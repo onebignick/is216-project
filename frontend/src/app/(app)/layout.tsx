@@ -1,13 +1,8 @@
-import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar/navbar";
 import { cn } from "@/lib/utils";
 import { fontSans } from "@/lib/fonts";
 import { ModeToggle } from "@/components/toggle-theme-button";
-
-export const metadata: Metadata = {
-  title: "IS442 Project",
-  description: "A custom CRM built for a school project",
-};
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function RootLayout({
   children,
@@ -19,7 +14,15 @@ export default function RootLayout({
       <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
         <div className="flex flex-row justify-between p-4 items-center">
           <Navbar className="mx-6" />
-          <ModeToggle />
+          <div className="flex flex-row gap-4">
+            <ModeToggle />
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </div>
         </div>
         {children}
       </body>
