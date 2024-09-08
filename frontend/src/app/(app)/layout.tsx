@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/components/theme-provider";
-import "./globals.css";
+import { Navbar } from "@/components/navbar/navbar";
 import { cn } from "@/lib/utils";
 import { fontSans } from "@/lib/fonts";
+import { ModeToggle } from "@/components/toggle-theme-button";
 
 export const metadata: Metadata = {
-  title: "IS216 Project",
-  description: "A project",
+  title: "IS442 Project",
+  description: "A custom CRM built for a school project",
 };
 
 export default function RootLayout({
@@ -17,9 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-        </ThemeProvider>
+        <div className="flex flex-row justify-between p-4 items-center">
+          <Navbar className="mx-6" />
+          <ModeToggle />
+        </div>
+        {children}
       </body>
     </html>
   );
