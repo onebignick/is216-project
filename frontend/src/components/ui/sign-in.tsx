@@ -57,7 +57,6 @@ export default function SignInForm() {
 
   // Display a form to capture the user's email and password
   return (
-    <div>
     <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Card className="bg-transparent border-none">
@@ -109,6 +108,5 @@ export default function SignInForm() {
             </Card>
         </form>
     </Form>
-    </div>
   )
 }
