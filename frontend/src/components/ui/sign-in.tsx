@@ -91,6 +91,7 @@ export default function SignInForm() {
                             <FormItem>
                                 <FormControl>
                                     <Input 
+                                        type= "password"
                                         className="text-black bg-white border-black"
                                         placeholder="Password" {...field}
                                     />
