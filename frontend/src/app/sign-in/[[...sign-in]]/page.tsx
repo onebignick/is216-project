@@ -3,7 +3,6 @@ import SignInForm from "@/components/ui/sign-in";
 import Image from "next/image";
 import Logo from "@/assets/logo.svg"
 
-
 export default function SignInPage() {
   const words: string[] = ["interviews", "meetings", "consultations"];
 
