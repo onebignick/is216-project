@@ -7,7 +7,7 @@ export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 	const navigationItems: NavigationItem[] = [
 		{href: "/", description: "Meetgrid"},
 		{href: "/", description: "Your Events"},
-		{href: "/", description: "Create an event"},
+		{href: "/events/create", description: "Create an event"},
 		{href: "/", description: "Register"},
 		{href: "/", description: "Notes"},
 	]
