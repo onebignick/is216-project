@@ -2,8 +2,6 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { Webhook } from "svix";
 
-const WEBHOOK_SECRET = "whsec_1EajRWukiOM52V0Qq7ZxMkjzG1x7vsCU";
-
 export function validateWebhookRequest(body: string, headers: ReadonlyHeaders) : WebhookEvent | null {
     try {
         const svix_id = headers.get("svix-id");
