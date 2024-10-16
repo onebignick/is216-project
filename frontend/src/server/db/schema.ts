@@ -14,3 +14,14 @@ export const user = createTable("user", {
 		.notNull(),
 	updatedAt: timestamp("updatedAt"),
 });
+
+export const event = createTable("event", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	name: varchar("name", {length: 100}),
+	description: varchar("description", {length: 10000}),
+	startDate: timestamp("startDate"),
+	endDate: timestamp("endDate"),
+	reminder: timestamp("reminder"),
+
+	organizerId: uuid("organizerId").references(() => user.id),
+})
