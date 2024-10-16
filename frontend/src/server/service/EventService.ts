@@ -23,4 +23,13 @@ export class EventService {
             return ""
         }
     }
+
+    async getAllEventsOrganizedByUser(userId: string) {
+        try {
+            return await this.eventRepository.getAllEventsOrganizedByUser(userId)
+        } catch (e) {
+            console.log(e.message);
+            return [];
+        }
+    }
 }

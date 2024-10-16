@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
 import { Textarea } from "../ui/textarea";
 import { MeetgridEvent } from "@/server/entity/event";
+import { useUser } from "@clerk/nextjs";
 
 const formSchema = z.object({
     eventName: z.string(),
@@ -23,6 +24,8 @@ const formSchema = z.object({
 })
 
 export function CreateEventForm() {
+    const { user } = useUser();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
     });
@@ -33,7 +36,7 @@ export function CreateEventForm() {
             description: values.description,
             startDate: values.startDate,
             endDate: values.endDate,
-            organizerId: null,
+            organizerId: user!.id,
             reminder: null,
         }
 

@@ -8,15 +8,23 @@ export class EventController {
         this.eventService = new EventService();
     }
 
-    async handlePost(request: Request) {
+    async handleEventCreation(request: Request) {
         try {
             const newEvent = await request.json();
-            console.log(newEvent)
             const result = this.eventService.createOneEvent(newEvent);
-            console.log(result)
-            return NextResponse.json({ message: "success"}, { status: 200 })
+            return NextResponse.json({ message: "success", result: result}, { status: 200 })
         } catch {
             return NextResponse.json({ message: "An Error occured"}, { status: 500 })
+        }
+    }
+
+    async handleGetAllEventsOrganizedByUser(request: Request) {
+        try {
+            const userIdRequest = await request.json();
+            const results = this.eventService.getAllEventsOrganizedByUser(userIdRequest);
+            return NextResponse.json({message: "success", result: results}, {status: 200});
+        } catch {
+            return NextResponse.json({message: "An error occured"}, {status: 500});
         }
     }
 }

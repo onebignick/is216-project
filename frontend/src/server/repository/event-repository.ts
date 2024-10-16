@@ -19,8 +19,14 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return result;
     }
 
+    async getAllEventsOrganizedByUser(userId: string): Promise<MeetgridEvent[]> {
+        const result = await db.query.event.findMany({
+            where: eq(event.organizerId, userId)
+        });
+        return result;
+    }
+
     async createOne(item: MeetgridEvent): Promise<{id: string}[]> {
-        console.log("this is the repository")
         const result: {id: string}[] = await db.insert(event).values(item).returning();
         return result
     }

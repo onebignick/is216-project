@@ -23,5 +23,5 @@ export const event = createTable("event", {
 	endDate: timestamp("endDate", { mode: "string" }),
 	reminder: timestamp("reminder"),
 
-	organizerId: uuid("organizerId").references(() => user.id),
+	organizerId: varchar("organizerId", {length: 32}).references(() => user.clerkUserId),
 })
