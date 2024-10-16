@@ -13,6 +13,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
 import { Textarea } from "../ui/textarea";
+import { MeetgridEvent } from "@/server/entity/event";
 
 const formSchema = z.object({
     eventName: z.string(),
@@ -26,8 +27,26 @@ export function CreateEventForm() {
         resolver: zodResolver(formSchema)
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const newEvent: MeetgridEvent = {
+            name: values.eventName,
+            description: values.description,
+            startDate: values.startDate,
+            endDate: values.endDate,
+            organizerId: null,
+            reminder: null,
+        }
+
+        const response = await fetch("/api/event/create", {
+            method: "POST",
+            body: JSON.stringify(newEvent),
+        })
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.log("An error occured");
+        }
     }
 
     return(
