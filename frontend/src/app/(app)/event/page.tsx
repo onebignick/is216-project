@@ -15,6 +15,9 @@ function EventPageSidebar() {
             <Input
                 placeholder="Search Events"
             />
+            <button>
+                Search
+            </button>
             This will be the event page sidebar
         </div>
     )
