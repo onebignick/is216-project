@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button";
 
 export default function Event() {
     return (
@@ -15,9 +16,10 @@ function EventPageSidebar() {
             <Input
                 placeholder="Search Events"
             />
-            <button>
-                Search
-            </button>
+            <Button type="submit">
+                Submit
+            </Button>
+
             This will be the event page sidebar
         </div>
     )
