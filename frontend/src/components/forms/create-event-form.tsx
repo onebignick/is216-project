@@ -90,7 +90,7 @@ export function CreateEventForm() {
                             control={form.control}
                             name="startDate"
                             render={({field}) => (
-                                <FormItem className="col-span-1">
+                                <FormItem className="col-span-2 sm:col-span-1">
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -118,7 +118,7 @@ export function CreateEventForm() {
                             control={form.control}
                             name="endDate"
                             render={({field}) => (
-                                <FormItem className="col-span-1">
+                                <FormItem className="col-span-2 sm:col-span-1">
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
