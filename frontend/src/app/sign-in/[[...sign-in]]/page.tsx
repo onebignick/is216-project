@@ -7,7 +7,7 @@ export default function SignInPage() {
   const words: string[] = ["interviews", "meetings", "consultations"];
 
   return (
-	<div className="grid grid-cols-12 gap-4 h-dvh p-5 bg-[#FEF4E6]">
+	<div className="grid grid-cols-12 gap-4 h-dvh p-5">
 		<div className="col-span-12 md:col-span-6 flex flex-col md:flex-row justify-center">
 			<div className="flex col-span-3 content-center justify-end md:mr-5">
 				<Image src={Logo} alt="meetgrid logo" className="mx-auto"/>

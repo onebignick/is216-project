@@ -4,15 +4,16 @@ import Logo from "@/assets/logo.svg"
 
 export default function Page() {
 	return (
-		<body className="bg-[#FEF4E6]">
-			<div className="p-3 inline-grid grid-cols-2 gap-0">
+		<div className="grid grid-rows-12 gap-4 h-dvh p-5">
+			<div className="flex grid-rows-1 items-center gap-2">
 				<Image src={Logo} alt="meetgrid logo" className="size-12"/>
 				<h1 className="content-center font-bold">Meetgrid</h1>
 			</div>
-			<div className="m-2 container mx-auto sm:w-9/12 sm:w-12 content-center">
-				<SignUpForm/>
+			<div className="grid grid-rows-1 grid-cols-12 gap-4">
+				<div className="col-span-12 sm:col-start-2 sm:col-span-10 md:col-start-3 md:col-span-8">
+					<SignUpForm/>
+				</div>
 			</div>
-		</body>
-
+		</div>
 	)
 }
