@@ -12,7 +12,7 @@ export const user = createTable("user", {
 	createdAt: timestamp("createdAt")
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),
-	updatedAt: timestamp("updatedAt"),
+	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
 export const event = createTable("event", {

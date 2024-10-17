@@ -3,7 +3,7 @@ export type MeetgridEvent = {
     name: string | null;
     description: string | null;
     organizerId: string | null;
-    startDate: Date | null;
-    endDate: Date | null;
+    startDate: string | null;
+    endDate: string | null;
     reminder: Date | null;
 }

@@ -34,8 +34,8 @@ export function CreateEventForm() {
         const newEvent: MeetgridEvent = {
             name: values.eventName,
             description: values.description,
-            startDate: values.startDate,
-            endDate: values.endDate,
+            startDate: values.startDate.toString(),
+            endDate: values.endDate.toString(),
             organizerId: user!.id,
             reminder: null,
         }

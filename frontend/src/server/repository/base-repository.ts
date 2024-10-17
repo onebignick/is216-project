@@ -1,5 +1,5 @@
 export interface IBaseRepository<T> {
-    getById(id: string): Promise<{id:string}[]>;
+    getById(id: string): Promise<T[]>;
     getAll(): Promise<T[]>;
     createOne(item: T): Promise<{id: string}[]>;
     createMany(items: T[]): Promise<{id: string}[]>;

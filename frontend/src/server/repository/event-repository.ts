@@ -43,10 +43,12 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
 
     // todo delete logic
     async deleteOne(id: string): Promise<MeetgridEvent[]> {
+        console.log(id);
         return [];
     }
 
     async deleteMany(ids: string[]): Promise<MeetgridEvent[]> {
+        console.log(ids);
         return []
     }
 }
