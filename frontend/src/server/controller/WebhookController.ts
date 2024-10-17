@@ -9,9 +9,9 @@ export class WebhookController {
         this.webhookService = new WebhookService();
     }
 
-    handleClerkRequest(request: Request, headers: ReadonlyHeaders) {
+    async handleClerkRequest(request: Request, headers: ReadonlyHeaders) {
         try {
-            this.webhookService.handleClerkWebhookEvent(request, headers);
+            await this.webhookService.handleClerkWebhookEvent(request, headers);
             return NextResponse.json({message: "success"}, {status: 200})
         } catch (e) {
             return NextResponse.json({message: e.message}, {status: 500})
