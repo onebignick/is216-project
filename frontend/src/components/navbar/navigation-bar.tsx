@@ -13,7 +13,7 @@ export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 		{href: "/", description: "Notes"},
 	]
 	return (
-		<NavigationMenu className="flex justify-between min-w-full h-[60px] px-5 bg-[#B7DFED]">
+		<NavigationMenu className="flex justify-between min-w-full h-[60px] px-5 bg-primary">
 			<NavigationMenuList className="flex gap-4 justify-start">
 				{navigationItems.map((navigationItem: NavigationItem, index: number) => {
 					return <NavigationItem key={index} href={navigationItem.href} description={navigationItem.description} icon={navigationItem.icon} />
