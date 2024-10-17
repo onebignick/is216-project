@@ -17,7 +17,8 @@ export class ClerkService {
             firstname: clerkUserObject.first_name,
             lastname: clerkUserObject.last_name,
         }
-        this.userRepository.createOneUser(newUser);
+        const newUserId = await this.userRepository.createOneUser(newUser);
+        console.log(newUserId);
         console.log("ClerkService : user created finished")
     }
 }
