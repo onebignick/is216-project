@@ -23,7 +23,7 @@ const formSchema = z.object({
     endDate: z.date(),
 })
 
-export function CreateEventForm() {
+export function RegisterEventForm() {
     const { user } = useUser();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -57,7 +57,7 @@ export function CreateEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <CardHeader>
-                        <CardTitle>Create an event</CardTitle>
+                        <CardTitle>Register an event</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
                         <FormField
@@ -104,7 +104,7 @@ export function CreateEventForm() {
                                                     mode="single"
                                                     selected={field.value}
                                                     onSelect={field.onChange}
-                                                    disabled={(date) => date < new Date() }
+                                                    disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                                                     initialFocus
                                                 />
                                             </PopoverContent>
@@ -132,7 +132,7 @@ export function CreateEventForm() {
                                                     mode="single"
                                                     selected={field.value}
                                                     onSelect={field.onChange}
-                                                    disabled={(date) => date < new Date()}
+                                                    disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
                                                     initialFocus
                                                 />
                                             </PopoverContent>
