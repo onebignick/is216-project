@@ -15,7 +15,9 @@ export class UserRepository {
     }
 
     async createOneUser(newUser: User) {
+        console.log("UserRepository.createOneUser: creating a user")
         const result = await db.insert(user).values(newUser)
+        console.log("UserRepository.createOneUser: created a user")
         return result;
     }
 }

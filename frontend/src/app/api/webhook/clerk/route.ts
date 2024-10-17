@@ -8,7 +8,7 @@ const webhookController: WebhookController = new WebhookController();
 export async function POST(request: Request) {
     try {
         const header: ReadonlyHeaders = headers();
-        webhookController.handleClerkRequest(request, header);
+        await webhookController.handleClerkRequest(request, header);
         return NextResponse.json({ message: "success" },{ status: 200 })
     } catch {
         return NextResponse.json({message: "An error occured"}, { status: 500 })

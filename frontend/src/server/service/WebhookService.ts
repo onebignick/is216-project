@@ -21,7 +21,9 @@ export class WebhookService {
 
         switch (event.type) {
             case "user.created":
-                this.clerkService.handleUserCreated(event);
+                console.log("WebhookService.handleClerkWebhookEvent: user.created event received")
+                const result = await this.clerkService.handleUserCreated(event);
+                console.log("WebhookService.handleClerkWebhookEvent: " + result)
                 break;
         }
     }
