@@ -19,8 +19,8 @@ export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}),
 	description: varchar("description", {length: 10000}),
-	startDate: timestamp("startDate", { mode: "string" }),
-	endDate: timestamp("endDate", { mode: "string" }),
+	startDate: varchar("startDate", { length: 1000 }),
+	endDate: varchar("endDate", { length: 1000 }),
 	reminder: timestamp("reminder"),
 
 	organizerId: varchar("organizerId", {length: 32}).references(() => user.clerkUserId),

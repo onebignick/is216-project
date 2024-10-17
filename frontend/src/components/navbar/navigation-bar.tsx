@@ -6,8 +6,8 @@ import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 	const navigationItems: NavigationItem[] = [
 		{href: "/", description: "Meetgrid"},
-		{href: "/", description: "Your Events"},
-		{href: "/events/create", description: "Create an event"},
+		{href: "/event", description: "Your Events"},
+		{href: "/event/create", description: "Create an event"},
 		{href: "/", description: "Register"},
 		{href: "/", description: "Notes"},
 	]

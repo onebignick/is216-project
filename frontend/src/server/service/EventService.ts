@@ -8,6 +8,23 @@ export class EventService {
         this.eventRepository = new EventRepository();
     }
 
+    async getOneEventById(eventId: string) {
+        try {
+            console.log(eventId);
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
+    
+    async getAllEventsOrganizedByUser(userId: string) {
+        try {
+            return await this.eventRepository.getAllEventsOrganizedByUser(userId)
+        } catch (e) {
+            console.log(e.message);
+            return [];
+        }
+    }
+
     async createOneEvent(newEvent: MeetgridEvent) {
         try {
             const result = await this.eventRepository.createOne(newEvent);
@@ -21,15 +38,6 @@ export class EventService {
         } catch (e) {
             console.log(e.message);
             return ""
-        }
-    }
-
-    async getAllEventsOrganizedByUser(userId: string) {
-        try {
-            return await this.eventRepository.getAllEventsOrganizedByUser(userId)
-        } catch (e) {
-            console.log(e.message);
-            return [];
         }
     }
 }
