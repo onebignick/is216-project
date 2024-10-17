@@ -44,7 +44,9 @@ export function CreateEventForm() {
             method: "POST",
             body: JSON.stringify(newEvent),
         })
+
         if (response.ok) {
+            // todo : generate code
             const data = await response.json();
             console.log(data);
         } else {
