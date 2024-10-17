@@ -8,7 +8,7 @@ export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 		{href: "/", description: "Meetgrid"},
 		{href: "/event", description: "Your Events"},
 		{href: "/event/create", description: "Create an event"},
-		{href: "/", description: "Register"},
+		{href: "/event/register", description: "Register"},
 		{href: "/", description: "Notes"},
 	]
 	return (
