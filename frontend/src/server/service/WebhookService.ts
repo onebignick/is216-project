@@ -28,6 +28,7 @@ export class WebhookService {
 
     validateRequest(body: string, headers: ReadonlyHeaders): boolean {
         try {
+            console.log("validating request")
             const svix_id = headers.get("svix-id");
             const svix_timestamp = headers.get("svix-timestamp");
             const svix_signature = headers.get("svix-signature");
@@ -41,8 +42,10 @@ export class WebhookService {
                 "svix-timestamp": svix_timestamp,
                 "svix-signature": svix_signature
             }) as WebhookEvent;
+            console.log("successfully validated request");
             return true;
         } catch {
+            console.log("failed to validate request");
             return false;
         }
     }
