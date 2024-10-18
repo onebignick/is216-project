@@ -57,7 +57,7 @@ export function RegisterEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <CardHeader>
-                        <CardTitle>Register an event</CardTitle>
+                        <CardTitle className = "text-center">Register an event</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col gap-4">
                         <FormField
