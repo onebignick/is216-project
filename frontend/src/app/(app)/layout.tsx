@@ -9,12 +9,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
+      <body className={cn("flex flex-col min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
         <Navbar className="mx-6" />
-        {children}
+        <main className="flex-grow">
+          {children}
+        </main>
         {/* Footer Section */}
-        <footer className="fixed bottom-0 p-4 w-full text-center bg-[#99DDCD]">
-            <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>
+        <footer className="p-4 w-full text-center bg-[#99DDCD]">
+          <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>
         </footer>
       </body>
     </html>
