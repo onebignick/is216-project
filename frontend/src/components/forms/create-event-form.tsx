@@ -21,6 +21,7 @@ const formSchema = z.object({
     description: z.string(),
     startDate: z.date(),
     endDate: z.date(),
+    reminder:  z.string().optional(), // New field for reminder
 })
 
 export function CreateEventForm() {
@@ -31,13 +32,25 @@ export function CreateEventForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        // Convert reminder to a number (assuming it's in days)
+            const reminderValue = values.reminder !== undefined && values.reminder !== null 
+            ? Number(values.reminder) 
+            : undefined;
+
+        // Calculate the reminder date based on the start date and reminder in days
+        const reminderDate = reminderValue 
+            ? new Date(values.startDate.getTime() - reminderValue * 24 * 60 * 60 * 1000) // Convert days to milliseconds
+            : null; // Set to null if no reminder is specified
+
+        console.log(reminderDate);
+        
         const newEvent: MeetgridEvent = {
             name: values.eventName,
             description: values.description,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),
             organizerId: user!.id,
-            reminder: null,
+            reminder: reminderDate,  // This should now be a Date or null
         }
 
         const response = await fetch("/api/event/create", {
@@ -105,7 +118,11 @@ export function CreateEventForm() {
                                                 mode="single"
                                                 selected={field.value}
                                                 onSelect={field.onChange}
-                                                disabled={(date) => date < new Date() }
+                                                disabled={(date) => {
+                                                    const today = new Date();
+                                                    today.setHours(0, 0, 0, 0); // Only compare date, not time
+                                                    return date < today;
+                                                }}
                                                 initialFocus
                                             />
                                         </PopoverContent>
@@ -133,7 +150,12 @@ export function CreateEventForm() {
                                                 mode="single"
                                                 selected={field.value}
                                                 onSelect={field.onChange}
-                                                disabled={(date) => date < new Date()}
+                                                // Disable dates earlier than the selected startDate
+                                                disabled={(date) => {
+                                                    const startDate = form.getValues("startDate") || new Date();
+                                                    startDate.setHours(0, 0, 0, 0); // Ensure only date part is compared
+                                                    return date < startDate;
+                                                }}
                                                 initialFocus
                                             />
                                         </PopoverContent>
@@ -142,6 +164,20 @@ export function CreateEventForm() {
                                 </FormItem>
                             )}
                         />
+                        {/* Reminder Field */}
+                        <FormField
+                            control={form.control}
+                            name="reminder"
+                            render={({ field }) => (
+                                <FormItem className="col-span-2 sm:col-span-1">
+                                    <FormControl>
+                                        <Input type="number" placeholder="Reminder in days" {...field} min="0" max="30"/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         <Button type="submit" className="col-span-2">
                             Submit
                         </Button>
