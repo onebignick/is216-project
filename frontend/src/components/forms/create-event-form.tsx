@@ -15,6 +15,7 @@ import { Calendar } from "../ui/calendar";
 import { Textarea } from "../ui/textarea";
 import { MeetgridEvent } from "@/server/entity/event";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
     eventName: z.string(),
@@ -30,6 +31,8 @@ export function CreateEventForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
     });
+
+    const router = useRouter()
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Convert reminder to a number (assuming it's in days)
@@ -62,6 +65,7 @@ export function CreateEventForm() {
             // todo : generate code
             const data = await response.json();
             console.log(data);
+            router.push('/event/create/success');
         } else {
             console.log("An error occured");
         }
