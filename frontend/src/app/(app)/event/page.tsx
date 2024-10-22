@@ -17,7 +17,7 @@ function EventPageSidebar() {
                 placeholder="Search Events"
             />
             <Button type="submit">
-                Submit
+                Search
             </Button>
 
             This will be the event page sidebar
@@ -27,8 +27,14 @@ function EventPageSidebar() {
 
 function MainEventPage() {
     return (
+        
+        
         <div>
+            <h2 style={{ fontWeight: 'bold', fontSize: '2.2rem', marginBottom: '1rem' }}>Calendar (Current Month)
+            </h2>
             This will be the main event page
         </div>
+        
+        
     )
 }
