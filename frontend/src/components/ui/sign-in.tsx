@@ -18,7 +18,8 @@ const formSchema = z.object({
 })
 
 export default function SignInForm() {
-    const { isLoaded, signIn, setActive } = useSignIn()
+    const { isLoaded, signIn, setActive } = useSignIn();
+    const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -51,6 +52,7 @@ export default function SignInForm() {
         } catch (err) {
             // See https://clerk.com/docs/custom-flows/error-handling
             // for more info on error handling
+            setErrorMessage('Invalid email or password. Please try again.');
             console.error(JSON.stringify(err, null, 2))
         }
     }
@@ -69,6 +71,9 @@ export default function SignInForm() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-col justify-center px-5 gap-4">
+                    {errorMessage && (
+                        <p className="bg-red-400 text-white p-4 rounded-lg">{errorMessage}</p>
+                    )}
                     <FormField
                         control={form.control}
                         name="email"
