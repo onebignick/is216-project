@@ -6,6 +6,7 @@ import { NavigationMenu, NavigationMenuList } from "../ui/navigation-menu";
 import { ModeToggle } from "@/components/toggle-theme-button";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Logo from "@/assets/logo.svg";
+import Image from "next/image";
 import { Button } from "../ui/button";
 
 export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
@@ -47,12 +48,17 @@ export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 						<path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
 					</svg>
 					</Button>
-
-					{/* Render navigation items for medium and larger screens */}
-					<div className="hidden md:flex gap-4"> {/* Hide on small screens */}
-					{navigationItems.map((navigationItem: NavigationItem, index: number) => (
-						<NavigationItem key={index} href={navigationItem.href} description={navigationItem.description} icon={navigationItem.icon}/>
-					))}
+					<div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+						<div className="md:hidden flex flex-shrink-0 items-center content-center justify-center">
+							<Image src={Logo} alt="Meetgrid logo" className="h-8 w-8" />
+							<span className="ml-2 font-bold">Meetgrid</span>
+						</div>
+						{/* Render navigation items for medium and larger screens */}
+						<div className="hidden md:flex gap-4"> {/* Hide on small screens */}
+						{navigationItems.map((navigationItem: NavigationItem, index: number) => (
+							<NavigationItem key={index} href={navigationItem.href} description={navigationItem.description} icon={navigationItem.icon}/>
+						))}
+						</div>
 					</div>
 				</NavigationMenuList>
 
@@ -70,7 +76,8 @@ export function Navbar({}: React.HTMLAttributes<HTMLElement>) {
 			{isDropdownOpen && (
 				<ul className="list-none"> {/* Remove bullet points here */}
 					<div className="absolute top-12 left-0 w-full bg-primary z-10 min-w-full">
-						{navigationItems.map((navigationItem: NavigationItem, index: number) => (
+						<NavigationItem href="/" description="Home"/>
+						{navigationItems.slice(1).map((navigationItem: NavigationItem, index: number) => (
 							<NavigationItem key={index} href={navigationItem.href} description={navigationItem.description} icon={navigationItem.icon}/>
 						))}
 					</div>
