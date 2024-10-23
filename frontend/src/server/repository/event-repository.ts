@@ -40,7 +40,15 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         const result: {id: string}[] = await db.update(event).set(item).where(eq(event.id, id)).returning();
         return result;
     }
-
+    
+    // Method to get an event by its unique code
+    async getEventByCode(code: string): Promise<MeetgridEvent | null> {
+        const result = await db.query.event.findFirst({
+            where: eq(event.EventCode, code) // Assuming 'code' is a field in your event schema
+        });
+        return result || null;
+    }
+    
     // todo delete logic
     async deleteOne(id: string): Promise<MeetgridEvent[]> {
         console.log(id);

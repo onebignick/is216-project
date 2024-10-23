@@ -33,10 +33,12 @@ export function RegisterEventForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const newEvent: MeetgridEvent = {
             name: values.eventName,
+            EventCode: null, // temporary testing
             description: values.description,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),
             organizerId: user!.id,
+            participantNum: null,
             reminder: null,
         }
 

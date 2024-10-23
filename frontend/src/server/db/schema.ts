@@ -18,10 +18,11 @@ export const user = createTable("user", {
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}),
+	EventCode: varchar("EventCode", {length: 1000000}),
 	description: varchar("description", {length: 10000}),
 	startDate: varchar("startDate", { length: 1000 }),
 	endDate: varchar("endDate", { length: 1000 }),
 	reminder: timestamp("reminder"),
-
+	participantNum: varchar("participantNum", {length: 100}),
 	organizerId: varchar("organizerId", {length: 32}).references(() => user.clerkUserId),
 })

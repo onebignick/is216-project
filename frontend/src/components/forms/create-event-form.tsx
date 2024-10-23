@@ -22,6 +22,7 @@ const formSchema = z.object({
     description: z.string(),
     startDate: z.date(),
     endDate: z.date(),
+    participantNum: z.string(),
     reminder:  z.string().optional(), // New field for reminder
 })
 
@@ -36,23 +37,25 @@ export function CreateEventForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         // Convert reminder to a number (assuming it's in days)
-            const reminderValue = values.reminder !== undefined && values.reminder !== null 
-            ? Number(values.reminder) 
-            : undefined;
+        const reminderValue = values.reminder !== undefined && values.reminder !== null 
+        ? Number(values.reminder) 
+        : undefined;
 
         // Calculate the reminder date based on the start date and reminder in days
         const reminderDate = reminderValue 
-            ? new Date(values.startDate.getTime() - reminderValue * 24 * 60 * 60 * 1000) // Convert days to milliseconds
-            : null; // Set to null if no reminder is specified
+        ? new Date(values.startDate.getTime() - reminderValue * 24 * 60 * 60 * 1000) // Convert days to milliseconds
+        : null; // Set to null if no reminder is specified
 
         console.log(reminderDate);
         
         const newEvent: MeetgridEvent = {
             name: values.eventName,
+            EventCode: null,
             description: values.description,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),
             organizerId: user!.id,
+            participantNum: values.participantNum.toString(),
             reminder: reminderDate,  // This should now be a Date or null
         }
 
@@ -65,7 +68,7 @@ export function CreateEventForm() {
             // todo : generate code
             const data = await response.json();
             console.log(data);
-            router.push('/event/create/success');
+            router.push(`/event/create/success?eventCode=${data.eventCode}`); // Pass the event code to the success page
         } else {
             console.log("An error occured");
         }
@@ -176,6 +179,19 @@ export function CreateEventForm() {
                                 <FormItem className="col-span-2 sm:col-span-1">
                                     <FormControl>
                                         <Input type="number" placeholder="Reminder in days" {...field} min="0" max="30"/>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {/* Participants Field */}
+                        <FormField
+                            control={form.control}
+                            name="participantNum"
+                            render={({ field }) => (
+                                <FormItem className="col-span-2 sm:col-span-1">
+                                    <FormControl>
+                                        <Input type="number" placeholder="Number of Participants" {...field} min="1" max="10"/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
