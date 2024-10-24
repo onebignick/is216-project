@@ -17,7 +17,10 @@ export default function Event() {
     return (
         <div className="p-4 flex gap-4">
             {isClient ? (
-            <><EventPageSidebar /><MainEventPage /></>
+            <>
+                <EventPageSidebar />
+                <MainEventPage />
+            </>
             ) : (
                 <p>Loading...</p>
             )}

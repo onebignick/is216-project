@@ -1,8 +1,6 @@
 import { TodaysMeetings } from "@/components/charts/todays-meetings";
 import { WeeksMeetings } from "@/components/charts/weeks-meetings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { HomeEventCard } from "@/components/ui/event-card";
-import { MeetgridEvent } from "@/server/entity/event";
 import { EventService } from "@/server/service/EventService";
 import { currentUser } from "@clerk/nextjs/server";
 
@@ -45,28 +43,5 @@ function WelcomeCard({ username, className } : { username: string, className: st
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
     </Card>
-  )
-}
-
-async function HomePanel({username, eventsOrganizedByUser}: {username: string, eventsOrganizedByUser: MeetgridEvent[]}) {
-  return (
-    <section>
-      <Card>
-        <CardHeader>
-          <CardTitle>
-            Welcome back, {username}!
-          </CardTitle>
-          <CardDescription>
-            What would you like to do today?
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <CardTitle>Upcoming Events</CardTitle>
-          {eventsOrganizedByUser.map((event, index) => {
-            return <HomeEventCard key={index} event={event}/>
-          })}
-        </CardContent>
-      </Card>
-    </section>
   )
 }

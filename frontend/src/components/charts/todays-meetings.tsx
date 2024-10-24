@@ -3,10 +3,11 @@
 import { Label, PolarGrid, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
 import { ChartConfig, ChartContainer } from "../ui/chart"
+import { MeetingLength } from "@/types/MeetingLength";
 
 interface Props {
     className: string
-    chartData: object[];
+    chartData: MeetingLength[];
 }
 
 export function TodaysMeetings({className, chartData}: Props) {
