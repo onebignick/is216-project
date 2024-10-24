@@ -50,7 +50,7 @@ export function CreateEventForm() {
         
         const newEvent: MeetgridEvent = {
             name: values.eventName,
-            EventCode: null,
+            eventCode: null,
             description: values.description,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),

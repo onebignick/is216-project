@@ -23,7 +23,7 @@ export class EventController {
 
             // Proceed with creating the event
             const result = await this.eventService.createOneEvent(newEvent);
-            return NextResponse.json({ message: "success",  eventCode: newEvent.EventCode, result: result}, { status: 200 })
+            return NextResponse.json({ message: "success",  eventCode: newEvent.eventCode, result: result}, { status: 200 })
             
         } catch {
             return NextResponse.json({ message: "An Error occured"}, { status: 500 })

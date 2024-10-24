@@ -84,7 +84,7 @@ export class EventService {
             } while (!isUnique);
 
             // Assign the unique code to the event
-            newEvent.EventCode = unique_code;
+            newEvent.eventCode = unique_code;
 
             // Attempt to create the event in the repository
             const result = await this.eventRepository.createOne(newEvent);

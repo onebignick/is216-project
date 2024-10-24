@@ -44,7 +44,7 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     // Method to get an event by its unique code
     async getEventByCode(code: string): Promise<MeetgridEvent | null> {
         const result = await db.query.event.findFirst({
-            where: eq(event.EventCode, code) // Assuming 'code' is a field in your event schema
+            where: eq(event.eventCode, code) // Assuming 'code' is a field in your event schema
         });
         return result || null;
     }
