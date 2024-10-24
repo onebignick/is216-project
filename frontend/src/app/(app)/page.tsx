@@ -1,3 +1,5 @@
+import { TodaysMeetings } from "@/components/charts/todays-meetings";
+import { WeeksMeetings } from "@/components/charts/weeks-meetings";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomeEventCard } from "@/components/ui/event-card";
 import { MeetgridEvent } from "@/server/entity/event";
@@ -13,8 +15,8 @@ export default async function Home() {
     <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
       {/* <HomePanel username={(user!.username)!} eventsOrganizedByUser={eventsOrganizedByUser}/> */}
       <WelcomeCard className="hidden md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
-      <ExampleCard className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <ExampleCard className="hidden md:block md:col-span-4 lg:col-span-3"/>
+      <TodaysMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
+      <WeeksMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <ExampleCard className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8"/>
       <ExampleCard className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
@@ -42,9 +44,6 @@ function WelcomeCard({ username, className } : { username: string, className: st
         <CardTitle>Welcome back {username}!</CardTitle>
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
-      <CardContent>
-        Create a new event?
-      </CardContent>
     </Card>
   )
 }
