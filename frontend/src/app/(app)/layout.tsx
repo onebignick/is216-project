@@ -1,6 +1,7 @@
-import { Navbar } from "@/components/navbar/navigation-bar";
 import { cn } from "@/lib/utils";
 import { fontSans } from "@/lib/fonts";
+import { SidebarLeft } from "@/components/sidebar-left";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function RootLayout({
   children,
@@ -8,17 +9,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("flex flex-col min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
-        <Navbar className="mx-6" />
-        <main className="flex-grow">
+    <SidebarProvider>
+      <SidebarLeft/>
+      <main className={cn("flex flex-col min-h-screen bg-background text-foreground font-sans antialiased flex-grow", fontSans.variable)}>
+        <SidebarTrigger/>
           {children}
-        </main>
-        {/* Footer Section */}
-        <footer className="p-4 w-full text-center bg-[#99DDCD]">
-          <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>
-        </footer>
-      </body>
-    </html>
+          <footer className="p-4 w-full text-center bg-[#99DDCD]" >
+            <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>
+          </footer>
+      </main>
+    </SidebarProvider>
   );
 }
