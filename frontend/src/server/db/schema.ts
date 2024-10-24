@@ -36,5 +36,5 @@ export const booking = createTable("booking", {
 	notes: varchar("description", {length: 10000}),
 	status: varchar("status", {length: 10000}),
 	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId),
-	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.eventCode), // Put it as Event ID first maybe will change later as EventCode in event table is not unique
+	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.eventCode), 
 })

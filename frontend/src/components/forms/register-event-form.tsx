@@ -13,11 +13,13 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
 import { useUser } from "@clerk/nextjs";
+import { MeetgridBookEvent } from "@/server/entity/booking";
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
     eventCode: z.string(),
     name: z.string(),
-    Date: z.date(),
+    date: z.date(),
     timeslot: z.string() // may need to change later
 })
 
@@ -38,10 +40,32 @@ export function RegisterEventForm() {
         resolver: zodResolver(formSchema)
     });
 
+    const router = useRouter();
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        const newBookEvent: MeetgridBookEvent = {
+            name: values.name,
+            date: values.date.toString(),
+            time: null, // Put null first as database is timestamp?
+            notes: null,
+            status: null,            
+            participantId: user!.id,
+            eventCode: values.eventCode
+        }
 
+        const response = await fetch("/api/Bookevent/create", {
+            method: "POST",
+            body: JSON.stringify(newBookEvent),
+        })
 
-
+        if (response.ok) {
+            // todo : generate code
+            const data = await response.json();
+            console.log(data);
+            router.push(`/event/register/success`); // Pass the event code to the success page
+        } else {
+            console.log("An error occured");
+        }
     }
 
     return(
@@ -49,7 +73,7 @@ export function RegisterEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <CardHeader>
-                        <CardTitle className = "text-center">Create an event</CardTitle>
+                        <CardTitle className = "text-center">Register an event</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
                         <FormField
@@ -78,7 +102,7 @@ export function RegisterEventForm() {
                         />
                         <FormField
                             control={form.control}
-                            name="Date"
+                            name="date"
                             render={({field}) => (
                                 <FormItem className="col-span-2 sm:col-span-1">
                                     <Popover>
