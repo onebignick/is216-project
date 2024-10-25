@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { EventService } from "../service/EventService";
+import { auth } from "@clerk/nextjs/server";
 
 export class EventController {
     eventService: EventService;
@@ -30,10 +31,11 @@ export class EventController {
         }
     }
 
-    async handleGetAllEventsOrganizedByUser(request: Request) {
+    async handleGetAllRelatedEventsToUser() {
         try {
-            const userIdRequest = await request.json();
-            const results = this.eventService.getAllEventsOrganizedByUser(userIdRequest);
+            const currentClerkUserId = auth();
+            const results = await this.eventService.getAllEventsRelatedToUser(currentClerkUserId.userId!);
+            console.log(results)
             return NextResponse.json({message: "success", result: results}, {status: 200});
         } catch {
             return NextResponse.json({message: "An error occured"}, {status: 500});

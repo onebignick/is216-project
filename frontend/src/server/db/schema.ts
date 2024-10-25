@@ -1,7 +1,9 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator, timestamp, varchar, uuid } from "drizzle-orm/pg-core";
+import { pgTableCreator, timestamp, varchar, uuid, pgEnum } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
+
+export const rolesEnum = pgEnum("roles", ["organizer", "admin", "attendee"]);
 
 export const user = createTable("user", {
 	id: uuid("id").defaultRandom().primaryKey(),
@@ -15,6 +17,17 @@ export const user = createTable("user", {
 	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
+export const userEvent = createTable("user_event", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	userId: varchar("userId", {length: 32}).references(() => user.clerkUserId, {
+		onDelete: "cascade",
+	}),
+	eventId: uuid("eventId").references(() => event.id, {
+		onDelete: "cascade",
+	}).notNull(),
+	role: rolesEnum("role").default("attendee"),
+});
+
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}),
@@ -24,8 +37,7 @@ export const event = createTable("event", {
 	endDate: varchar("endDate", { length: 1000 }),
 	reminder: timestamp("reminder"),
 	participantNum: varchar("participantNum", {length: 100}),
-	organizerId: varchar("organizerId", {length: 32}).references(() => user.clerkUserId),
-
+	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
 });
 
 export const booking = createTable("booking", {

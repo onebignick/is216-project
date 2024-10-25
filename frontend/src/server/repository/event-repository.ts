@@ -1,8 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { event } from "../db/schema";
+import { event, user, userEvent } from "../db/schema";
 import { MeetgridEvent } from "../entity/event";
 import { IBaseRepository } from "./base-repository";
+import { UserEvent } from "@/types/UserEvent";
+import { User } from "../entity/user";
 
 export class EventRepository implements IBaseRepository<MeetgridEvent> {
     async getById(id: string): Promise<MeetgridEvent[]> {
@@ -19,16 +21,44 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return result;
     }
 
-    async getAllEventsOrganizedByUser(userId: string): Promise<MeetgridEvent[]> {
-        const result = await db.query.event.findMany({
-            where: eq(event.organizerId, userId)
-        });
-        return result;
+    async getAllEventsRelatedToUser(clerkUserId: string): Promise<User[]> {
+        const result = await db.select()
+            .from(userEvent)
+            .leftJoin(event, eq(userEvent.eventId, event.id))
+            .leftJoin(user, eq(userEvent.userId, user.clerkUserId))
+            .where(eq(userEvent.userId, clerkUserId))
+
+        if (result.length == 0 ) {
+            return [];
+        }
+
+        const resultUser: User = result[0].user as User;
+        resultUser.organizedEvents = [];
+        resultUser.adminEvents = [];
+        resultUser.registeredEvents = [];
+        for (let i=0;i<result.length;i++) {
+            if (result[i].user_event.role === "organizer") {
+                resultUser.organizedEvents.push(result[i].event! as MeetgridEvent);
+            } else if (result[i].user_event.role === "admin") {
+                resultUser.adminEvents.push(result[i].event! as MeetgridEvent);
+            } else if (result[i].user_event.role === "attendee") {
+                resultUser.registeredEvents.push(result[i].event! as MeetgridEvent);
+            }
+        }
+
+        return [resultUser];
     }
 
     async createOne(item: MeetgridEvent): Promise<{id: string}[]> {
-        const result: {id: string}[] = await db.insert(event).values(item).returning();
-        return result
+        const newEvent : {id: string}[] = await db.insert(event).values(item).returning();
+        const newRelation = {
+            eventId: newEvent[0].id,
+            userClerkId: item.createdBy,
+            role: "organizer",
+        } as UserEvent
+        await this.createOneUserEventRelation(newRelation);
+
+        return newEvent
     }
 
     async createMany(items: MeetgridEvent[]): Promise<{id: string}[]> {
@@ -58,5 +88,14 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     async deleteMany(ids: string[]): Promise<MeetgridEvent[]> {
         console.log(ids);
         return []
+    }
+
+    async createOneUserEventRelation(relation: UserEvent) {
+        const result = await db.insert(userEvent).values({
+            eventId: relation.eventId,
+            userId: relation.userClerkId,
+            role: relation.role,
+        });
+        return result;
     }
 }

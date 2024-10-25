@@ -15,7 +15,6 @@ import {
 import { NavFavorites } from "@/components/nav-favorites"
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
-import { NavWorkspaces } from "@/components/nav-workspaces"
 
 import {
   Sidebar,
@@ -200,9 +199,45 @@ const data = {
   ],
 }
 
+interface SidebarComponent {
+  name: string;
+  url: string;
+}
+
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const [meetingData, setMeetingData] = React.useState<SidebarComponent[]>([]);
+
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      const res = await fetch("/api/event/user");
+      const result = await res.json();
+
+      const newMeetingData: SidebarComponent[] = [];
+
+      const organizedEvents = result.result[0].organizedEvents;
+      for(let i=0;i<organizedEvents.length;i++) {
+        newMeetingData.push({
+          name: organizedEvents[i].name,
+          url: "/event/"+organizedEvents[i].id,
+        } as SidebarComponent);
+      }
+
+      const adminEvents = result.result[0].adminEvents;
+      for(let i=0;i<adminEvents.length;i++) {
+        newMeetingData.push({
+          name: adminEvents[i].name,
+          url: "/event/"+adminEvents[i].id,
+        } as SidebarComponent)
+      }
+
+      setMeetingData(newMeetingData);
+      return result;
+    }
+    fetchUserData();
+  }, [])
+
   return (
     <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
@@ -215,8 +250,7 @@ export function SidebarLeft({
         <NavMain items={data.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data.favorites} />
-        <NavWorkspaces workspaces={data.events} />
+        <NavFavorites favorites={meetingData} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarRail />

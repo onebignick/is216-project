@@ -1,14 +1,15 @@
 import { TodaysMeetings } from "@/components/charts/todays-meetings";
 import { WeeksMeetings } from "@/components/charts/weeks-meetings";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { EventService } from "@/server/service/EventService";
 import { currentUser } from "@clerk/nextjs/server";
+import Link from "next/link";
 
 export default async function Home() {
   const eventService: EventService = new EventService();
   const user = await currentUser();
-  const eventsOrganizedByUser = await eventService.getAllEventsOrganizedByUser(user!.id);
+  const eventsOrganizedByUser = await eventService.getAllEventsRelatedToUser(user!.id);
 
   return (
     <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
@@ -20,16 +21,6 @@ export default async function Home() {
       <ExampleCard className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
   );
-
-  return(
-        <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4 ">
-            <Skeleton className="hidden md:block md:min-w-[200px] md:min-h-[250px] md:col-span-4 lg:col-span-6"/>
-            <Skeleton className="hidden md:block md:col-span-4 lg:col-span-3"/>
-            <Skeleton className="hidden md:block md:col-span-4 lg:col-span-3"/>
-            <Skeleton className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8"/>
-            <Skeleton className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
-        </main>
-  )
 
 }
 
@@ -54,6 +45,11 @@ function WelcomeCard({ username, className } : { username: string, className: st
         <CardTitle>Welcome back {username}!</CardTitle>
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
+      <CardContent>
+        <Button asChild>
+          <Link href="/event/create">Create a new event</Link>
+        </Button>
+      </CardContent>
     </Card>
   )
 }

@@ -1,3 +1,5 @@
+import { MeetgridEvent } from "./event";
+
 export type User = {
     id?: string;
     clerkUserId: string | null;
@@ -6,4 +8,7 @@ export type User = {
     lastname: string | null;
     createdAt?: Date;
     updatedAt?: string | null;
+    organizedEvents?: MeetgridEvent[];
+    adminEvents?: MeetgridEvent[];
+    registeredEvents?: MeetgridEvent[];
 }

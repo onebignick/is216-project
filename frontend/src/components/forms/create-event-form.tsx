@@ -54,7 +54,7 @@ export function CreateEventForm() {
             description: values.description,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),
-            organizerId: user!.id,
+            createdBy: user!.id,
             participantNum: values.participantNum.toString(),
             reminder: reminderDate,  // This should now be a Date or null
         }

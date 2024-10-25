@@ -31,9 +31,9 @@ export class EventService {
         }
     }
     
-    async getAllEventsOrganizedByUser(userId: string) {
+    async getAllEventsRelatedToUser(userId: string) {
         try {
-            return await this.eventRepository.getAllEventsOrganizedByUser(userId)
+            return await this.eventRepository.getAllEventsRelatedToUser(userId)
         } catch (e) {
             console.log(e.message);
             return [];
