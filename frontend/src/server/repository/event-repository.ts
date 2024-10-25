@@ -8,11 +8,7 @@ import { User } from "../entity/user";
 
 export class EventRepository implements IBaseRepository<MeetgridEvent> {
     async getById(id: string): Promise<MeetgridEvent[]> {
-        const result = await db.query.event.findMany({
-            with: {
-                id: id
-            },
-        });
+        const result = await db.select().from(event).where(eq(event.id, id));
         return result
     }
 

@@ -35,7 +35,6 @@ export class EventController {
         try {
             const currentClerkUserId = auth();
             const results = await this.eventService.getAllEventsRelatedToUser(currentClerkUserId.userId!);
-            console.log(results)
             return NextResponse.json({message: "success", result: results}, {status: 200});
         } catch {
             return NextResponse.json({message: "An error occured"}, {status: 500});

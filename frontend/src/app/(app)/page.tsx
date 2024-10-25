@@ -56,7 +56,6 @@ function WelcomeCard({ username, className } : { username: string, className: st
 async function RecentActivityCard({ className, clerkUserId } : {className: string, clerkUserId: string}) { 
   const eventService = new EventService();
   const recentActivity = await eventService.getUserRecentEventActivity(clerkUserId);
-  console.log(recentActivity);
   
   return (
     <Card className={className}>
