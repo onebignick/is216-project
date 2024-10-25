@@ -7,10 +7,11 @@ export default async function EventPage({params}: {params: {eventId:string}}) {
     const eventService: EventService = new EventService();
     const eventInformation = await eventService.getOneEventById(params.eventId);
     return (
-        <div>
-            <ExampleCard className=""/>
-            <InviteCard className=""/>
-            <Card1 className=""/>
+        <div className="grid grid-cols-12 gap-4">
+            <InviteCard eventCode={eventInformation![0].eventCode!} className="col-span-12"/>
+            <ExampleCard className="hidden lg:block col-span-3"/>
+            <Card1 className="col-span-12 md:col-span-6"/>
+            <Card1 className="col-span-12 md:col-span-6"/>
             {eventInformation![0].eventCode}
         </div>
     )
@@ -31,8 +32,7 @@ function ExampleCard({ className } : {className:string}) {
   )
 }
 
-
-function InviteCard({ className } : {className:string}) {
+function InviteCard({ className, eventCode } : {className:string, eventCode: string}) {
   return (
     <Card className={className}>
       <CardHeader>
@@ -41,7 +41,7 @@ function InviteCard({ className } : {className:string}) {
       </CardHeader>
       <CardContent>
         <Button>Invite your friends now</Button>
-        Invite people to join your event with this code :XXXXX
+        <p>Invite people to join your event with this code : {eventCode}</p>
       </CardContent>
     </Card>
   )

@@ -10,6 +10,7 @@ import {
   Settings2,
   Sparkles,
   MapPin,
+  Plus,
 } from "lucide-react"
 
 import { NavFavorites } from "@/components/nav-favorites"
@@ -43,6 +44,11 @@ const data = {
       url: "/",
       icon: Home,
       isActive: true,
+    },
+    {
+      title: "Create an Event",
+      url: "/event/create",
+      icon: Plus,
     },
     {
       title: "Your Events",

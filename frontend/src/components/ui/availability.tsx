@@ -56,7 +56,7 @@ export function Availability({ days, period } : AvailabilityProps) {
                                     if (!val) {
                                         return <td 
                                             key={idx}
-                                            className="h-8 w-8 border border-foreground hover:bg-green-400"
+                                            className="h-4 w-4 border border-foreground hover:bg-green-400"
                                             onMouseEnter={(e) =>  {
                                                 e.preventDefault();
                                                 handleMouseEnter(idx, idy)
