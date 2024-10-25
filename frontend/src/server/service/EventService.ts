@@ -40,6 +40,15 @@ export class EventService {
         }
     }
 
+    async getUserRecentEventActivity(userId: string) {
+        try {
+            return await this.eventRepository.getRecentEventActivityRelatedToUser(userId);
+        } catch (e) {
+            console.log(e.message);
+            return []
+        }
+    }
+
     // Checks if the generated code is unique
     async isCodeUnique(code: string): Promise<boolean> {
         try {

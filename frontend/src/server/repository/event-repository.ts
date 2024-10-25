@@ -49,6 +49,31 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return [resultUser];
     }
 
+    async getRecentEventActivityRelatedToUser(clerkUserId: string) : Promise<{username: string | null | undefined, role: "admin" | "organizer" | "attendee" | null}[]> {
+        const result = await db.select()
+            .from(userEvent)
+            .leftJoin(event, eq(userEvent.eventId, event.id))
+            .leftJoin(user, eq(userEvent.userId, user.clerkUserId))
+            .where(eq(userEvent.userId, clerkUserId))
+        
+        if (result.length == 0 ) {
+            return [];
+        }
+
+        const resultUserActvity = [];
+        let currentActivity;
+        for(let i=0;i<result.length;i++) {
+            currentActivity = result[i];
+            resultUserActvity.push({
+                username: currentActivity.user?.username,
+                event: currentActivity.event?.name,
+                role: currentActivity.user_event.role,
+            })
+        }
+
+        return resultUserActvity;
+    }
+
     async createOne(item: MeetgridEvent): Promise<{id: string}[]> {
         const newEvent : {id: string}[] = await db.insert(event).values(item).returning();
         const newRelation = {
