@@ -12,6 +12,7 @@ export function Availability({ days, period } : AvailabilityProps) {
 
     // generate dp table
     const dp: boolean[][] = Array.from({ length: interval }, () => Array(days).fill(false));
+    const dayName: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
     const [availability, setAvailability] = useState(dp);
     const [isMouseDown, setIsMouseDown] = useState(false);
     const [selectState, setSelectState] = useState(false);
@@ -34,14 +35,13 @@ export function Availability({ days, period } : AvailabilityProps) {
         }
     }
 
-
     return (
         <table className="border border-foreground w-full" onMouseUp={handleMouseUp} draggable={false}>
             <thead>
                 <tr>
                     {
                         [...Array(days)].map((_, idx) => {
-                            return <th key={idx} className="border border-foreground">title</th>
+                            return <th key={idx} className="border border-foreground">{dayName[idx]}</th>
                         })
                     }
                 </tr>
@@ -68,7 +68,7 @@ export function Availability({ days, period } : AvailabilityProps) {
                                     } else {
                                         return <td 
                                             key={idx}
-                                            className="h-8 w-8 border border-foreground bg-green-200 hover:bg-green-400"
+                                            className="h-4 w-4 border border-foreground bg-green-200 hover:bg-green-400"
                                             onMouseEnter={(e) =>  {
                                                 e.preventDefault();
                                                 handleMouseEnter(idx, idy)
