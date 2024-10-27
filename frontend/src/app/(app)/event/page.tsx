@@ -53,7 +53,7 @@ function EventPageSidebar() {
 
     return (
         <div className="w-1/3 bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Search Notes</h2>
+            <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
             <Input placeholder="Search Events" className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
             <Button type="submit" className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                 Search
@@ -61,7 +61,7 @@ function EventPageSidebar() {
 
             <h3 className="font-bold text-md mb-2">Filter Events:</h3>
             <div className="space-y-2">
-                {["event1", "event2", "event3"].map((event) => (
+                {["event 1", "event 2", "event 3"].map((event) => (
                     <label key={event} className="flex items-center">
                         <input
                             type="checkbox"
