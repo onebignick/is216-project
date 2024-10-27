@@ -14,9 +14,19 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "../ui/calendar";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from "@/components/ui/dropdown-menu"
+  
 
 // Schema to validate inputs
 const formSchema = z.object({
+    eventId: z.string().min(1, "Event is required"),
     eventDate: z.date().refine(date => !isNaN(date.getTime()), {
         message: "Date is required", // Custom error message for invalid date
     }),
@@ -28,7 +38,6 @@ const formSchema = z.object({
     participantId: z.string().optional(),
 });
 
-
 export function NotesForm() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -37,6 +46,42 @@ export function NotesForm() {
     const router = useRouter();
     const [interviewees, setInterviewees] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
+    const [availableDates, setAvailableDates] = useState([]);
+    const [events, setEvents] = useState([]); // To hold events
+
+    // Fetch events to select from
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch('/api/events'); // Adjust endpoint as necessary
+                if (response.ok) {
+                    const data = await response.json();
+                    setEvents(data); // Assuming data is an array of events
+                } else {
+                    console.error("Failed to fetch events");
+                }
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        };
+
+        fetchEvents();
+    }, []);
+
+    // Fetch available dates for interviews when the event is selected
+    const fetchAvailableDates = async (eventId: string) => {
+        try {
+            const response = await fetch(`/api/interviewDates?eventId=${eventId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setAvailableDates(data); // Set available dates from the API response
+            } else {
+                console.error("Failed to fetch available dates");
+            }
+        } catch (error) {
+            console.error("Error fetching available dates:", error);
+        }
+    };
 
     // Fetch available time slots when the date is selected
     useEffect(() => {
@@ -109,12 +154,40 @@ export function NotesForm() {
                         <CardTitle className="text-center">Create Note</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
+                        {/* Event Selection */}
+                        <FormField
+                            control={form.control}
+                            name="eventId"
+                            render={({ field }) => (
+                                <FormItem className="col-span-2 sm:col-span-1">
+                                    <div>Select Event</div>
+                                    <FormControl>
+                                        <select
+                                            {...field}
+                                            className="w-full pl-3 text-left"
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value);
+                                                fetchAvailableDates(e.target.value); // Fetch dates for the selected event
+                                            }}
+                                        >
+                                            <option value="" disabled>Select event</option>
+                                            {events.map((event) => (
+                                                <option key={event.id} value={event.id}>{event.name}</option>
+                                            ))}
+                                        </select>
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
                         {/* Date Field */}
                         <FormField
                             control={form.control}
                             name="eventDate"
                             render={({ field }) => (
                                 <FormItem className="col-span-2 sm:col-span-1">
+                                    <div>Date</div>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -128,8 +201,13 @@ export function NotesForm() {
                                             <Calendar
                                                 mode="single"
                                                 selected={field.value}
-                                                onSelect={field.onChange}
+                                                onSelect={(date) => {
+                                                    field.onChange(date);
+                                                    const formattedDate = format(date, "yyyy-MM-dd");
+                                                    fetchTimeSlots(formattedDate); // Fetch time slots for the selected date
+                                                }}
                                                 initialFocus
+                                                disabledDates={availableDates} // Populate calendar with available dates
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -137,6 +215,7 @@ export function NotesForm() {
                                 </FormItem>
                             )}
                         />
+                        
                         {/* Time Field */}
                         <FormField
                             control={form.control}
@@ -145,6 +224,7 @@ export function NotesForm() {
                                 <FormItem className="col-span-2 sm:col-span-1">
                                     <FormControl>
                                         <div className="relative">
+                                            <div>Time</div>
                                             <select
                                                 {...field}
                                                 className="w-full pl-3 text-left"
@@ -180,10 +260,7 @@ export function NotesForm() {
                                         <li key={interviewee.id} className="py-2 border-b">
                                             <div className="flex justify-between">
                                                 <span>{interviewee.name}</span>
-                                                <Input placeholder="Add notes here" 
-                                                        value={intervieweeNotes[interviewee.id] || ''} // Controlled input
-                                                        onChange={(e) => handleIntervieweeNoteChange(interviewee.id, e.target.value)} // Update specific interviewee's note
-                                                />
+                                                <Input type="checkbox" value={interviewee.id} />
                                             </div>
                                         </li>
                                     ))}
