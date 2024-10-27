@@ -102,6 +102,10 @@ function convertDateToISO(dateString: string): string {
 }
 
 function MainEventPage({ events }: { events: any[] }) {
+
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
     const formattedEvents = events.map(event => {
         const startISO = convertDateToISO(event.startDate); // Convert start date
         const endISO = convertDateToISO(event.endDate); // Convert end date
@@ -127,11 +131,38 @@ function MainEventPage({ events }: { events: any[] }) {
             end: endDate.toISOString(), // Ensure end date is in ISO format
             allDay: isAllDay, // Mark as all-day
             category: "time",
+            description: event.description
         };
     });
 
     console.log("Formatted Events for Calendar:", formattedEvents);
-
+    
+    const handleEventClick = (event: any) => {
+        const clickedEvent = event.event || event;
+    
+        // Map the `clickedEvent` data to the simpler structure
+        const formattedEvent = {
+            id: clickedEvent.id,
+            title: clickedEvent.title,
+            start: clickedEvent.start,
+            end: clickedEvent.end,
+            allDay: clickedEvent.isAllday || false,
+            category: clickedEvent.category,
+            description: clickedEvent.description
+        };
+    
+        console.log("Formatted Clicked Event Data:", formattedEvent);
+    
+        setSelectedEvent({
+            title: formattedEvent.title,
+            start: new Date(formattedEvent.start).toLocaleString(),
+            end: new Date(formattedEvent.end).toLocaleString(),
+            description: formattedEvent.description,
+        });
+    
+        setIsModalOpen(true);
+    };
+    
     return (
 
         <div className="w-2/3 bg-white shadow-lg rounded-lg p-6">
@@ -139,10 +170,50 @@ function MainEventPage({ events }: { events: any[] }) {
             <p className="mb-4">This will be the main event page</p>
             <Calendar 
                 height="700px" 
-                events={formattedEvents} // Pass formatted events to Calendar
+                events={formattedEvents}
                 usageStatistics={false}
-                view="week" // Specify either month or week explicitly
+                view="week"
+                onClickEvent={handleEventClick} // Attach the click handler
+            />
+            {/* Render the modal with event details */}
+            <EventDetailModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                event={selectedEvent} 
             />
         </div>
+        
     );
 }
+
+
+// Modal Component
+const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: any; }) => {
+    console.log("Modal Event:", event); // Log the event in the modal
+    if (!isOpen || !event) return null;
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg p-6 w-1/3">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold text-center flex-grow">{event.title}</h2>
+                    <button 
+                        onClick={onClose} 
+                        className="text-gray-500 hover:text-gray-800"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <p>Starts at: {new Date(event.start).toLocaleString()}</p>
+                <p>Ends at: {new Date(event.end).toLocaleString()}</p>
+                <p>Description: {event.description || "No description available."}</p>
+                <button 
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+                    onClick={onClose}
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    );
+};
