@@ -23,6 +23,15 @@ import {
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
   
+const timeSlots = [ // sample timeslot. need to get from database later
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "01:00 PM - 02:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
+];
 
 // Schema to validate inputs
 const formSchema = z.object({
@@ -38,16 +47,25 @@ const formSchema = z.object({
     participantId: z.string().optional(),
 });
 
-export function NotesForm() {
+interface EventPageProps {
+    events: any[];
+}
+
+export default function NotesForm ({ events }: EventPageProps) {
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true); // Ensures component renders only on client side
+    }, []);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     });
-
+    
     const router = useRouter();
     const [interviewees, setInterviewees] = useState([]);
     const [timeSlots, setTimeSlots] = useState([]);
     const [availableDates, setAvailableDates] = useState([]);
-    const [events, setEvents] = useState([]); // To hold events
+    //const [events, setEvents] = useState([]); // To hold events
 
     // Fetch events to select from
     useEffect(() => {
@@ -164,7 +182,7 @@ export function NotesForm() {
                                     <FormControl>
                                         <select
                                             {...field}
-                                            className="w-full pl-3 text-left"
+                                            className="w-full border p-2 bg-background text-muted-foreground"
                                             onChange={(e) => {
                                                 field.onChange(e.target.value);
                                                 fetchAvailableDates(e.target.value); // Fetch dates for the selected event
@@ -227,7 +245,7 @@ export function NotesForm() {
                                             <div>Time</div>
                                             <select
                                                 {...field}
-                                                className="w-full pl-3 text-left"
+                                                className="w-full border p-2 bg-background text-muted-foreground"
                                                 onChange={(e) => {
                                                     field.onChange(e.target.value);
                                                     if (e.target.value) {
@@ -237,7 +255,7 @@ export function NotesForm() {
                                                     }
                                                 }}
                                             >
-                                                <option value="" disabled>Select time</option>
+                                                <option value="">Select time</option>
                                                 {timeSlots.map((timeSlot) => (
                                                     <option key={timeSlot} value={timeSlot}>{timeSlot}</option>
                                                 ))}
@@ -246,9 +264,11 @@ export function NotesForm() {
                                         </div>
                                     </FormControl>
                                     <FormMessage />
-                                </FormItem>
+                                </FormItem>    
                             )}
                         />
+
+
                         <Button type="submit" className="col-span-2">Load Interviewees</Button>
 
                         {/* Display Interviewees */}
