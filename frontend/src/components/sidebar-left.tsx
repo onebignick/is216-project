@@ -62,7 +62,7 @@ const data = {
     },
     {
       title: "Notes",
-      url: "/event/notes",
+      url: "/event/notes/view-notes",
       icon: Inbox,
       badge: "10",
     },

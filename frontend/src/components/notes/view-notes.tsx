@@ -13,7 +13,7 @@ interface Note {
     createdAt: string;
 }
 
-export function NotesView() {
+export function NotesDisplay() {
     const [notes, setNotes] = useState<Note[]>([]);
 
     useEffect(() => {
