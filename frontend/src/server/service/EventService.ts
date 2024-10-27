@@ -41,6 +41,15 @@ export class EventService {
         }
     }
 
+    async getAllEvents(userId: string) {
+        try {
+            return await this.eventRepository.getAllEvents(userId)
+        } catch (e) {
+            console.log(e.message);
+            return [];
+        }
+    }
+
     async getUserRecentEventActivity(userId: string) {
         try {
             return await this.eventRepository.getRecentEventActivityRelatedToUser(userId);
