@@ -61,8 +61,8 @@ const data = {
       icon: MapPin,
     },
     {
-      title: "Inbox",
-      url: "#",
+      title: "Notes",
+      url: "/event/notes",
       icon: Inbox,
       badge: "10",
     },
