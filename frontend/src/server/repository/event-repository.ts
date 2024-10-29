@@ -25,6 +25,7 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
             .where(eq(userEvent.userId, clerkUserId))
 
         if (result.length == 0 ) {
+            console.log("No events found for user:", clerkUserId);
             return [];
         }
 
@@ -45,6 +46,24 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return [resultUser];
     }
 
+    async getAllEvents(clerkUserId: string): Promise<MeetgridEvent[]> {
+        const result = await db
+            .select()
+            .from(userEvent)
+            .innerJoin(event, eq(userEvent.eventId, event.id))
+            .where(eq(userEvent.userId, clerkUserId)); 
+    
+        if (result.length === 0) {
+            console.log("No events found for user:", clerkUserId);
+            return [];
+        }
+    
+        // Map over result to extract events
+        const organizedEvents: MeetgridEvent[] = result.map(row => row.event as MeetgridEvent);
+    
+        return organizedEvents;
+    }
+    
     async getRecentEventActivityRelatedToUser(clerkUserId: string) : Promise<{username: string | null | undefined, role: "admin" | "organizer" | "attendee" | null}[]> {
         const result = await db.select()
             .from(userEvent)
@@ -52,6 +71,7 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
             .leftJoin(user, eq(userEvent.userId, user.clerkUserId))
             .where(eq(userEvent.userId, clerkUserId))
         
+        console.log(result);
         if (result.length == 0 ) {
             return [];
         }
