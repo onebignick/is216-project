@@ -4,6 +4,8 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"; // Adjust the import path as necessary
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface Note {
     id: number;
@@ -53,6 +55,9 @@ export function NotesDisplay() {
                     )}
                 </CardContent>
             </Card>
+            <Button>
+                <Link href="/event/notes/create">Create Notes</Link>
+            </Button>
         </div>
     );
 }
