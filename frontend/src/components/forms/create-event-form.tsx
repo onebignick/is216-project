@@ -77,7 +77,7 @@ export function CreateEventForm() {
     return(
         <Card>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-lg">
                     <CardHeader>
                         <CardTitle className = "text-center">Create an event</CardTitle>
                     </CardHeader>
