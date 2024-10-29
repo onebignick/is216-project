@@ -105,7 +105,7 @@ function MainEventPage({ events }: { events: any[] }) {
 
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    console.log(events);
     const formattedEvents = events.map(event => {
         const startISO = convertDateToISO(event.startDate); // Convert start date
         const endISO = convertDateToISO(event.endDate); // Convert end date
@@ -130,7 +130,7 @@ function MainEventPage({ events }: { events: any[] }) {
             start: startISO,
             end: endDate.toISOString(), // Ensure end date is in ISO format
             allDay: isAllDay, // Mark as all-day
-            category: "time",
+            category: "allday",
             description: event.description
         };
     });
@@ -138,17 +138,21 @@ function MainEventPage({ events }: { events: any[] }) {
     console.log("Formatted Events for Calendar:", formattedEvents);
     
     const handleEventClick = (event: any) => {
-        const clickedEvent = event.event || event;
-    
+        const clickedEvent = event.event; // Access the nested 'event' object
+        console.log("Original Event Data:", clickedEvent);
+
+        // Find the matching event in formattedEvents using ID to get the description
+        const matchedEvent = formattedEvents.find(e => e.id === clickedEvent.id);
+        const description = matchedEvent ? matchedEvent.description : "No description available";
+
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
             id: clickedEvent.id,
             title: clickedEvent.title,
-            start: clickedEvent.start,
-            end: clickedEvent.end,
-            allDay: clickedEvent.isAllday || false,
-            category: clickedEvent.category,
-            description: clickedEvent.description
+            start: clickedEvent.start.d.d, // Accessing the date string
+            end: clickedEvent.end.d.d, // Accessing the date string
+            allDay: clickedEvent.isAllday || false, // Important for showing as all-day
+            description: description, // Fallback to description
         };
     
         console.log("Formatted Clicked Event Data:", formattedEvent);
@@ -172,7 +176,11 @@ function MainEventPage({ events }: { events: any[] }) {
                 height="700px" 
                 events={formattedEvents}
                 usageStatistics={false}
-                view="week"
+                view="week" 
+                week={{
+                    hourStart: 0,  // Start of day in 24-hour format
+                    hourEnd: 24,   // End of day in 24-hour format
+                }}
                 onClickEvent={handleEventClick} // Attach the click handler
             />
             {/* Render the modal with event details */}
@@ -186,11 +194,21 @@ function MainEventPage({ events }: { events: any[] }) {
     );
 }
 
+function formatDateToDDMMYYYY(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0'); // Get day and pad with zero if necessary
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-indexed, so +1) and pad
+    const year = date.getFullYear(); // Get full year
+
+    return `${day}/${month}/${year}`; // Return formatted date
+}
 
 // Modal Component
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: any; }) => {
     console.log("Modal Event:", event); // Log the event in the modal
     if (!isOpen || !event) return null;
+
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end);
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -204,9 +222,9 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                         &times;
                     </button>
                 </div>
-                <p>Starts at: {new Date(event.start).toLocaleString()}</p>
-                <p>Ends at: {new Date(event.end).toLocaleString()}</p>
-                <p>Description: {event.description || "No description available."}</p>
+                <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
+                <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
+                <p>Description: {event.description}</p>
                 <button 
                     className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
                     onClick={onClose}
@@ -217,3 +235,4 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
         </div>
     );
 };
+
