@@ -8,4 +8,5 @@ export type MeetgridEvent = {
     endDate: string | null;
     reminder: Date | null;
     participantNum: string | null;
+    eventAvailability?: string;
 }

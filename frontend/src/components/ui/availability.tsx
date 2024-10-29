@@ -1,90 +1,35 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button } from "./button";
+import { availability } from "@/server/db/schema";
 
 interface AvailabilityProps {
     days: number;
     period: number;
+    currentAvailability: number[]
+    setCurrentAvailability: any;
+    eventId: string;
 }
 
-export function Availability({ days, period } : AvailabilityProps) {
-    const interval = 1440 / period >> 0;
+export function Availability({ days, period, currentAvailability, setCurrentAvailability, eventId } : AvailabilityProps) {
+    const [userAvailability, setUserAvailability] = useState<number[]>();
 
-    // generate dp table
-    const dp: boolean[][] = Array.from({ length: interval }, () => Array(days).fill(false));
-    const dayName: string[] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const [availability, setAvailability] = useState(dp);
-    const [isMouseDown, setIsMouseDown] = useState(false);
-    const [selectState, setSelectState] = useState(false);
-    
-    function handleMouseDown(x: number, y:number) {
-        setSelectState(availability[y][x]);
-        availability[y][x] = !selectState;
-        setAvailability([...availability]);
-        setIsMouseDown(true)
-    }
-
-    function handleMouseUp() {
-        setIsMouseDown(false)
-    }
-
-    function handleMouseEnter(x: number, y: number) {
-        if (isMouseDown) {
-            availability[y][x] = !selectState;
-            setAvailability([...availability]);
+    useEffect(() => {
+        async function getUserAvailabilityForEvent() {
+            const res = await fetch("/api/event/availability?" + new URLSearchParams({
+                eventId: eventId
+            }));
+            const availability = await res.json();
+            console.log(availability)
         }
-    }
+
+        getUserAvailabilityForEvent();
+    }, [userAvailability])
 
     return (
-        <table className="border border-foreground w-full" onMouseUp={handleMouseUp} draggable={false}>
-            <thead>
-                <tr>
-                    {
-                        [...Array(days)].map((_, idx) => {
-                            return <th key={idx} className="border border-foreground">{dayName[idx]}</th>
-                        })
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            {
-                availability.map((dayAvailability, idy) => {
-                    return (
-                        <tr key={idy}>
-                            {
-                                dayAvailability.map((val, idx) => {
-                                    if (!val) {
-                                        return <td 
-                                            key={idx}
-                                            className="h-4 w-4 border border-foreground hover:bg-green-400"
-                                            onMouseEnter={(e) =>  {
-                                                e.preventDefault();
-                                                handleMouseEnter(idx, idy)
-                                            }}
-                                            onMouseDown={() => {
-                                                handleMouseDown(idx, idy);
-                                            }}
-                                        ></td>
-                                    } else {
-                                        return <td 
-                                            key={idx}
-                                            className="h-4 w-4 border border-foreground bg-green-200 hover:bg-green-400"
-                                            onMouseEnter={(e) =>  {
-                                                e.preventDefault();
-                                                handleMouseEnter(idx, idy)
-                                            }}
-                                            onMouseDown={() => {
-                                                handleMouseDown(idx, idy);
-                                            }}
-                                        ></td>
-                                    }
-                                })
-                            }
-                        </tr>
-                    )
-                })
-            }
-            </tbody>
-        </table>
+        <>
+            <Button>Save</Button>
+        </>
     )
 }

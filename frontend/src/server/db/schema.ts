@@ -37,8 +37,20 @@ export const event = createTable("event", {
 	endDate: varchar("endDate", { length: 1000 }),
 	reminder: timestamp("reminder"),
 	participantNum: varchar("participantNum", {length: 100}),
+	eventAvailability: varchar("eventAvailability", { length: 2000 }),
 	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
 });
+
+export const availability = createTable("availability", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	availabilityString: varchar("availabilityString", {length: 2000}),
+	clerkUserId: varchar("clerkUserId", {length: 32}).references(() => user.clerkUserId, {
+		onDelete: "cascade",
+	}),
+	eventId: uuid("eventId").references(() => event.id, {
+		onDelete: "cascade",
+	}).notNull(),
+})
 
 export const booking = createTable("booking", {
 	id: uuid("id").defaultRandom().primaryKey(),
@@ -47,6 +59,10 @@ export const booking = createTable("booking", {
 	time: timestamp("time"),
 	notes: varchar("description", {length: 10000}),
 	status: varchar("status", {length: 10000}),
-	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId),
-	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.eventCode), 
+	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId, {
+		onDelete: "cascade"
+	}),
+	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.eventCode, {
+		onDelete: "cascade"
+	}), 
 })
