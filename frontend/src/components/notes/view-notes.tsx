@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"; 
 import { Button } from "../ui/button";
 import Link from "next/link";
+import SearchBar from "@/components/ui/searchbar";
 
 interface Note {
     id: number;
@@ -24,6 +25,8 @@ export function NotesDisplay() {
         { id: 6, title: "Event 6", content: "This is the sixth sample note content.", createdAt: new Date().toISOString() },
     ]);
 
+    const [searchTerm, setSearchTerm] = useState("");
+
     useEffect(() => {
         const storedNotes = localStorage.getItem('notes');
         if (storedNotes) {
@@ -38,16 +41,27 @@ export function NotesDisplay() {
         }
     }, []);
 
-    return (
-        <div className="min-h-screen flex flex-col justify-between p-4">
-            <div>
-                <h1 className="text-2xl font-bold mb-6">Your Notes</h1>
+    const filteredNotes = notes.filter(note =>
+        note.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
+    return (
+        <div className="min-h-screen flex justify-between p-4">
+             <div className="w-1/4 p-4 bg-gray-100"> 
+                <h2 className="text-lg font-bold">Interview Stats</h2>
+                <p className="mt-2">Total Interviews Left: </p>
+            </div>
+
+            <div className= "flex-1 p-4">
+                
+                <h1 className="text-2xl font-bold mb-6">Your Notes</h1>
+                <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+                
                 {notes.length === 0 ? (
                     <CardDescription>No notes available. Create a new note!</CardDescription>
                 ) : (
                     <div className="grid gap-6 lg:grid-cols-3">
-                        {notes.map((note) => (
+                        {filteredNotes.map((note) => (
                             <Card key={note.id} className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
                                 <CardHeader>
                                     <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
@@ -66,7 +80,7 @@ export function NotesDisplay() {
             </div>
 
           
-            <div className="mt-6">
+            <div className="flex mt-6">
                 <Button>
                     <Link href="/event/notes/create">Create Note</Link>
                 </Button>
