@@ -3,7 +3,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"; 
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ interface Note {
 
 export function NotesDisplay() {
     const [notes, setNotes] = useState<Note[]>([
-        { id: 1, title: "Event 1", content: "This is the first sample note content.", createdAt: new Date().toISOString() }, //edit id, use EventID?
+        { id: 1, title: "Event 1", content: "This is the first sample note content.", createdAt: new Date().toISOString() },
         { id: 2, title: "Event 2", content: "This is the second sample note content.", createdAt: new Date().toISOString() },
         { id: 3, title: "Event 3", content: "This is the third sample note content.", createdAt: new Date().toISOString() },
         { id: 4, title: "Event 4", content: "This is the fourth sample note content.", createdAt: new Date().toISOString() },
@@ -25,7 +25,7 @@ export function NotesDisplay() {
     ]);
 
     useEffect(() => {
-        const storedNotes = localStorage.getItem('notes');
+        const storedNotes = localStorage.getItem("notes");
         if (storedNotes) {
             try {
                 const parsedNotes = JSON.parse(storedNotes);
@@ -48,27 +48,27 @@ export function NotesDisplay() {
                 ) : (
                     <div className="grid gap-6 lg:grid-cols-3">
                         {notes.map((note) => (
-                            <Card key={note.id} className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
-                                <CardHeader>
-                                    <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
-                                    
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription>{note.content}</CardDescription>
-                                    <small className="text-gray-500 block mt-2">
-                                        {new Date(note.createdAt).toLocaleString()}
-                                    </small>
-                                </CardContent>
-                            </Card>
+                            <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
+                                <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
+                                    <CardHeader>
+                                        <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <CardDescription>{note.content}</CardDescription>
+                                        <small className="text-gray-500 block mt-2">
+                                            {new Date(note.createdAt).toLocaleString()}
+                                        </small>
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         ))}
                     </div>
                 )}
             </div>
 
-          
             <div className="mt-6">
                 <Button>
-                    <Link href="/event/notes/create">Create Note</Link>
+                    <Link href="/event/notes/view?id=${note.id}">Create Note</Link>
                 </Button>
             </div>
         </div>
