@@ -14,21 +14,33 @@ interface EventPageProps {
 
 export default function EventPage({ events }: EventPageProps) {
     const [isClient, setIsClient] = useState(false);
+    const [filteredEvents, setFilteredEvents] = useState(events); // State to manage filtered events
+    const [eventFilters, setEventFilters] = useState<{ [key: string]: boolean }>({}); // Track selecte
 
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
     }, []);
 
+    // Update filtered events when eventFilters change
+    useEffect(() => {
+        const activeFilters = Object.keys(eventFilters).filter(key => eventFilters[key]);
+        setFilteredEvents(
+            activeFilters.length > 0
+                ? events.filter(event => activeFilters.includes(event.name || "Untitled Event"))
+                : events
+        );
+    }, [eventFilters, events]);
+
     return (
         <div className="p-4 flex gap-4">
             {isClient ? (
                 <>
-                    <EventPageSidebar events={events}/>
-                    <MainEventPage events={events} />
+                    <EventPageSidebar events={events} setEventFilters={setEventFilters} eventFilters={eventFilters} />
+                    <MainEventPage events={filteredEvents} />
                 </>
             ) : (
                 <p>Loading...</p>
-            )}
+            )}  
         </div>
     );
 }
@@ -38,25 +50,16 @@ type EventFilters = {
     event3: boolean;
 };
 
-function EventPageSidebar({ events }: { events: any[] }) {
-    const [eventFilters, setEventFilters] = useState<{[key:string]:boolean}>({});
-
-    const formattedEventTitles = events.map(event => {
-        return event.name || "Untitled Event"; // Return only the title of the event
-    });
-    
-    // Now you can use `formattedEventTitles` as needed
-    console.log("Event Titles:", formattedEventTitles);
-    
-    
+// Sidebar Component
+function EventPageSidebar({ events, setEventFilters, eventFilters }: { events: any[], setEventFilters: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, eventFilters: { [key: string]: boolean } }) {
+    const formattedEventTitles = events.map(event => event.name || "Untitled Event");
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = event.target as HTMLInputElement;
+        const { name, checked } = event.target;
         setEventFilters((prev) => ({
             ...prev,
             [name]: checked,
         }));
-        console.log(`Checkbox ${name} changed to ${checked}`);
     };
 
     return (
@@ -66,16 +69,15 @@ function EventPageSidebar({ events }: { events: any[] }) {
             <Button type="submit" className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                 Search
             </Button>
-
             <h3 className="font-bold text-md mb-2">Filter Events:</h3>
             <div className="space-y-2">
-            {formattedEventTitles.length > 0 ? (
+                {formattedEventTitles.length > 0 ? (
                     formattedEventTitles.map((title, index) => (
                         <label key={index} className="flex items-center">
                             <input
                                 type="checkbox"
                                 name={title} // Use the event title as the checkbox name
-                                checked={eventFilters[title] || false} // Default to false if not defined
+                                checked={eventFilters[title] || false}
                                 onChange={handleCheckboxChange}
                                 className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
                             />
@@ -83,12 +85,13 @@ function EventPageSidebar({ events }: { events: any[] }) {
                         </label>
                     ))
                 ) : (
-                    <p>No events available</p> // Fallback message
+                    <p>No events available</p>
                 )}
             </div>
         </div>
     );
 }
+
 
 function convertDateToISO(dateString: string): string {
     // Ensure dateString is not null or undefined
