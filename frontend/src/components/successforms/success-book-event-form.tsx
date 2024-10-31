@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function SuccessBookEventForm() {
 
@@ -12,8 +14,10 @@ export function SuccessBookEventForm() {
                     <h1>You have Successfully Register for an event</h1>
                     
                 </div>
-                <div className="absolute bottom-0 right-4 bg-[#99DDCD] p-3 rounded-full">
-                    <p>See More at Your Events</p>
+                <div>
+                    <Button variant="outline" asChild>
+                        <Link href="/event/notes">See More at Your Events</Link>
+                    </Button>
                 </div>
             </div>
         </div>
