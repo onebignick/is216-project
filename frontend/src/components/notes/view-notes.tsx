@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { Input } from "../ui/input";
 import SearchBar from "@/components/ui/searchbar";
 
 interface Note {
@@ -44,20 +45,21 @@ export function NotesDisplay() {
     );
 
     return (
-        <div className="flex flex-wrap gap-6 p-4">
+        <div className="flex flex-wrap gap-6 p-4 h-full">
                 <Card className="flex-1 w-1/3 bg-white shadow-lg rounded-lg p-6">
-                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                    <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
-                        Search Event Name
-                    </Button>
+                <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
+                <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+                <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                    Search Event Name
+                </Button>
                     <br/><br/><hr/><br/>
                     <h2 className="text-lg font-bold">Interview Stats</h2>
                     <p className="mt-2">Total Meetings Done: </p>
                     <p className="mt-2">Total Meetings Left: </p>
                 </Card>
 
-                <Card className="flex-2 w-2/3 bg-white shadow-lg rounded-lg p-4">
-                    <h1 className="text-2xl font-bold mb-6">Click to view</h1>
+                <Card className="w-2/3 bg-white shadow-lg rounded-lg p-6">
+                    <h2 className="text-2xl font-bold mb-4">Click to view</h2>
                     
                     {filteredNotes.length === 0 ? (
                         <CardDescription>No notes available. Create a new note!</CardDescription>
