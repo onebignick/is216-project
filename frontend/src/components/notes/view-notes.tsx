@@ -1,9 +1,7 @@
-// src/components/notes/ViewNotes.tsx
-
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"; 
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import SearchBar from "@/components/ui/searchbar";
@@ -28,7 +26,7 @@ export function NotesDisplay() {
     const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        const storedNotes = localStorage.getItem('notes');
+        const storedNotes = localStorage.getItem("notes");
         if (storedNotes) {
             try {
                 const parsedNotes = JSON.parse(storedNotes);
@@ -46,43 +44,42 @@ export function NotesDisplay() {
     );
 
     return (
-        <div className="flex min-h-screen">
-            {/* Increased the width of Interview Stats to one-third */}
-            <div className="w-1/3 bg-gray shadow-lg rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Interview Stats</h2>
+        <div className="min-h-screen flex justify-between p-4">
+            <div className="w-1/4 p-4 bg-gray-100"> 
+                <h2 className="text-lg font-bold">Interview Stats</h2>
                 <p className="mt-2">Total Interviews Left: </p>
             </div>
 
-            {/* Increased the flex-grow of the main content */}
-            <div className="w-2/3 bg-gray shadow-lg rounded-lg p-6">
+            <div className="flex-1 p-4">
                 <h1 className="text-2xl font-bold mb-6">Your Notes</h1>
                 <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
                 
-                {notes.length === 0 ? (
+                {filteredNotes.length === 0 ? (
                     <CardDescription>No notes available. Create a new note!</CardDescription>
                 ) : (
                     <div className="grid gap-6 lg:grid-cols-2">
                         {filteredNotes.map((note) => (
-                            <Card key={note.id} className="hover:shadow-lg transition duration-300 cursor-pointer">
-                                <CardHeader>
-                                    <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription>{note.content}</CardDescription>
-                                    <small className="text-gray-500 block mt-8">
-                                        {new Date(note.createdAt).toLocaleString()}
-                                    </small>
-                                </CardContent>
-                            </Card>
+                            <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
+                                <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
+                                    <CardHeader>
+                                        <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <CardDescription>{note.content}</CardDescription>
+                                        <small className="text-gray-500 block mt-2">
+                                            {new Date(note.createdAt).toLocaleString()}
+                                        </small>
+                                    </CardContent>
+                                </Card>
+                            </Link>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Adjusted button to remain on the bottom of the main content */}
-            <div className="flex mt-auto mr-auto">
+            <div className="mt-auto">
                 <Button>
-                    <Link href="/event/notes/create">Create Note</Link>
+                    <Link href="/event/notes/new">Create Note</Link>
                 </Button>
             </div>
         </div>

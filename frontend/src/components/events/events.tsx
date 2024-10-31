@@ -96,6 +96,10 @@ function convertDateToISO(dateString: string): string {
         console.error(`Invalid date string: ${dateString}`);
         return ""; // Handle invalid date
     }
+
+    // Set date time to midnight and adjust for Singapore timezone (UTC+8)
+    date.setHours(0, 0, 0, 0); // Ensure it’s set to midnight
+    date.setHours(date.getHours() + 8); // Offset to Singapore time   
     
     // Return ISO format in UTC
     return date.toISOString();
@@ -120,7 +124,7 @@ function MainEventPage({ events }: { events: any[] }) {
         // Adjust the end date for all-day events
         if (isAllDay) {
             // Set end date to startDate + 1 day for all-day events
-            endDate.setUTCDate(endDate.getUTCDate() + 1); // Move end date to the next day
+            endDate.setUTCDate(endDate.getUTCDate()); // Move end date to the next day
             endDate.setUTCHours(0, 0, 0, 0); // Reset time to start of the day
         }
 
@@ -176,10 +180,20 @@ function MainEventPage({ events }: { events: any[] }) {
                 height="700px" 
                 events={formattedEvents}
                 usageStatistics={false}
-                view="week" 
+                view="month" 
                 week={{
                     hourStart: 0,  // Start of day in 24-hour format
                     hourEnd: 24,   // End of day in 24-hour format
+                }}
+                timezone={{
+                    zones: [
+                        {
+                            timezoneName: "Asia/Singapore",
+                            displayLabel: "SGT",
+                            tooltip: "Singapore Time (UTC+8)"
+
+                        },
+                    ],
                 }}
                 onClickEvent={handleEventClick} // Attach the click handler
             />
