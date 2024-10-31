@@ -23,7 +23,7 @@ export default function EventPage({ events }: EventPageProps) {
         <div className="p-4 flex gap-4">
             {isClient ? (
                 <>
-                    <EventPageSidebar />
+                    <EventPageSidebar events={events}/>
                     <MainEventPage events={events} />
                 </>
             ) : (
@@ -38,12 +38,17 @@ type EventFilters = {
     event3: boolean;
 };
 
-function EventPageSidebar() {
-    const [eventFilters, setEventFilters] = useState<EventFilters>({
-        event1: false,
-        event2: false,
-        event3: false,
+function EventPageSidebar({ events }: { events: any[] }) {
+    const [eventFilters, setEventFilters] = useState<{[key:string]:boolean}>({});
+
+    const formattedEventTitles = events.map(event => {
+        return event.name || "Untitled Event"; // Return only the title of the event
     });
+    
+    // Now you can use `formattedEventTitles` as needed
+    console.log("Event Titles:", formattedEventTitles);
+    
+    
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target as HTMLInputElement;
@@ -64,18 +69,22 @@ function EventPageSidebar() {
 
             <h3 className="font-bold text-md mb-2">Filter Events:</h3>
             <div className="space-y-2">
-                {["event 1", "event 2", "event 3"].map((event) => (
-                    <label key={event} className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name={event}
-                            checked={eventFilters[event as keyof EventFilters]} // Type assertion here
-                            onChange={handleCheckboxChange}
-                            className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                        />
-                        <span className="text-gray-700">{event.charAt(0).toUpperCase() + event.slice(1).replace('event', 'Event ')}</span>
-                    </label>
-                ))}
+            {formattedEventTitles.length > 0 ? (
+                    formattedEventTitles.map((title, index) => (
+                        <label key={index} className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name={title} // Use the event title as the checkbox name
+                                checked={eventFilters[title] || false} // Default to false if not defined
+                                onChange={handleCheckboxChange}
+                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                            />
+                            <span className="text-gray-700">{title}</span>
+                        </label>
+                    ))
+                ) : (
+                    <p>No events available</p> // Fallback message
+                )}
             </div>
         </div>
     );
