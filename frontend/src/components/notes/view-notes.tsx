@@ -7,12 +7,14 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-//import { EventService } from "@/server/service/EventService";
 
 type EventFilters = {
     event1: boolean;
     event2: boolean;
     event3: boolean;
+    event4: boolean; // Added event4
+    event5: boolean; // Added event5
+    event6: boolean; // Added event6
 };
 
 interface Event {
@@ -39,7 +41,72 @@ const ViewNotePage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
 
-    
+    // Mock event data (replace with actual data fetching)
+    const fetchEvents = () => {
+        // Replace this with your actual API call or data source
+        return [
+            {
+                id: "1",
+                name: "Event 1",
+                startDate: "2024-10-30T10:00:00Z",
+                endDate: "2024-10-30T12:00:00Z",
+                description: "Description for Event 1",
+                questions: { question1: "", question2: "" },
+            },
+            {
+                id: "2",
+                name: "Event 2",
+                startDate: "2024-10-31T10:00:00Z",
+                endDate: "2024-10-31T12:00:00Z",
+                description: "Description for Event 2",
+                questions: { question1: "", question2: "" },
+            },
+            {
+                id: "3",
+                name: "Event 3",
+                startDate: "2024-10-31T10:00:00Z",
+                endDate: "2024-10-31T12:00:00Z",
+                description: "Description for Event 3",
+                questions: { question1: "", question2: "" },
+            },
+            {
+                id: "4",
+                name: "Event 4",
+                startDate: "2024-10-31T10:00:00Z",
+                endDate: "2024-10-31T12:00:00Z",
+                description: "Description for Event 4",
+                questions: { question1: "", question2: "" },
+            },
+            {
+                id: "5",
+                name: "Event 5",
+                startDate: "2024-10-31T10:00:00Z",
+                endDate: "2024-10-31T12:00:00Z",
+                description: "Description for Event 5",
+                questions: { question1: "", question2: "" },
+            },
+            {
+                id: "6",
+                name: "Event 6",
+                startDate: "2024-10-31T10:00:00Z",
+                endDate: "2024-10-31T12:00:00Z",
+                description: "Description for Event 6",
+                questions: { question1: "", question2: "" },
+            },
+            // Add more events as needed
+        ];
+    };
+
+    useEffect(() => {
+        const fetchedEvents = fetchEvents();
+        setEvents(fetchedEvents);
+
+        // Set selected event based on id from URL
+        const event = fetchedEvents.find(event => event.id === id);
+        if (event) {
+            setSelectedEvent(event);
+        }
+    }, [id]);
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
@@ -70,6 +137,9 @@ const ViewNotePage = () => {
         if (eventFilters.event1 && event.name.includes("Person 1")) return true;
         if (eventFilters.event2 && event.name.includes("Person 2")) return true;
         if (eventFilters.event3 && event.name.includes("Person 3")) return true;
+        if (eventFilters.event4 && event.name.includes("Person 4")) return true; // Adjusted for event 4
+        if (eventFilters.event5 && event.name.includes("Person 5")) return true; // Adjusted for event 5
+        if (eventFilters.event6 && event.name.includes("Person 6")) return true; // Adjusted for event 6
         return false;
     }) || [];
 
@@ -90,61 +160,65 @@ const ViewNotePage = () => {
 
                     <h3 className="font-bold text-md mb-2">Filter person:</h3>
                     <div className="space-y-2">
-                        {["event1", "event2", "event3"].map((event) => (
-                            <label key={event} className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    name={event}
-                                    checked={eventFilters[event as keyof EventFilters]}
-                                    onChange={handleCheckboxChange}
-                                    className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                                />
-                                <span className="text-gray-700">{`Person ${event.charAt(5)}`}</span>
-                            </label>
-                        ))}
+                    {["event1", "event2", "event3", "event4", "event5", "event6"].map((event) => (
+                        <label key={event} className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name={event}
+                                checked={eventFilters[event as keyof EventFilters]}
+                                onChange={handleCheckboxChange}
+                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                            />
+                            <span className="text-gray-700">{`Person ${event.charAt(5)}`}</span>
+                        </label>
+                    ))}
                     </div>
                 </Card>
 
                 {/* Event Details Card */}
                 <Card className="flex-2 bg-white shadow-lg rounded-lg p-4 max-h-[calc(100vh-120px)] overflow-y-auto w-3/4">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-semibold">Event 3 Details</CardTitle>
-                        <CardDescription className="text-gray-500">Event description</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table className="mt-4">
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Name</TableHead>
-                                    <TableHead>Timeslot</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    {filteredEvents[0]?.questions && Object.keys(filteredEvents[0].questions).map((key) => (
-                                        <TableHead key={key}>{key}</TableHead>
-                                    ))}
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {filteredEvents.map((event) => (
-                                    <TableRow key={event.id} onClick={() => handleEventClick(event)}>
-                                        <TableCell>{event.name}</TableCell>
-                                        <TableCell>{`${formatDateToDDMMYYYY(new Date(event.startDate))} - ${formatDateToDDMMYYYY(new Date(event.endDate))}`}</TableCell>
-                                        <TableCell>Sample Status</TableCell>
+                    {selectedEvent && (
+                        <>
+                            <CardHeader>
+                                <CardTitle className="text-xl font-semibold">{selectedEvent.name} Details</CardTitle>
+                                <CardDescription className="text-gray-500">{selectedEvent.description}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table className="mt-4">
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Timeslot</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            {filteredEvents[0]?.questions && Object.keys(filteredEvents[0].questions).map((key) => (
+                                                <TableHead key={key}>{key}</TableHead>
+                                            ))}
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {filteredEvents.map((event) => (
+                                            <TableRow key={event.id} onClick={() => handleEventClick(event)}>
+                                                <TableCell>{event.name}</TableCell>
+                                                <TableCell>{`${formatDateToDDMMYYYY(new Date(event.startDate))} - ${formatDateToDDMMYYYY(new Date(event.endDate))}`}</TableCell>
+                                                <TableCell>Sample Status</TableCell>
 
-                                        {Object.keys(event.questions).map((questionKey) => (
-                                            <TableCell key={questionKey}>
-                                                <input
-                                                    type="text"
-                                                    value={event.questions[questionKey]}
-                                                    onChange={(e) => handleInputChange(event.id, questionKey, e.target.value)}
-                                                    className="w-full p-1 border rounded"
-                                                />
-                                            </TableCell>
+                                                {Object.keys(event.questions).map((questionKey) => (
+                                                    <TableCell key={questionKey}>
+                                                        <input
+                                                            type="text"
+                                                            value={event.questions[questionKey]}
+                                                            onChange={(e) => handleInputChange(event.id, questionKey, e.target.value)}
+                                                            className="w-full p-1 border rounded"
+                                                        />
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
                                         ))}
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
+                                    </TableBody>
+                                </Table>
+                            </CardContent>
+                        </>
+                    )}
                 </Card>
 
                 {/* Event Detail Modal */}
@@ -172,10 +246,10 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                         &times;
                     </button>
                 </div>
-                <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
-                <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
-                <p>Description: {event.description}</p>
-                <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded" onClick={onClose}>
+                <p>Starts: {startDate.toLocaleString()}</p>
+                <p>Ends: {endDate.toLocaleString()}</p>
+                <p>{event.description}</p>
+                <button onClick={onClose} className="mt-4 w-full bg-blue-500 text-white rounded py-2 hover:bg-blue-600">
                     Close
                 </button>
             </div>
