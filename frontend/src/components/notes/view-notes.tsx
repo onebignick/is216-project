@@ -44,44 +44,44 @@ export function NotesDisplay() {
     );
 
     return (
-        <div className="min-h-screen flex justify-between p-4">
-            <div className="w-1/4 p-4 bg-gray-100"> 
-                <h2 className="text-lg font-bold">Interview Stats</h2>
-                <p className="mt-2">Total Interviews Left: </p>
-            </div>
+        <div className="flex flex-wrap gap-6 p-4">
+                <Card className="flex-1 w-1/3 bg-white shadow-lg rounded-lg p-6">
+                    <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
+                    <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                        Search Event Name
+                    </Button>
+                    <br/><br/><hr/><br/>
+                    <h2 className="text-lg font-bold">Interview Stats</h2>
+                    <p className="mt-2">Total Meetings Done: </p>
+                    <p className="mt-2">Total Meetings Left: </p>
+                </Card>
 
-            <div className="flex-1 p-4">
-                <h1 className="text-2xl font-bold mb-6">Your Notes</h1>
-                <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                
-                {filteredNotes.length === 0 ? (
-                    <CardDescription>No notes available. Create a new note!</CardDescription>
-                ) : (
-                    <div className="grid gap-6 lg:grid-cols-2">
-                        {filteredNotes.map((note) => (
-                            <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
-                                <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
-                                    <CardHeader>
-                                        <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <CardDescription>{note.content}</CardDescription>
-                                        <small className="text-gray-500 block mt-2">
-                                            {new Date(note.createdAt).toLocaleString()}
-                                        </small>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))}
-                    </div>
-                )}
-            </div>
-
-            <div className="mt-auto">
-                <Button>
-                    <Link href="/event/notes/new">Create Note</Link>
-                </Button>
-            </div>
-        </div>
+                <Card className="flex-2 w-2/3 bg-white shadow-lg rounded-lg p-4">
+                    <h1 className="text-2xl font-bold mb-6">Click to view</h1>
+                    
+                    {filteredNotes.length === 0 ? (
+                        <CardDescription>No notes available. Create a new note!</CardDescription>
+                    ) : (
+                        <div className="grid gap-6 lg:grid-cols-2">
+                            {filteredNotes.map((note) => (
+                                <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
+                                    <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
+                                        <CardHeader>
+                                            <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <CardDescription>{note.content}</CardDescription>
+                                            <small className="text-gray-500 block mt-2">
+                                                {new Date(note.createdAt).toLocaleString()}
+                                            </small>
+                                        </CardContent>
+                                    </Card>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                    </Card>
+             </div>
+            
     );
 }
