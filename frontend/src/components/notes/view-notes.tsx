@@ -36,7 +36,7 @@ const formatDateToDDMMYYYY = (date: Date): string => {
 const ViewNotePage = () => {
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
-    const [eventFilters, setEventFilters] = useState<EventFilters>({ event1: false, event2: false, event3: false });
+    const [eventFilters, setEventFilters] = useState<EventFilters>({ event1: false, event2: false, event3: false, event4: false, event5:false, event6:false});
     const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [events, setEvents] = useState<Event[]>([]);
