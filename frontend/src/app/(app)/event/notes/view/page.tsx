@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link"
+import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,7 @@ interface Event {
     startDate: string;
     endDate: string;
     description: string;
+    questions: { [key: string]: string }; // Dynamic questions
 }
 
 const formatDateToDDMMYYYY = (date: Date): string => {
@@ -47,10 +48,18 @@ const ViewNotePage = ({ events }: { events: Event[] }) => {
     const handleEventClick = (event: Event) => {
         setSelectedEvent({
             ...event,
-            start: new Date(event.startDate).toLocaleString(),
-            end: new Date(event.endDate).toLocaleString(),
+            startDate: new Date(event.startDate).toLocaleString(),
+            endDate: new Date(event.endDate).toLocaleString(),
         });
         setIsModalOpen(true);
+    };
+
+    const handleInputChange = (id: string, questionKey: string, value: string) => {
+        setSelectedEvent((prevEvent) =>
+            prevEvent?.id === id
+                ? { ...prevEvent, questions: { ...prevEvent.questions, [questionKey]: value } }
+                : prevEvent
+        );
     };
 
     const filteredEvents = events?.filter((event) => {
@@ -59,82 +68,84 @@ const ViewNotePage = ({ events }: { events: Event[] }) => {
         if (eventFilters.event3 && event.name.includes("Event 3")) return true;
         return false;
     }) || [];
-    
 
     return (
-        
         <div className="relative p-6">
             {/* Go Back Button */}
-            
             <Button variant="outline" className="absolute top-6 left-6">
-                 <Link href="/event/notes">Go Back</Link>
+                <Link href="/event/notes">Go Back</Link>
             </Button>
             <div className="flex flex-wrap gap-6 mt-16">
-            {/* My Events Card */}
-            <Card className="flex-1 w-1/3 bg-white shadow-lg rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
-                <Input placeholder="Search Events" className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-                <Button type="submit" className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
-                    Search
-                </Button>
+                {/* My Events Card */}
+                <Card className="flex-1 w-1/3 bg-white shadow-lg rounded-lg p-6">
+                    <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Person</h2>
+                    <Input placeholder="Search Person" className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
+                    <Button type="submit" className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                        Search
+                    </Button>
 
-                <h3 className="font-bold text-md mb-2">Filter Events:</h3>
-                <div className="space-y-2">
-                    {["event1", "event2", "event3"].map((event) => (
-                        <label key={event} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name={event}
-                                checked={eventFilters[event as keyof EventFilters]}
-                                onChange={handleCheckboxChange}
-                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                            />
-                            <span className="text-gray-700">{`Event ${event.charAt(5)}`}</span>
-                        </label>
-                    ))}
-                </div>
-            </Card>
+                    <h3 className="font-bold text-md mb-2">Filter person:</h3>
+                    <div className="space-y-2">
+                        {["event1", "event2", "event3"].map((event) => (
+                            <label key={event} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name={event}
+                                    checked={eventFilters[event as keyof EventFilters]}
+                                    onChange={handleCheckboxChange}
+                                    className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                                />
+                                <span className="text-gray-700">{`Event ${event.charAt(5)}`}</span>
+                            </label>
+                        ))}
+                    </div>
+                </Card>
 
-            {/* Event Details Card */}
-            <Card className="flex-2 w-2/3 bg-white shadow-lg rounded-lg p-4">
-                <CardHeader>
-                    <CardTitle className="text-xl font-semibold">Event 3 Details</CardTitle>
-                    <CardDescription className="text-gray-500">Event description</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Table className="mt-4">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Name</TableHead>
-                                <TableHead>Timeslot</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Q1</TableHead>
-                                <TableHead>Q2</TableHead>
-                                <TableHead>Q3</TableHead>
-                                <TableHead>Q4</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filteredEvents.map((event) => (
-                                <TableRow key={event.id} onClick={() => handleEventClick(event)}>
-                                    <TableCell>{event.name}</TableCell>
-                                    <TableCell>{`${formatDateToDDMMYYYY(new Date(event.startDate))} - ${formatDateToDDMMYYYY(new Date(event.endDate))}`}</TableCell>
-                                    <TableCell>Sample Status</TableCell>
-                                    <TableCell>Sample Text</TableCell>
-                                    <TableCell>Sample Text</TableCell>
-                                    <TableCell>Sample Text</TableCell>
-                                    <TableCell>Sample Text</TableCell>
+                {/* Event Details Card */}
+                <Card className="flex-2 w-2/3 bg-white shadow-lg rounded-lg p-4">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Event 3 Details</CardTitle>
+                        <CardDescription className="text-gray-500">Event description</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table className="mt-4">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Timeslot</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    {filteredEvents[0]?.questions && Object.keys(filteredEvents[0].questions).map((key) => (
+                                        <TableHead key={key}>{key}</TableHead>
+                                    ))}
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </CardContent>
-            </Card>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredEvents.map((event) => (
+                                    <TableRow key={event.id} onClick={() => handleEventClick(event)}>
+                                        <TableCell>{event.name}</TableCell>
+                                        <TableCell>{`${formatDateToDDMMYYYY(new Date(event.startDate))} - ${formatDateToDDMMYYYY(new Date(event.endDate))}`}</TableCell>
+                                        <TableCell>Sample Status</TableCell>
 
+                                        {Object.keys(event.questions).map((questionKey) => (
+                                            <TableCell key={questionKey}>
+                                                <input
+                                                    type="text"
+                                                    value={event.questions[questionKey]}
+                                                    onChange={(e) => handleInputChange(event.id, questionKey, e.target.value)}
+                                                    className="w-full p-1 border rounded"
+                                                />
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
 
-            {/* Event Detail Modal */}
-            <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
-        </div>
+                {/* Event Detail Modal */}
+                <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+            </div>
         </div>
     );
 };
