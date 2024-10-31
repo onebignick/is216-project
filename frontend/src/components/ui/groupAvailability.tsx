@@ -10,9 +10,12 @@ interface AvailabilityProps {
 export function GroupAvailability({ period, eventInformation } : AvailabilityProps) {
     const availability = eventInformation.eventAvailability!.split(",").map((str: string) => parseInt(str));
     const startDate = new Date(eventInformation.startDate!);
+    const startDateOffset = startDate.getDay();
     const endDate = new Date(eventInformation.endDate!);
     const interval = availability.length * 15 / 1440
     const offset = startDate.getDay() + 6 - endDate.getDay();
+    const diff = (endDate-startDate) / (1000 * 60 * 60 * 24);
+
     
     function generateTableHeaders() {
         const headers = [];
@@ -30,17 +33,18 @@ export function GroupAvailability({ period, eventInformation } : AvailabilityPro
 
     function generateTableBody() {
         const fifteenMinIntervalInDay = 1440 / 15;
-        const body = Array(fifteenMinIntervalInDay).fill(
-            Array(interval+offset).fill(0)
-        );
+        const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(interval + offset).fill(0));
 
         const result = []
-        for (let i=startDate.getDay(); i < body.length - (7 - endDate.getDay()); i++) {
-            for (let j=0;j<body[i].length;j++) {
-                body[i][j] = availability[i-startDate.getDay()+j]
+        for (let i=0;i<fifteenMinIntervalInDay;i++) {
+            for (let j=0;j<=diff; j++) {
+                if (availability[fifteenMinIntervalInDay*j + i] != 0) {
+                    body[i][j+startDateOffset] = availability[fifteenMinIntervalInDay*j + i]
+                }
             }
         }
         result.push(<TableRow table={body}/>)
+
         return result;
     }
 
@@ -67,13 +71,13 @@ function TableHeader({ title }: {title: string}) {
 function TableRow({ table }: { table: number[][] }) {
     return (
         <>
-            {table.map(( col, idx ) => {
+            {table.map(( row, idy ) => {
                 return (
-                    <tr key={idx}>
+                    <tr key={idy}>
                         {
-                            col.map(( row, idx ) => {
-                                if (!row) return <td key={idx} className="min-h-[10px] min-w-[30px] border border-slate-500"></td>
-                                else return <td key={idx} className="h-[10px] w-[30px] bg-green-800"></td>
+                            row.map(( col, idx ) => {
+                                if (table[idy][idx] === 0) return <td key={idx} className="h-[10px] w-[30px] border border-slate-500"></td>
+                                else return <td key={idx} className="h-[10px] w-[30px] bg-green-800 border border-slate-500"></td>
                             })
                         }
                     </tr>
