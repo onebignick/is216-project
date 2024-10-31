@@ -44,11 +44,11 @@ export default function EventPage({ events }: EventPageProps) {
         </div>
     );
 }
-type EventFilters = {
-    event1: boolean;
-    event2: boolean;
-    event3: boolean;
-};
+// type EventFilters = {
+//     event1: boolean;
+//     event2: boolean;
+//     event3: boolean;
+// };
 
 // Sidebar Component
 function EventPageSidebar({ events, setEventFilters, eventFilters }: { events: any[], setEventFilters: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, eventFilters: { [key: string]: boolean } }) {
