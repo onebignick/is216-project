@@ -57,7 +57,7 @@ export function NotesDisplay() {
                 {filteredNotes.length === 0 ? (
                     <CardDescription>No notes available. Create a new note!</CardDescription>
                 ) : (
-                    <div className="grid gap-6 lg:grid-cols-3">
+                    <div className="grid gap-6 lg:grid-cols-2">
                         {filteredNotes.map((note) => (
                             <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
                                 <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
@@ -77,7 +77,7 @@ export function NotesDisplay() {
                 )}
             </div>
 
-            <div className="mt-6">
+            <div className="mt-auto">
                 <Button>
                     <Link href="/event/notes/new">Create Note</Link>
                 </Button>
