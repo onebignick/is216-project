@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { MeetgridEvent } from "@/server/entity/event";
 import { useEffect, useState } from "react";
+import { GroupAvailability } from "./ui/groupAvailability";
 
 interface AvailabilityCardProps {
   className: string;
@@ -33,7 +34,7 @@ export function AvailabilityCard({ className, eventInformation } : AvailabilityC
               <CardDescription>Shows availability across your group</CardDescription>
             </CardHeader>
             <CardContent>
-              <Availability days={5} period={15} currentAvailability={currentAvailability} setCurrentAvailability={setCurrentAvailability} eventId={eventInformation[0].id!}/>
+              <GroupAvailability period={15} eventInformation={eventInformation[0]}/>
             </CardContent>
         </TabsContent>
         <TabsContent value="individual">
@@ -42,7 +43,7 @@ export function AvailabilityCard({ className, eventInformation } : AvailabilityC
               <CardDescription>Click and drag to indicate your availability</CardDescription>
             </CardHeader>
             <CardContent>
-              <Availability days={5} period={15}/>
+              <Availability days={5} period={15} currentAvailability={currentAvailability} setCurrentAvailability={setCurrentAvailability} eventInformation={eventInformation[0]}/>
             </CardContent>
         </TabsContent>
         <TabsContent value="settings">

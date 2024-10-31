@@ -46,8 +46,13 @@ export function CreateEventForm() {
         ? new Date(values.startDate.getTime() - reminderValue * 24 * 60 * 60 * 1000) // Convert days to milliseconds
         : null; // Set to null if no reminder is specified
 
-        const defaultAvailability: number[] = Array(672).fill(0);
+        console.log(values.startDate);
+        console.log(values.endDate);
 
+        // diff between [startDate, endDate] in interval of 15 minutes
+        const availabilityLength = (values.endDate - values.startDate) / (1000*60*15) + 96
+        const eventAvailability = Array(availabilityLength).fill(0)
+        
         const newEvent: MeetgridEvent = {
             name: values.eventName,
             eventCode: null,
@@ -57,7 +62,7 @@ export function CreateEventForm() {
             createdBy: user!.id,
             participantNum: values.participantNum.toString(),
             reminder: reminderDate,  // This should now be a Date or null
-            eventAvailability: defaultAvailability.toString(),
+            eventAvailability: eventAvailability.toString(),
         }
 
         const response = await fetch("/api/event/create", {

@@ -2,34 +2,70 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "./button";
-import { availability } from "@/server/db/schema";
+import { MeetgridEvent } from "@/server/entity/event";
 
 interface AvailabilityProps {
     days: number;
     period: number;
     currentAvailability: number[]
     setCurrentAvailability: any;
-    eventId: string;
+    eventInformation: MeetgridEvent;
 }
 
-export function Availability({ days, period, currentAvailability, setCurrentAvailability, eventId } : AvailabilityProps) {
+const DAYS_OF_WEEK = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+export function Availability({ days, period, currentAvailability, setCurrentAvailability, eventInformation } : AvailabilityProps) {
     const [userAvailability, setUserAvailability] = useState<number[]>();
 
     useEffect(() => {
-        async function getUserAvailabilityForEvent() {
+        async function handleUserAvailability() {
             const res = await fetch("/api/event/availability?" + new URLSearchParams({
-                eventId: eventId
+                eventId: eventInformation.id!
             }));
-            const availability = await res.json();
-            console.log(availability)
+            const { result } = await res.json();
+
+            let newUserAvailability: number[];
+            if (result.length === 0) {
+                newUserAvailability = Array(672).fill(0);
+            } else {
+                newUserAvailability = result[0].split(",").map((str: string) => parseInt(str))
+            }
+            setUserAvailability(newUserAvailability);
+            console.log(newUserAvailability)
         }
 
-        getUserAvailabilityForEvent();
-    }, [userAvailability])
+        handleUserAvailability();
+    }, [])
+
+    function generateTableHeaders() {
+        const headers = [];
+        for(let i=0;i<DAYS_OF_WEEK.length;i++) {
+            headers.push(<TableHeader key={i} day={DAYS_OF_WEEK[i]}/>)
+        }
+        return headers
+    }
+
+    function generateTableBody() {
+
+    }
 
     return (
         <>
+            <table>
+                <thead>
+                    <tr>
+                        {generateTableHeaders()}
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
             <Button>Save</Button>
         </>
     )
+}
+
+function TableHeader({day} : {day: string}) {
+    return <th>{day}</th>
 }
