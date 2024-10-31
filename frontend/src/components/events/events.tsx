@@ -108,11 +108,36 @@ function convertDateToISO(dateString: string): string {
 
     // Set date time to midnight and adjust for Singapore timezone (UTC+8)
     date.setHours(0, 0, 0, 0); // Ensure it’s set to midnight
-    date.setHours(date.getHours() + 8); // Offset to Singapore time   
-    
+    date.setHours(date.getHours() + 8); // Offset to Singapore time  
+
     // Return ISO format in UTC
     return date.toISOString();
 }
+
+// Function to generate a random color
+const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
+// Function to check if color is light or dark
+const isLightColor = (hexColor: string) => {
+    // Convert hex to RGB
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+
+    // Calculate luminance
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+    // If luminance is greater than a threshold (128), it's a light color
+    return luminance > 128;
+};
+
 
 function MainEventPage({ events }: { events: any[] }) {
 
@@ -137,6 +162,11 @@ function MainEventPage({ events }: { events: any[] }) {
             endDate.setUTCHours(0, 0, 0, 0); // Reset time to start of the day
         }
 
+         // Assign random colors
+        const backgroundColor = getRandomColor();
+        const borderColor = getRandomColor();
+        const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
+        
         return {
             id: event.id,
             title: event.name || "Untitled Event",
@@ -144,7 +174,10 @@ function MainEventPage({ events }: { events: any[] }) {
             end: endDate.toISOString(), // Ensure end date is in ISO format
             allDay: isAllDay, // Mark as all-day
             category: "allday",
-            description: event.description
+            description: event.description,
+            backgroundColor, // Random background color
+            borderColor,     // Random border color
+            color: textColor // Text color (white for readability)
         };
     });
 
