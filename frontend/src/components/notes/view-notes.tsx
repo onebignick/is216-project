@@ -1,89 +1,184 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { Button } from "../ui/button";
 import Link from "next/link";
-import { Input } from "../ui/input";
-import SearchBar from "@/components/ui/searchbar";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+//import { EventService } from "@/server/service/EventService";
 
-interface Note {
-    id: number;
-    title: string;
-    content: string;
-    createdAt: string;
+type EventFilters = {
+    event1: boolean;
+    event2: boolean;
+    event3: boolean;
+};
+
+interface Event {
+    id: string;
+    name: string;
+    startDate: string;
+    endDate: string;
+    description: string;
+    questions: { [key: string]: string }; // Dynamic questions
 }
 
-export function NotesDisplay() {
-    const [notes, setNotes] = useState<Note[]>([
-        { id: 1, title: "Event 1", content: "This is the first sample note content.", createdAt: new Date().toISOString() },
-        { id: 2, title: "Event 2", content: "This is the second sample note content.", createdAt: new Date().toISOString() },
-        { id: 3, title: "Event 3", content: "This is the third sample note content.", createdAt: new Date().toISOString() },
-        { id: 4, title: "Event 4", content: "This is the fourth sample note content.", createdAt: new Date().toISOString() },
-        { id: 5, title: "Event 5", content: "This is the fifth sample note content.", createdAt: new Date().toISOString() },
-        { id: 6, title: "Event 6", content: "This is the sixth sample note content.", createdAt: new Date().toISOString() },
-    ]);
+const formatDateToDDMMYYYY = (date: Date): string => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+};
 
-    const [searchTerm, setSearchTerm] = useState("");
+const ViewNotePage = () => {
+    const searchParams = useSearchParams();
+    const id = searchParams.get("id");
+    const [eventFilters, setEventFilters] = useState<EventFilters>({ event1: false, event2: false, event3: false });
+    const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [events, setEvents] = useState<Event[]>([]);
 
-    useEffect(() => {
-        const storedNotes = localStorage.getItem("notes");
-        if (storedNotes) {
-            try {
-                const parsedNotes = JSON.parse(storedNotes);
-                if (Array.isArray(parsedNotes)) {
-                    setNotes(parsedNotes);
-                }
-            } catch (error) {
-                console.error("Error parsing notes:", error);
-            }
-        }
-    }, []);
+    
 
-    const filteredNotes = notes.filter(note =>
-        note.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, checked } = event.target;
+        setEventFilters((prev) => ({
+            ...prev,
+            [name]: checked,
+        }));
+    };
+
+    const handleEventClick = (event: Event) => {
+        setSelectedEvent({
+            ...event,
+            startDate: new Date(event.startDate).toLocaleString(),
+            endDate: new Date(event.endDate).toLocaleString(),
+        });
+        setIsModalOpen(true);
+    };
+
+    const handleInputChange = (id: string, questionKey: string, value: string) => {
+        setSelectedEvent((prevEvent) =>
+            prevEvent?.id === id
+                ? { ...prevEvent, questions: { ...prevEvent.questions, [questionKey]: value } }
+                : prevEvent
+        );
+    };
+
+    const filteredEvents = events?.filter((event) => {
+        if (eventFilters.event1 && event.name.includes("Person 1")) return true;
+        if (eventFilters.event2 && event.name.includes("Person 2")) return true;
+        if (eventFilters.event3 && event.name.includes("Person 3")) return true;
+        return false;
+    }) || [];
 
     return (
-        <div className="flex flex-wrap gap-6 p-4 h-full">
-                <Card className="flex-1 w-1/3 bg-white shadow-lg rounded-lg p-6">
-                <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
-                <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
-                <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
-                    Search Event Name
-                </Button>
-                    <br/><br/><hr/><br/>
-                    <h2 className="text-lg font-bold">Interview Stats</h2>
-                    <p className="mt-2">Total Meetings Done: </p>
-                    <p className="mt-2">Total Meetings Left: </p>
+        <div className="relative p-6 h-screen flex flex-col">
+            {/* Go Back Button */}
+            <Button variant="outline" className="absolute top-6 left-6 bg-black text-white hover:bg-gray-800 transition duration-200 rounded-md">
+                <Link href="/event/notes">Go Back</Link>
+            </Button>
+            <div className="flex flex-wrap gap-6 mt-16 flex-grow">
+                {/* My Events Card */}
+                <Card className="flex-1 bg-white shadow-lg rounded-lg p-6 max-h-[calc(100vh-120px)] overflow-y-auto">
+                    <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Person</h2>
+                    <Input placeholder="Search" className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
+                    <Button type="submit" className="mb-4 w-full bg-black text-white hover:bg-gray-800 transition duration-200 rounded-md">
+                        Search
+                    </Button>
+
+                    <h3 className="font-bold text-md mb-2">Filter person:</h3>
+                    <div className="space-y-2">
+                        {["event1", "event2", "event3"].map((event) => (
+                            <label key={event} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name={event}
+                                    checked={eventFilters[event as keyof EventFilters]}
+                                    onChange={handleCheckboxChange}
+                                    className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                                />
+                                <span className="text-gray-700">{`Person ${event.charAt(5)}`}</span>
+                            </label>
+                        ))}
+                    </div>
                 </Card>
 
-                <Card className="w-2/3 bg-white shadow-lg rounded-lg p-6">
-                    <h2 className="text-2xl font-bold mb-4">Click to view</h2>
-                    
-                    {filteredNotes.length === 0 ? (
-                        <CardDescription>No notes available. Create a new note!</CardDescription>
-                    ) : (
-                        <div className="grid gap-6 lg:grid-cols-2">
-                            {filteredNotes.map((note) => (
-                                <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
-                                    <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
-                                        <CardHeader>
-                                            <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <CardDescription>{note.content}</CardDescription>
-                                            <small className="text-gray-500 block mt-2">
-                                                {new Date(note.createdAt).toLocaleString()}
-                                            </small>
-                                        </CardContent>
-                                    </Card>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                    </Card>
-             </div>
-            
+                {/* Event Details Card */}
+                <Card className="flex-2 bg-white shadow-lg rounded-lg p-4 max-h-[calc(100vh-120px)] overflow-y-auto w-3/4">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">Event 3 Details</CardTitle>
+                        <CardDescription className="text-gray-500">Event description</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table className="mt-4">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Name</TableHead>
+                                    <TableHead>Timeslot</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    {filteredEvents[0]?.questions && Object.keys(filteredEvents[0].questions).map((key) => (
+                                        <TableHead key={key}>{key}</TableHead>
+                                    ))}
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredEvents.map((event) => (
+                                    <TableRow key={event.id} onClick={() => handleEventClick(event)}>
+                                        <TableCell>{event.name}</TableCell>
+                                        <TableCell>{`${formatDateToDDMMYYYY(new Date(event.startDate))} - ${formatDateToDDMMYYYY(new Date(event.endDate))}`}</TableCell>
+                                        <TableCell>Sample Status</TableCell>
+
+                                        {Object.keys(event.questions).map((questionKey) => (
+                                            <TableCell key={questionKey}>
+                                                <input
+                                                    type="text"
+                                                    value={event.questions[questionKey]}
+                                                    onChange={(e) => handleInputChange(event.id, questionKey, e.target.value)}
+                                                    className="w-full p-1 border rounded"
+                                                />
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+
+                {/* Event Detail Modal */}
+                <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+            </div>
+        </div>
     );
-}
+};
+
+export default ViewNotePage;
+
+// Modal Component
+const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: Event | null }) => {
+    if (!isOpen || !event) return null;
+
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg p-6 w-1/3">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold text-center flex-grow">{event.name}</h2>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+                        &times;
+                    </button>
+                </div>
+                <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
+                <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
+                <p>Description: {event.description}</p>
+                <button className="mt-4 bg-blue-500 text-white py-2 px-4 rounded" onClick={onClose}>
+                    Close
+                </button>
+            </div>
+        </div>
+    );
+};
