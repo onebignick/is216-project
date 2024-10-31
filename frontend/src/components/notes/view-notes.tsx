@@ -1,6 +1,4 @@
-// src/components/notes/ViewNotes.tsx
-
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -47,21 +45,20 @@ export function NotesDisplay() {
 
     return (
         <div className="min-h-screen flex justify-between p-4">
-             <div className="w-1/4 p-4 bg-gray-100"> 
+            <div className="w-1/4 p-4 bg-gray-100"> 
                 <h2 className="text-lg font-bold">Interview Stats</h2>
                 <p className="mt-2">Total Interviews Left: </p>
             </div>
 
-            <div className= "flex-1 p-4">
-                
+            <div className="flex-1 p-4">
                 <h1 className="text-2xl font-bold mb-6">Your Notes</h1>
                 <SearchBar searchTerm={searchTerm} onSearchChange={setSearchTerm} />
                 
-                {notes.length === 0 ? (
+                {filteredNotes.length === 0 ? (
                     <CardDescription>No notes available. Create a new note!</CardDescription>
                 ) : (
                     <div className="grid gap-6 lg:grid-cols-3">
-                        {notes.map((note) => (
+                        {filteredNotes.map((note) => (
                             <Link key={note.id} href={`/event/notes/view?id=${note.id}`}>
                                 <Card className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
                                     <CardHeader>
@@ -75,29 +72,14 @@ export function NotesDisplay() {
                                     </CardContent>
                                 </Card>
                             </Link>
-                        {filteredNotes.map((note) => (
-                            <Card key={note.id} className="p-4 hover:shadow-lg transition duration-300 cursor-pointer">
-                                <CardHeader>
-                                    <CardTitle className="text-lg font-semibold">{note.title}</CardTitle>
-                                    
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription>{note.content}</CardDescription>
-                                    <small className="text-gray-500 block mt-2">
-                                        {new Date(note.createdAt).toLocaleString()}
-                                    </small>
-                                </CardContent>
-                            </Card>
                         ))}
                     </div>
                 )}
             </div>
 
             <div className="mt-6">
-          
-            <div className="flex mt-6">
                 <Button>
-                    <Link href="/event/notes/view?id=${note.id}">Create Note</Link>
+                    <Link href="/event/notes/new">Create Note</Link>
                 </Button>
             </div>
         </div>
