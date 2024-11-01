@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator, timestamp, varchar, uuid, pgEnum } from "drizzle-orm/pg-core";
+import { pgTableCreator, timestamp, varchar, uuid, pgEnum, unique } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
@@ -51,7 +51,9 @@ export const availability = createTable("availability", {
 	eventId: uuid("eventId").references(() => event.id, {
 		onDelete: "cascade",
 	}).notNull(),
-})
+}, (t) => ({
+	unq: unique().on(t.clerkUserId, t.eventId),
+}))
 
 export const booking = createTable("booking", {
 	id: uuid("id").defaultRandom().primaryKey(),

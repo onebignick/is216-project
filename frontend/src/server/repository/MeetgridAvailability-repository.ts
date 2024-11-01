@@ -33,9 +33,15 @@ export class MeetgridAvailabilityRepository implements IBaseRepository<MeetgridA
         return result;
     }
 
-    async createOne(item: MeetgridAvailability): Promise<{ id: string }[]> {
-        const newItemId: { id: string }[] = await db.insert(availability).values(item).returning();
-        return newItemId;
+    async createOne(item: MeetgridAvailability): Promise<MeetgridAvailability> {
+        const res = await this.getUserToEventAvailability(item.clerkUserId!, item.eventId!);
+        console.log(res);
+        if (res.length == 0) {
+            const newItem: MeetgridAvailability = await db.insert(availability).values(item).returning();
+            return newItem;
+        } else {
+            throw new Error();
+        }
     }
 
     async createMany(items: MeetgridAvailability[]): Promise<{ id: string; }[]> {

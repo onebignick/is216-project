@@ -12,7 +12,19 @@ export class MeetgridAvailabilityController {
     async handleUpdateMeetgridAvailability(request: Request) {
         try {
             const updatedMeetgridAvailability = await request.json();
+            const updatedItem = await this.meetgridAvailabilityService.updateUserToEventMeetgridAvailability(updatedMeetgridAvailability.eventAvailability);
+            console.log(updatedItem)
             return NextResponse.json({ message: "Success"}, { status: 200 });
+        } catch {
+            return NextResponse.json({ message: "An error occured"}, { status: 500 });
+        }
+    }
+
+    async handleCreateMeetgridAvailability(request: Request) {
+        try {
+            const { meetgridAvailability } = await request.json();
+            const newItem = await this.meetgridAvailabilityService.createUserToEventMeetgridAvailability(meetgridAvailability);
+            return NextResponse.json({message: "Success", result: newItem}, {status: 200});
         } catch {
             return NextResponse.json({ message: "An error occured"}, { status: 500 });
         }
