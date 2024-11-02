@@ -21,9 +21,9 @@ export default function SignInForm() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="flex flex-col justify-center gap-4">
-                    <Clerk.Connection name="google" asChild>
+                    {/* <Clerk.Connection name="google" asChild>
                         <Button>Sign in with Google</Button>
-                    </Clerk.Connection>
+                    </Clerk.Connection> */}
 
                     <Clerk.Field name="identifier">
                         <Clerk.Input asChild>

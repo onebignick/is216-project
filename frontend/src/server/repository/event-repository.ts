@@ -1,10 +1,10 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db";
-import { event, user, userEvent } from "../db/schema";
+import { event, user, registration } from "../db/schema";
 import { MeetgridEvent } from "../entity/event";
 import { IBaseRepository } from "./base-repository";
-import { UserEvent } from "@/types/UserEvent";
 import { User } from "../entity/user";
+import { Registration } from "../entity/registration";
 
 export class EventRepository implements IBaseRepository<MeetgridEvent> {
     async getById(id: string): Promise<MeetgridEvent[]> {
@@ -19,10 +19,10 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
 
     async getAllEventsRelatedToUser(clerkUserId: string): Promise<User[]> {
         const result = await db.select()
-            .from(userEvent)
-            .leftJoin(event, eq(userEvent.eventId, event.id))
-            .leftJoin(user, eq(userEvent.userId, user.clerkUserId))
-            .where(eq(userEvent.userId, clerkUserId))
+            .from(registration)
+            .leftJoin(event, eq(registration.eventId, event.id))
+            .leftJoin(user, eq(registration.userId, user.clerkUserId))
+            .where(eq(registration.userId, clerkUserId))
 
         if (result.length == 0 ) {
             console.log("No events found for user:", clerkUserId);
@@ -49,9 +49,9 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     async getAllEvents(clerkUserId: string): Promise<MeetgridEvent[]> {
         const result = await db
             .select()
-            .from(userEvent)
-            .innerJoin(event, eq(userEvent.eventId, event.id))
-            .where(eq(userEvent.userId, clerkUserId)); 
+            .from(registration)
+            .innerJoin(event, eq(registration.eventId, event.id))
+            .where(eq(registration.userId, clerkUserId)); 
     
         if (result.length === 0) {
             console.log("No events found for user:", clerkUserId);
@@ -66,10 +66,10 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     
     async getRecentEventActivityRelatedToUser(clerkUserId: string) : Promise<{username: string | null | undefined, role: "admin" | "organizer" | "attendee" | null}[]> {
         const result = await db.select()
-            .from(userEvent)
-            .leftJoin(event, eq(userEvent.eventId, event.id))
-            .leftJoin(user, eq(userEvent.userId, user.clerkUserId))
-            .where(eq(userEvent.userId, clerkUserId))
+            .from(registration)
+            .leftJoin(event, eq(registration.eventId, event.id))
+            .leftJoin(user, eq(registration.userId, user.clerkUserId))
+            .where(eq(registration.userId, clerkUserId))
         
         console.log(result);
         if (result.length == 0 ) {
@@ -94,9 +94,9 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         const newEvent : {id: string}[] = await db.insert(event).values(item).returning();
         const newRelation = {
             eventId: newEvent[0].id,
-            userClerkId: item.createdBy,
+            userId: item.createdBy,
             role: "organizer",
-        } as UserEvent
+        } as Registration
         await this.createOneUserEventRelation(newRelation);
 
         return newEvent
@@ -131,12 +131,22 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return []
     }
 
-    async createOneUserEventRelation(relation: UserEvent) {
-        const result = await db.insert(userEvent).values({
+    async createOneUserEventRelation(relation: Registration) {
+        const result = await db.insert(registration).values({
             eventId: relation.eventId,
-            userId: relation.userClerkId,
+            userId: relation.userId,
             role: relation.role,
         });
+        return result;
+    }
+
+    async findRegistrationByUserIdAndEventId(userId: string, eventId: string) {
+        const result = await db.select().from(registration).where(
+            and(
+                eq(registration.eventId, eventId),
+                eq(registration.userId, userId)
+            )
+        )
         return result;
     }
 }

@@ -25,13 +25,16 @@ export class EventService {
 
     async getOneEventById(eventId: string) {
         try {
-            console.log("eventId: " + eventId)
             const eventInformation = await this.eventRepository.getById(eventId);
-            console.log("eventInformation: " + eventInformation)
             return eventInformation;
         } catch (e) {
             console.log(e.message);
         }
+    }
+
+    async getOneEventByCode(eventCode: string) {
+        const eventInformation = await this.eventRepository.getEventByCode(eventCode);
+        return eventInformation;
     }
     
     async getAllEventsRelatedToUser(userId: string) {

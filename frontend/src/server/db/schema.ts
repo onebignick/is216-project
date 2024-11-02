@@ -17,7 +17,7 @@ export const user = createTable("user", {
 	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
-export const userEvent = createTable("user_event", {
+export const registration = createTable("user_event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	userId: varchar("userId", {length: 32}).references(() => user.clerkUserId, {
 		onDelete: "cascade",
