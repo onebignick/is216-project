@@ -140,86 +140,87 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
             <Button variant="outline" className="absolute top-6 left-6 bg-black text-white hover:bg-gray-800 transition duration-200 rounded-md">
                 <Link href="/event/notes">Go Back</Link>
             </Button>
+            {isLoading ? ( // Display loading indicator if loading
+                <div className="flex items-center justify-center py-4">
+                    <p className="text-gray-500">Loading events...</p>
+                        </div>
+            ) : (
+                <div className="flex flex-wrap gap-6 mt-16 flex-grow">
+                    {/* My Events Card */}
+                    <Card className="flex-1 bg-white shadow-lg rounded-lg p-6 max-h-[calc(100vh-120px)] overflow-y-auto">
+                        <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Person</h2>
+                        <Input
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                        />
+                        <Button type="submit" className="mb-4 w-full bg-black text-white hover:bg-gray-800 transition duration-200 rounded-md">
+                            Search
+                        </Button>
 
-            <div className="flex flex-wrap gap-6 mt-16 flex-grow">
-                {/* My Events Card */}
-                <Card className="flex-1 bg-white shadow-lg rounded-lg p-6 max-h-[calc(100vh-120px)] overflow-y-auto">
-                    <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">Person</h2>
-                    <Input
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-                    />
-                    <Button type="submit" className="mb-4 w-full bg-black text-white hover:bg-gray-800 transition duration-200 rounded-md">
-                        Search
-                    </Button>
+                        <h3 className="font-bold text-md mb-2">Filter participants:</h3>
+                        <div className="space-y-2">
+                        {flatBookingEvents.map((event) => (
+                            <label key={event.id} className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    name={event.id as string} // Ensure name is a string
+                                    checked={eventFilters[event.id as string] ?? false} // Use nullish coalescing
+                                    onChange={handleCheckboxChange}
+                                    className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                                />
+                                <span className="text-gray-700">{event.name || "Unknown Event"}</span>
+                            </label>
+                        ))}
+                        </div>
+                    </Card>
 
-                    <h3 className="font-bold text-md mb-2">Filter participants:</h3>
-                    <div className="space-y-2">
-                    {flatBookingEvents.map((event) => (
-                        <label key={event.id} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name={event.id as string} // Ensure name is a string
-                                checked={eventFilters[event.id as string] ?? false} // Use nullish coalescing
-                                onChange={handleCheckboxChange}
-                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                            />
-                            <span className="text-gray-700">{event.name || "Unknown Event"}</span>
-                        </label>
-                    ))}
-                    </div>
+                    {/* Event Details Card */}
+                    <Card className="flex-2 bg-white shadow-lg rounded-lg p-4 max-h-[calc(100vh-120px)] overflow-y-auto w-3/4">
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold">{selectedEvent ? `${selectedEvent.name} Details` : 'Event Details'}</CardTitle>
+                        {/* {selectedEvent && <CardDescription className="text-gray-500">{selectedEvent.description}</CardDescription>} */}
+                    </CardHeader>
+                    <CardContent>
+
+                                <Table className="mt-4">
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Name</TableHead>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Time</TableHead>
+                                            <TableHead>Status</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                    {filteredEvents.length > 0 ? (
+                                            filteredEvents.map((event) => (
+                                                <TableRow key={event.id} onClick={() => handleEventClick(event)}>
+                                                    <TableCell>{event.name}</TableCell>
+                                                    <TableCell>{formatDateToDDMMYYYY(new Date(event.date ?? 0))}</TableCell>
+                                                    <TableCell>{event.time ? event.time.toLocaleTimeString() : "N/A"}</TableCell>
+                                                    <TableCell>{event.status}</TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={4} className="text-center py-4">
+                                                    No participants found
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            
+                        </CardContent>
                 </Card>
 
-                {/* Event Details Card */}
-                <Card className="flex-2 bg-white shadow-lg rounded-lg p-4 max-h-[calc(100vh-120px)] overflow-y-auto w-3/4">
-                <CardHeader>
-                    <CardTitle className="text-xl font-semibold">{selectedEvent ? `${selectedEvent.name} Details` : 'Event Details'}</CardTitle>
-                    {/* {selectedEvent && <CardDescription className="text-gray-500">{selectedEvent.description}</CardDescription>} */}
-                </CardHeader>
-                <CardContent>
-                        {isLoading ? ( // Display loading indicator if loading
-                            <div className="flex items-center justify-center py-4">
-                                <p className="text-gray-500">Loading events...</p>
-                            </div>
-                        ) : (
-                            <Table className="mt-4">
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Name</TableHead>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Time</TableHead>
-                                        <TableHead>Status</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                {filteredEvents.length > 0 ? (
-                                        filteredEvents.map((event) => (
-                                            <TableRow key={event.id} onClick={() => handleEventClick(event)}>
-                                                <TableCell>{event.name}</TableCell>
-                                                <TableCell>{formatDateToDDMMYYYY(new Date(event.date ?? 0))}</TableCell>
-                                                <TableCell>{event.time ? event.time.toLocaleTimeString() : "N/A"}</TableCell>
-                                                <TableCell>{event.status}</TableCell>
-                                            </TableRow>
-                                        ))
-                                    ) : (
-                                        <TableRow>
-                                            <TableCell colSpan={4} className="text-center py-4">
-                                                No participants found
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </TableBody>
-                            </Table>
-                        )}
-                    </CardContent>
-            </Card>
 
-
-                {/* Event Detail Modal */}
-                <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
-            </div>
+                    {/* Event Detail Modal */}
+                    <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+                </div>
+            )}
         </div>
     );
 };
