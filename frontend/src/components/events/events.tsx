@@ -42,7 +42,7 @@ export default function EventPage({ events }: EventPageProps) {
     }, [eventFilters, searchTerm, events]);
 
     return (
-        <div className="p-4 flex gap-4">
+        <div className="p-4 flex flex-col lg:flex-row gap-4">
             {isClient ? (
                 <>
                     <EventPageSidebar 
@@ -86,7 +86,7 @@ function EventPageSidebar({ events, setEventFilters, eventFilters, searchTerm, s
     };
 
     return (
-        <div className="w-1/3 bg-white shadow-lg rounded-lg p-6">
+        <div className="w-full lg:w-1/3 bg-white shadow-lg rounded-lg p-6 mb-4 lg:mb-0">
             <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
             <Input 
                 placeholder="Search Events" 
@@ -97,8 +97,8 @@ function EventPageSidebar({ events, setEventFilters, eventFilters, searchTerm, s
             <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                 Search Event Name
             </Button>
-            <h3 className="font-bold text-md mb-2">Filter Events:</h3>
-            <div className="space-y-2">
+            <h3 className="font-bold text-md mb-2 hidden lg:block">Filter Events:</h3>
+            <div className="space-y-2 hidden lg:block">
                 {formattedEventTitles.length > 0 ? (
                     formattedEventTitles.map((title, index) => (
                         <label key={index} className="flex items-center">
@@ -246,7 +246,7 @@ function MainEventPage({ events }: { events: any[] }) {
     
     return (
 
-        <div className="w-2/3 bg-white shadow-lg rounded-lg p-6">
+        <div className="w-full lg:w-2/3 bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Calendar (Current Month)</h2>
             <p className="mb-4">This will be the main event page</p>
             <Calendar 
