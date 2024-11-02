@@ -14,36 +14,53 @@ interface EventPageProps {
 
 export default function EventPage({ events }: EventPageProps) {
     const [isClient, setIsClient] = useState(false);
-    const [filteredEvents, setFilteredEvents] = useState(events); // State to manage filtered events
-    const [eventFilters, setEventFilters] = useState<{ [key: string]: boolean }>({}); // Track selecte
+    const [filteredEvents, setFilteredEvents] = useState(events);
+    const [eventFilters, setEventFilters] = useState<{ [key: string]: boolean }>({});
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        setIsClient(true); // Ensures component renders only on client side
+        setIsClient(true);
     }, []);
 
-    // Update filtered events when eventFilters change
     useEffect(() => {
         const activeFilters = Object.keys(eventFilters).filter(key => eventFilters[key]);
-        setFilteredEvents(
-            activeFilters.length > 0
-                ? events.filter(event => activeFilters.includes(event.name || "Untitled Event"))
-                : events
-        );
-    }, [eventFilters, events]);
+        
+        const filtered = events.filter(event => {
+            // Check if event matches the selected filters
+            const matchesFilters = activeFilters.length === 0 || activeFilters.includes(event.name || "Untitled Event");
+            
+            // Check if event matches the search term
+            const matchesSearch = 
+                event.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                event.description?.toLowerCase().includes(searchTerm.toLowerCase());
+            
+            // Both conditions must be true for an event to be included
+            return matchesFilters && matchesSearch;
+        });
+        
+        setFilteredEvents(filtered);
+    }, [eventFilters, searchTerm, events]);
 
     return (
         <div className="p-4 flex gap-4">
             {isClient ? (
                 <>
-                    <EventPageSidebar events={events} setEventFilters={setEventFilters} eventFilters={eventFilters} />
+                    <EventPageSidebar 
+                        events={events} 
+                        setEventFilters={setEventFilters} 
+                        eventFilters={eventFilters} 
+                        searchTerm={searchTerm} 
+                        setSearchTerm={setSearchTerm} 
+                    />
                     <MainEventPage events={filteredEvents} />
                 </>
             ) : (
                 <p>Loading...</p>
-            )}  
+            )}
         </div>
     );
 }
+
 // type EventFilters = {
 //     event1: boolean;
 //     event2: boolean;
@@ -51,7 +68,13 @@ export default function EventPage({ events }: EventPageProps) {
 // };
 
 // Sidebar Component
-function EventPageSidebar({ events, setEventFilters, eventFilters }: { events: any[], setEventFilters: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, eventFilters: { [key: string]: boolean } }) {
+function EventPageSidebar({ events, setEventFilters, eventFilters, searchTerm, setSearchTerm }: { 
+    events: any[], 
+    setEventFilters: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, 
+    eventFilters: { [key: string]: boolean }, 
+    searchTerm: string, 
+    setSearchTerm: React.Dispatch<React.SetStateAction<string>> 
+}) {
     const formattedEventTitles = events.map(event => event.name || "Untitled Event");
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,9 +88,14 @@ function EventPageSidebar({ events, setEventFilters, eventFilters }: { events: a
     return (
         <div className="w-1/3 bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events</h2>
-            <Input placeholder="Search Events" className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" />
-            <Button type="submit" className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
-                Search
+            <Input 
+                placeholder="Search Events" 
+                className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+            />
+            <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                Search Event Name
             </Button>
             <h3 className="font-bold text-md mb-2">Filter Events:</h3>
             <div className="space-y-2">
@@ -76,7 +104,7 @@ function EventPageSidebar({ events, setEventFilters, eventFilters }: { events: a
                         <label key={index} className="flex items-center">
                             <input
                                 type="checkbox"
-                                name={title} // Use the event title as the checkbox name
+                                name={title} 
                                 checked={eventFilters[title] || false}
                                 onChange={handleCheckboxChange}
                                 className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
