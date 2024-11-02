@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { NotesService } from "../service/notesService"; // Adjust the import path as necessary
+import { NotesService } from "../service/NotesService"; // Adjust the import path as necessary
 import { auth } from "@clerk/nextjs/server";
 
 export class NotesController {
@@ -31,14 +31,14 @@ export class NotesController {
       }
     }
 
-    async handleGetAllRelatedNotesToUserBooking() {
-        try {
-            const currentClerkUserId = auth();
-            const results = await this.notesService.getAllNotesRelatedToBooking(currentClerkUserId.userId!);
-            return NextResponse.json({message: "success", result: results}, {status: 200});
-        } catch {
-            return NextResponse.json({message: "An error occured"}, {status: 500});
-        }
-    }
+    // async handleGetAllRelatedNotesToUserBooking() {
+    //     try {
+    //         const currentClerkUserId = auth();
+    //         const results = await this.notesService.getAllNotesRelatedToBooking(currentClerkUserId.userId!);
+    //         return NextResponse.json({message: "success", result: results}, {status: 200});
+    //     } catch {
+    //         return NextResponse.json({message: "An error occured"}, {status: 500});
+    //     }
+    // }
 
 }

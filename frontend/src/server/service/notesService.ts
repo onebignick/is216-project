@@ -27,14 +27,15 @@ export class NotesService {
         }
     }
 
-    // Fetch all notes related to a specific booking ID
-    async getAllNotesRelatedToBooking(bookId: string): Promise<MeetgridNote[]> {
-        try {
-            const notes = await this.notesRepository.getNotesByBookingId(bookId);
-            return notes; // This should now be an array of MeetgridNote
-        } catch (e) {
-            console.log("Error fetching notes:", e.message);
-            return []; // Return an empty array in case of error
-        }
-    }
+    // // Fetch all notes related to a specific set of booking IDs
+    // async getAllNotesRelatedToBooking(bookingIds: string[]): Promise<MeetgridNote[]> {
+    //     try {
+    //         // Assume that `getNotesByBookingIds` can handle multiple IDs
+    //         const notes = await this.notesRepository.getNotesByBookingId(bookingIds);
+    //         return notes; // Return the notes array
+    //     } catch (e) {
+    //         console.log("Error fetching notes:", e.message);
+    //         return []; // Return an empty array in case of error
+    //     }
+    // }
 }

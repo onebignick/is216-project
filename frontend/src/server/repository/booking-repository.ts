@@ -42,13 +42,13 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
     }
     
     // Method to get an event by its unique code
-    async getEventByCode(code: string): Promise<MeetgridBookEvent| null> {
-        const result = await db.query.booking.findFirst({
-            where: eq(booking.eventCode, code) // Assuming 'code' is a field in your event schema
+    async getEventByCode(eventCode: string): Promise<MeetgridBookEvent[]> {
+        const results = await db.query.booking.findMany({
+            where: eq(booking.eventCode, eventCode) // Assuming 'code' is a field in your event schema
         });
-        return result || null;
+        return results;
     }
-
+    
     // todo delete logic
     async deleteOne(id: string): Promise<MeetgridBookEvent[]> {
         console.log(id);

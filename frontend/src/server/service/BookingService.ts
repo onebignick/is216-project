@@ -8,11 +8,19 @@ export class BookingService {
         this.BookEventRepository = new BookEventRepository();
     }
 
-    async getOneBookEventById(bookId: string) {
+    async getOneBookEventById(eventCode: string) {
         try {
-            console.log(bookId);
+            console.log("Fetching event with code:", eventCode);
+            const bookingEvent = await this.BookEventRepository.getEventByCode(eventCode);
+            if (!bookingEvent) {
+                console.log("No event found with this code:", eventCode);
+                return null;
+            }
+            console.log("Event found:", bookingEvent);
+            return bookingEvent;
         } catch (e) {
-            console.log(e.message);
+            console.log("Error fetching booking event:", e.message);
+            return null;
         }
     }
     
@@ -44,4 +52,6 @@ export class BookingService {
             return "";
         }
     }
+
+    
 }
