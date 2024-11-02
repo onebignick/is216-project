@@ -3,22 +3,14 @@ import { Availability } from "@/components/ui/availability";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { MeetgridEvent } from "@/server/entity/event";
-import { useEffect, useState } from "react";
 import { GroupAvailability } from "./ui/groupAvailability";
 
 interface AvailabilityCardProps {
   className: string;
-  eventInformation: MeetgridEvent[];
+  eventInformation: MeetgridEvent;
 }
 
 export function AvailabilityCard({ className, eventInformation } : AvailabilityCardProps) {
-  const currentEvent: MeetgridEvent = eventInformation[0];
-  const eventAvailability: number[] = []
-  currentEvent.eventAvailability!.split(",").map((stringToInt) => {
-    eventAvailability.push(parseInt(stringToInt));
-  })
-
-  const [currentAvailability, setCurrentAvailability] = useState<number[]>(eventAvailability);
   
   return (
     <Card className={className}>
@@ -34,7 +26,7 @@ export function AvailabilityCard({ className, eventInformation } : AvailabilityC
               <CardDescription>Shows availability across your group</CardDescription>
             </CardHeader>
             <CardContent>
-              <GroupAvailability period={15} eventInformation={eventInformation[0]}/>
+              <GroupAvailability period={15} eventInformation={eventInformation}/>
             </CardContent>
         </TabsContent>
         <TabsContent value="individual">
@@ -43,7 +35,7 @@ export function AvailabilityCard({ className, eventInformation } : AvailabilityC
               <CardDescription>Click and drag to indicate your availability</CardDescription>
             </CardHeader>
             <CardContent>
-              <Availability days={5} period={15} currentAvailability={currentAvailability} setCurrentAvailability={setCurrentAvailability} eventInformation={eventInformation[0]}/>
+              <Availability eventInformation={eventInformation}/>
             </CardContent>
         </TabsContent>
         <TabsContent value="settings">
