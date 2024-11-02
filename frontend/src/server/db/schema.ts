@@ -71,10 +71,9 @@ export const booking = createTable("booking", {
 })
 
 // New notes table
-export const notes = createTable("notes", {
+export const notes_questions = createTable("notes_questions", {
     id: uuid("id").defaultRandom().primaryKey(),
-    name: varchar("name", { length: 100 }).notNull(),
-    content: varchar("content", { length: 10000 }).notNull(),
+    questions: varchar("questions", { length: 10000 }).notNull(),
     bookingId: uuid("bookingId").references(() => booking.id, { // Add this line to connect to booking
         onDelete: "cascade", // If the booking is deleted, delete related notes
     }),
@@ -85,12 +84,12 @@ export const notes = createTable("notes", {
 });
 
 // New questions table
-export const questions = createTable("questions", {
+export const notes_answer = createTable("notes_answer", {
     id: uuid("id").defaultRandom().primaryKey(),
-    noteId: uuid("noteId").references(() => notes.id, {
+    noteId: uuid("noteId").references(() => notes_questions.id, {
         onDelete: "cascade", // If the note is deleted, delete related questions
     }),
-    questionText: varchar("questionText", { length: 10000 }).notNull(), // Text of the question
+    answers: varchar("answer", { length: 10000 }).notNull(), // Text of the question
     createdAt: timestamp("createdAt")
         .default(sql`CURRENT_TIMESTAMP`)
         .notNull(), // Timestamp of when the question was created

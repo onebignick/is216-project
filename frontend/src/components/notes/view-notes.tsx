@@ -8,12 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 // Types for event and booking events
+interface Question {
+    key: string;
+    prompt: string;
+    answer?: string;
+}
+
+// Types for event and booking events
 interface Event {
     id?: string ;
     name: string | null;
     date: string | null;
     time: Date | null;
     status: string;
+    questions?: Question[]; // Add questions property
 }
 
 interface ViewNotePageProps {
@@ -217,8 +225,9 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
                 </Card>
 
 
-                    {/* Event Detail Modal */}
-                    <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+                 {/* Event Detail Modal */}
+                <EventDetailModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} event={selectedEvent} />
+
                 </div>
             )}
         </div>
@@ -227,16 +236,117 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
 
 // Modal Component
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: Event | null }) => {
+    const [questions, setQuestions] = useState<Question[]>(event?.questions || []);
+    const [newQuestionPrompt, setNewQuestionPrompt] = useState<string>(""); // For new question prompt
+    const [newAnswer, setNewAnswer] = useState<string>(""); // For optional answer
+    const [answers, setAnswers] = useState<{ [key: string]: string }>({});
+
+    useEffect(() => {
+        if (event) {
+            setQuestions(event.questions || []);
+            const initialAnswers = (event.questions || []).reduce((acc, question) => {
+                acc[question.key] = question.answer || "";
+                return acc;
+            }, {} as { [key: string]: string });
+            setAnswers(initialAnswers);
+        }
+    }, [event]);
+
+    // Function to add a new question with or without an answer
+    const handleAddQuestion = () => {
+        if (!newQuestionPrompt.trim()) return; // Only add if question prompt is filled
+
+        const newQuestion: Question = {
+            key: `question-${questions.length + 1}`,
+            prompt: newQuestionPrompt,
+            answer: newAnswer || "", // Answer is optional; defaults to an empty string
+        };
+        
+        setQuestions((prevQuestions) => [...prevQuestions, newQuestion]);
+        setNewQuestionPrompt(""); // Clear question input
+        setNewAnswer(""); // Clear answer input
+    };
+
+    const handleAnswerChange = (key: string, value: string) => {
+        setAnswers((prevAnswers) => ({
+            ...prevAnswers,
+            [key]: value,
+        }));
+    };
+
+    const handleSave = async () => {
+        const updatedQuestions = questions.map((q) => ({
+            ...q,
+            answer: answers[q.key] || q.answer || "", // Save the updated answer if available
+        }));
+
+        // try {
+        //     await axios.post("/api/save-questions", {
+        //         eventId: event?.id,
+        //         questions: updatedQuestions,
+        //     });
+        //     alert("Questions and answers saved successfully!");
+        //     onClose(); // Close modal after saving
+        // } catch (error) {
+        //     console.error("Error saving questions:", error);
+        //     alert("Failed to save questions.");
+        // }
+    };
+
     if (!isOpen || !event) return null;
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6">
-                <h2 className="text-lg font-bold">{event.name}</h2>
-                {/* <p>{event.description}</p> */}
-                <button onClick={onClose} className="mt-4 bg-red-500 text-white p-2 rounded">
-                    Close
-                </button>
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-bold text-center flex-grow">{event.name} Details</h2>
+                    <button 
+                            onClick={onClose} 
+                            className="text-gray-500 hover:text-gray-800"
+                        >
+                            &times;
+                    </button>
+                </div>
+                <h3 className="mt-4 text-lg font-semibold">Notes Taking:</h3>
+                <br></br>
+                    {/* Display each question with input for answers */}
+                    {questions.map((question, index) => (
+                        <div key={question.key} className="mb-4">
+                            <label className="block font-semibold text-gray-700">
+                                Question {index + 1}: {question.prompt}
+                            </label>
+                            <input
+                                type="text"
+                                value={answers[question.key] || question.answer}
+                                onChange={(e) => handleAnswerChange(question.key, e.target.value)}
+                                className="mt-2 p-2 w-full border rounded-md"
+                                placeholder="Type your answer here..."
+                            />
+                        </div>
+                    ))}
+
+                {/* Input for typing a new question and optional answer */}
+                <input
+                    type="text"
+                    value={newQuestionPrompt}
+                    onChange={(e) => setNewQuestionPrompt(e.target.value)}
+                    className="mt-4 p-2 w-full border rounded-md"
+                    placeholder="Type a new question prompt..."
+                />
+                <input
+                    type="text"
+                    value={newAnswer}
+                    onChange={(e) => setNewAnswer(e.target.value)}
+                    className="mt-2 p-2 w-full border rounded-md"
+                    placeholder="Type the answer (optional)..."
+                />
+                <Button onClick={handleAddQuestion} className="mt-2 bg-blue-500 text-white">
+                    Add Question
+                </Button>
+
+                <Button onClick={handleSave} className="mt-4 bg-green-500 text-white p-2 rounded-md">
+                    Save Questions
+                </Button>
             </div>
         </div>
     );
