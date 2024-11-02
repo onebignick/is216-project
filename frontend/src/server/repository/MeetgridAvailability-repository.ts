@@ -33,6 +33,12 @@ export class MeetgridAvailabilityRepository implements IBaseRepository<MeetgridA
         return result;
     }
 
+    async getEventAvailability(eventId: string) {
+        const result = await db.select().from(availability)
+        .where(eq(availability.eventId, eventId));
+        return result;
+    }
+
     async createOne(item: MeetgridAvailability): Promise<MeetgridAvailability> {
         const res = await this.getUserToEventAvailability(item.clerkUserId!, item.eventId!);
         console.log(res);

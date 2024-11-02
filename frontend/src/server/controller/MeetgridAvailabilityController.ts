@@ -38,4 +38,12 @@ export class MeetgridAvailabilityController {
         const result = await this.meetgridAvailabilityService.getUserToEventMeetgridAvailability(userId!, eventId!);
         return NextResponse.json({ message: "Success", result: result }, { status: 200 });
     }
+
+    async handleGetTotalEventAvailability(request: NextRequest) {
+        const params = request.nextUrl.searchParams;
+        const eventId = params.get("eventId");
+
+        const result = await this.meetgridAvailabilityService.getTotalEventAvailability(eventId!);
+        return NextResponse.json({ message: "Success", result: result}, { status: 200});
+    }
 }
