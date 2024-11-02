@@ -1,20 +1,33 @@
 "use client"
 
 import { MeetgridEvent } from "@/server/entity/event";
+import { useEffect, useState } from "react";
 
 interface AvailabilityProps {
     period: number;
     eventInformation: MeetgridEvent;
 }
 
-export function GroupAvailability({ period, eventInformation } : AvailabilityProps) {
-    const availability = eventInformation.eventAvailability!.split(",").map((str: string) => parseInt(str));
+export function GroupAvailability({ eventInformation } : AvailabilityProps) {
+    const [availability, setAvailability] = useState<number[]>([]);
+
     const startDate = new Date(eventInformation.startDate!);
     const startDateOffset = startDate.getDay();
     const endDate = new Date(eventInformation.endDate!);
-    const interval = availability.length * 15 / 1440
     const offset = startDate.getDay() + 6 - endDate.getDay();
     const diff = (endDate-startDate) / (1000 * 60 * 60 * 24);
+
+    useEffect(() => {
+        async function getEventAvailability() {
+            const res = await fetch("/api/event?" + new URLSearchParams({
+                eventId: eventInformation.id!
+            }))
+
+            const response = await res.json();
+            setAvailability(response.result)
+        }
+        getEventAvailability();
+    }, [])
 
     
     function generateTableHeaders() {
@@ -22,8 +35,8 @@ export function GroupAvailability({ period, eventInformation } : AvailabilityPro
         const curDate = startDate;
         const options = { weekday: "short", day: "2-digit", month: "short" }
         
-        curDate.setDate(curDate.getDate() - (curDate.getDay() % 7));
-        for (let i=0; i < interval + offset; i++) {
+        curDate.setDate(curDate.getDate());
+        for (let i=0; i <= diff; i++) {
             headers.push(<TableHeader title={curDate.toLocaleDateString("en-GB", options)}/>)
             curDate.setDate(curDate.getDate() + 1)
         }
@@ -33,13 +46,14 @@ export function GroupAvailability({ period, eventInformation } : AvailabilityPro
 
     function generateTableBody() {
         const fifteenMinIntervalInDay = 1440 / 15;
-        const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(interval + offset).fill(0));
+        const interval = availability.length * 15 / 1440
+        const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(diff+1).fill(0));
 
         const result = []
         for (let i=0;i<fifteenMinIntervalInDay;i++) {
             for (let j=0;j<=diff; j++) {
-                if (availability[fifteenMinIntervalInDay*j + i] != 0) {
-                    body[i][j+startDateOffset] = availability[fifteenMinIntervalInDay*j + i]
+                if (availability![fifteenMinIntervalInDay*j + i] != 0) {
+                    body[i][j] = availability![fifteenMinIntervalInDay*j + i]
                 }
             }
         }
@@ -57,7 +71,7 @@ export function GroupAvailability({ period, eventInformation } : AvailabilityPro
                     </tr>
                 </thead>
                 <tbody>
-                    {generateTableBody()}                   
+                    {generateTableBody()}
                 </tbody>
             </table>
         </>

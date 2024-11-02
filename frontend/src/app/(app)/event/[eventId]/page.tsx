@@ -10,8 +10,9 @@ export default async function EventPage({params}: {params: {eventId:string}}) {
     return (
         <div className="grid grid-cols-12 gap-4 p-4">
             <InviteCard eventCode={eventInformation![0].eventCode!} className="col-span-12"/>
+            <AvailabilityCard eventInformation={eventInformation![0]} className="col-span-12"/>
             <ExampleCard className="hidden lg:block col-span-12"/>
-            <AvailabilityCard eventInformation={eventInformation!} className="col-span-12"/>
+            <AdminCard/>
         </div>
     )
 }
@@ -42,6 +43,18 @@ function InviteCard({ className, eventCode } : {className:string, eventCode: str
         <Button>Invite your friends now</Button>
         <p>Invite people to join your event with this code : {eventCode}</p>
       </CardContent>
+    </Card>
+  )
+}
+
+function AdminCard() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          This is the admin Card
+        </CardTitle>
+      </CardHeader>
     </Card>
   )
 }
