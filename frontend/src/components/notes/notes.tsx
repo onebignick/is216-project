@@ -6,36 +6,35 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 
 interface Note {
-    id: string; // UUID as a string
-    name: string; // Title of the note (or event)
-    eventCode: string; // Code for the event
-    description: string; // Content of the note
-    startDate: string; // Event start date
+    id: string;
+    name: string;
+    eventCode: string;
+    description: string;
+    startDate: string;
     endDate: string;
 }
 
 interface NotesProps {
-    notes: any[]; // Changed from any[] to Note[] for better type safety
+    notes: Note[];
 }
 
 export function NotesDisplay({ notes }: NotesProps) {
     const [searchTerm, setSearchTerm] = useState("");
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        console.log("Notes data:", notes);
-    }, [notes]);
+        setIsMounted(true);
+    }, []);
 
-    // Inside the filter function
     const filteredNotes = notes.filter(note => {
-        const nameMatch = note.name && note.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const descriptionMatch = note.description && note.description.toLowerCase().includes(searchTerm.toLowerCase());
-        console.log(`Note ID: ${note.id}, Name Match: ${nameMatch}, Description Match: ${descriptionMatch}`);
+        const nameMatch = note.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const descriptionMatch = note.description.toLowerCase().includes(searchTerm.toLowerCase());
         return nameMatch || descriptionMatch;
     });
 
-    useEffect(() => {
-        console.log("Filtered notes:", filteredNotes);
-    }, [filteredNotes]);
+    if (!isMounted) {
+        return null; // Prevent rendering before mount
+    }
 
     return (
         <div className="flex flex-wrap gap-6 p-4 h-full">
@@ -72,10 +71,10 @@ export function NotesDisplay({ notes }: NotesProps) {
                                     <CardContent>
                                         <CardDescription>{note.description}</CardDescription>
                                         <small className="text-gray-500 block mt-2">
-                                            Start Date: {new Date(note.startDate).toLocaleString()}
+                                            Start Date: {formatDate(note.startDate)}
                                         </small>
                                         <small className="text-gray-500 block mt-2">
-                                            End Date: {new Date(note.endDate).toLocaleString()}
+                                            End Date: {formatDate(note.endDate)}
                                         </small>
                                     </CardContent>
                                 </Card>
@@ -87,3 +86,8 @@ export function NotesDisplay({ notes }: NotesProps) {
         </div>
     );
 }
+
+// Function to format date strings
+const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleString('en-US', { timeZone: 'UTC' });
+};
