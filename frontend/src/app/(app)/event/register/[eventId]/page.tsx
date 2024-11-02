@@ -10,8 +10,8 @@ export default async function RegisterEventPage({ params }: {params: {eventId: s
     const eventInformation = await eventService.getOneEventById(params.eventId);
 
     return (
-        <>
+        <div>
             <ParticipantAvailability availability={availability} eventInformation={eventInformation![0]}/>
-        </>
+        </div>
     )
 }

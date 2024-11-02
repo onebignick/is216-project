@@ -7,8 +7,6 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { useUser } from "@clerk/nextjs";
-import { MeetgridBookEvent } from "@/server/entity/booking";
 import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
@@ -17,7 +15,6 @@ const formSchema = z.object({
 
 
 export function RegisterEventForm() {
-    const { user } = useUser();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)

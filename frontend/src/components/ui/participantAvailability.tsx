@@ -15,7 +15,7 @@ export function ParticipantAvailability({ availability, eventInformation } : Ava
 
     
     function generateTableHeaders() {
-        const headers = [];
+        const headers = [<th key={-1}></th>];
         const curDate = startDate;
         const options = { weekday: "short", day: "2-digit", month: "short" }
         
@@ -30,7 +30,7 @@ export function ParticipantAvailability({ availability, eventInformation } : Ava
 
     function generateTableBody() {
         const fifteenMinIntervalInDay = 1440 / 15;
-        const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(diff+1).fill(0));
+        const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(diff+2).fill(0));
 
         const result = []
         for (let i=0;i<fifteenMinIntervalInDay;i++) {
@@ -40,7 +40,7 @@ export function ParticipantAvailability({ availability, eventInformation } : Ava
                 }
             }
         }
-        result.push(<TableRow table={body}/>)
+        result.push(<TableRow key={-1} table={body}/>)
 
         return result;
     }
@@ -73,7 +73,18 @@ function TableRow({ table }: { table: number[][] }) {
                     <tr key={idy}>
                         {
                             row.map(( col, idx ) => {
-                                if (table[idy][idx] === 0) {
+                                if (idx == 0) {
+                                    let startHour = ((idy*15)/60 >> 0).toString();
+                                    if (startHour.length == 1) startHour = "0" + startHour;
+
+                                    let startMinute = ((idy*15)%60).toString();
+                                    if (startMinute.length == 1) startMinute = "0" + startMinute;
+
+                                    return <td key={idx} className="h-[10px] w-[30px] border border-slate-500">
+                                        {startHour + startMinute}
+                                    </td>
+                                }
+                                else if (col === 0) {
                                     return ( 
                                         <td key={idx} className="h-[10px] w-[30px] border border-slate-500">
                                         </td>
