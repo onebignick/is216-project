@@ -1,6 +1,5 @@
 import { MeetgridEvent } from "@/server/entity/event";
 import { Button } from "./button";
-import { ArrowRight } from "lucide-react";
 
 interface AvailabilityProps {
     availability: number[]
@@ -36,11 +35,20 @@ export function ParticipantAvailability({ availability, eventInformation } : Ava
         for (let i=0;i<fifteenMinIntervalInDay;i++) {
             for (let j=0;j<=diff; j++) {
                 if (availability![fifteenMinIntervalInDay*j + i] != 0) {
-                    body[i][j] = availability![fifteenMinIntervalInDay*j + i]
+                    body[i][j+1] = availability![fifteenMinIntervalInDay*j + i]
                 }
             }
         }
-        result.push(<TableRow key={-1} table={body}/>)
+
+        result.push(
+            <TableRow
+                key={-1} 
+                table={body} 
+                startTime={eventInformation.startTime!} 
+                endTime={eventInformation.endTime!}
+                interval={eventInformation.interval!}
+            />
+        )
 
         return result;
     }
@@ -65,19 +73,23 @@ function TableHeader({ title }: {title: string}) {
     return <th className="border border-slate-500">{title}</th>
 }
 
-function TableRow({ table }: { table: number[][] }) {
+function TableRow({ table, startTime, endTime, interval }: { table: number[][], startTime: number, endTime: number, interval: number}) {
     return (
         <>
             {table.map(( row, idy ) => {
+                const curTime = idy*15;
+                if (curTime < startTime || curTime >= endTime) return;
+                if (idy % interval != 0) return;
+
                 return (
                     <tr key={idy}>
                         {
                             row.map(( col, idx ) => {
                                 if (idx == 0) {
-                                    let startHour = ((idy*15)/60 >> 0).toString();
+                                    let startHour = (curTime/60 >> 0).toString();
                                     if (startHour.length == 1) startHour = "0" + startHour;
 
-                                    let startMinute = ((idy*15)%60).toString();
+                                    let startMinute = (curTime%60).toString();
                                     if (startMinute.length == 1) startMinute = "0" + startMinute;
 
                                     return <td key={idx} className="h-[10px] w-[30px] border border-slate-500">
@@ -93,7 +105,7 @@ function TableRow({ table }: { table: number[][] }) {
                                 else {
                                     return (
                                         <td key={idx} className="h-[10px] w-[30px] bg-green-800 border border-slate-500">
-                                            <Button>Register<ArrowRight/></Button>
+                                            <Button>Register</Button>
                                         </td>
                                     );
                                 }

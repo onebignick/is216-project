@@ -222,6 +222,7 @@ export function SidebarLeft({
 
       const newMeetingData: SidebarComponent[] = [];
 
+      if (result.result.length === 0) return;
       const organizedEvents = result.result[0].organizedEvents;
       for(let i=0;i<organizedEvents.length;i++) {
         newMeetingData.push({

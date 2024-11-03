@@ -1,7 +1,7 @@
 import { EventService } from "@/server/service/EventService"
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { AvailabilityCard } from "@/components/availability-card";
+import { MeetgridEvent } from "@/server/entity/event";
 
 export default async function EventPage({params}: {params: {eventId:string}}) {
     const eventService: EventService = new EventService();
@@ -9,10 +9,10 @@ export default async function EventPage({params}: {params: {eventId:string}}) {
 
     return (
         <div className="grid grid-cols-12 gap-4 p-4">
-            <InviteCard eventCode={eventInformation![0].eventCode!} className="col-span-12"/>
+            <InviteCard event={eventInformation![0]} className="col-span-12"/>
             <AvailabilityCard eventInformation={eventInformation![0]} className="col-span-12"/>
             <ExampleCard className="hidden lg:block col-span-12"/>
-            <AdminCard/>
+            <AdminCard className="col-span-12" event={eventInformation![0]}/>
         </div>
     )
 }
@@ -32,29 +32,30 @@ function ExampleCard({ className } : {className:string}) {
   )
 }
 
-function InviteCard({ className, eventCode } : {className:string, eventCode: string}) {
+function InviteCard({ className, event } : {className:string, event: MeetgridEvent}) {
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Welcome to Example event</CardTitle>
-        <CardDescription>Invite your friends to this page</CardDescription>
+        <CardTitle>Welcome to {event.name}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button>Invite your friends now</Button>
-        <p>Invite people to join your event with this code : {eventCode}</p>
+        <p>Invite people to join your event with this code : {event.eventCode}</p>
       </CardContent>
     </Card>
   )
 }
 
-function AdminCard() {
+function AdminCard({ className, event }: { className: string, event: MeetgridEvent}) {
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>
-          This is the admin Card
+          Add collaborators to this meeting
         </CardTitle>
       </CardHeader>
+      <CardContent>
+               
+      </CardContent>
     </Card>
   )
 }
