@@ -4,7 +4,6 @@ import { MeetgridEvent } from "@/server/entity/event";
 import { useEffect, useState } from "react";
 
 interface AvailabilityProps {
-    period: number;
     eventInformation: MeetgridEvent;
 }
 
@@ -52,7 +51,7 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
         for (let i=0;i<fifteenMinIntervalInDay;i++) {
             for (let j=0;j<=diff; j++) {
                 if (availability![fifteenMinIntervalInDay*j + i] != 0) {
-                    body[i][j] = availability![fifteenMinIntervalInDay*j + i]
+                    body[i][j+1] = availability![fifteenMinIntervalInDay*j + i]
                 }
             }
         }

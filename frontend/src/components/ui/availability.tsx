@@ -90,7 +90,7 @@ export function Availability({ eventInformation } : AvailabilityProps) {
                 }
             }
         }
-        result.push(<TableRow table={body} interval={diff} meetgridAvailability={userAvailabilityObject!} timeIntervals={timeIntervals} />);
+        result.push(<TableRow table={body} interval={diff} meetgridAvailability={userAvailabilityObject!} timeIntervals={timeIntervals} startTime={eventInformation.startTime!} endTime={eventInformation.endTime!}/>);
 
         return result;
     }
@@ -115,7 +115,7 @@ function TableHeader({ title }: {title: string}) {
     return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
 }
 
-function TableRow({ table, interval, meetgridAvailability, timeIntervals }: { table: number[][], interval: number, meetgridAvailability: MeetgridAvailability, timeIntervals: string[] }) {
+function TableRow({ table, interval, meetgridAvailability, timeIntervals, startTime, endTime }: { table: number[][], interval: number, meetgridAvailability: MeetgridAvailability, timeIntervals: string[], startTime: number, endTime: number }) {
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [currentBg, setCurrentBg] = useState<number>(0);
 
@@ -170,6 +170,9 @@ function TableRow({ table, interval, meetgridAvailability, timeIntervals }: { ta
     return (
         <>
             {table.map(( row, idy ) => {
+                const curTime = idy*15;
+                if (curTime < startTime || curTime >= endTime) return;
+
                 return (
                     <tr key={idy}>
                         <td className="border border-slate-500 px-2">{timeIntervals[idy]}</td> {/* Timing Column */}
