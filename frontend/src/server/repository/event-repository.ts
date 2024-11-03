@@ -108,8 +108,15 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     }
 
     async updateOne(id: string, item: MeetgridEvent): Promise<{id: string}[]> {
-        const result: {id: string}[] = await db.update(event).set(item).where(eq(event.id, id)).returning();
-        return result;
+        try {
+            console.log(id, item)
+            const result = await db.update(event).set(item).where(eq(event.id, id)).returning();
+            console.log(result);
+            return result;
+        } catch (e) {
+            console.log(e.message);
+            throw new Error(e.message);
+        }
     }
     
     // Method to get an event by its unique code

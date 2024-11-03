@@ -109,6 +109,8 @@ export class EventService {
 
             // Assign the unique code to the event
             newEvent.eventCode = unique_code;
+            newEvent.startTime = 540;
+            newEvent.endTime = 1080;
 
             // Attempt to create the event in the repository
             const result = await this.eventRepository.createOne(newEvent);
@@ -123,6 +125,15 @@ export class EventService {
         } catch (e) {
             console.log("Error creating event:", e.message);
             return "";
+        }
+    }
+
+    async updateOneEvent(updatedEvent: MeetgridEvent) {
+        try {
+            const result = await this.eventRepository.updateOne(updatedEvent.id!, updatedEvent);
+            return result;
+        } catch {
+            throw new Error("an error occured")
         }
     }
 }

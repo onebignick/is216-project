@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { MeetgridEvent } from "@/server/entity/event";
 import { GroupAvailability } from "./ui/groupAvailability";
+import { SettingsForm } from "./forms/settings-form";
 
 interface AvailabilityCardProps {
   className: string;
@@ -39,14 +40,14 @@ export function AvailabilityCard({ className, eventInformation } : AvailabilityC
             </CardContent>
         </TabsContent>
         <TabsContent value="settings">
-          <SettingsCard/>
+          <SettingsCard event={eventInformation}/>
         </TabsContent>
       </Tabs>
     </Card>
   )
 }
 
-function SettingsCard() {
+function SettingsCard({event} : {event: MeetgridEvent}) {
   return(
     <>
       <CardHeader>
@@ -54,7 +55,7 @@ function SettingsCard() {
         <CardDescription>View and edit your settings here</CardDescription>
       </CardHeader>
       <CardContent>
-        abcde
+        <SettingsForm event={event}/>
       </CardContent>
     </>
   )

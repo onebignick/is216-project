@@ -40,4 +40,14 @@ export class EventController {
             return NextResponse.json({message: "An error occured"}, {status: 500});
         }
     }
+
+    async handleUpdateEvent(request: Request) {
+        try {
+            const req = await request.json();
+            const result =  await this.eventService.updateOneEvent(req.updatedEvent);
+            return NextResponse.json({message: "success", result: result}, {status: 200});
+        } catch {
+            return NextResponse.json({message: "An error occured"}, {status: 500});
+        }
+    }
 }

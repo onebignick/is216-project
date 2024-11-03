@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator, timestamp, varchar, uuid, pgEnum, unique } from "drizzle-orm/pg-core";
+import { pgTableCreator, timestamp, varchar, uuid, pgEnum, unique, integer } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
@@ -36,9 +36,10 @@ export const event = createTable("event", {
 	description: varchar("description", {length: 10000}),
 	startDate: varchar("startDate", { length: 1000 }),
 	endDate: varchar("endDate", { length: 1000 }),
-	reminder: timestamp("reminder"),
+	startTime: integer("startTime"),
+	endTime: integer("endTime"),
+	reminder: varchar("reminder", {length: 1000}),
 	participantNum: varchar("participantNum", {length: 100}),
-	eventAvailability: varchar("eventAvailability", { length: 2000 }),
 	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
 });
 
