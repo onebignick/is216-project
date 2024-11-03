@@ -65,15 +65,11 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
                     events={formattedEvents}
                     useCreationPopup={true}
                     useDetailPopup={true}
-                    taskView={false}      // Disable task view
-                    milestoneView={false}  // Disable milestone view
-                    template={{
-                        task: () => '', // Custom task template that returns nothing
-                        milestone: () => '', // Custom milestone template that returns nothing
-                    }}
                     week={{
                         hourStart: 0,  // Start of day in 24-hour format
                         hourEnd: 24,   // End of day in 24-hour format
+                        taskView: false,
+                        eventView: ['time', 'allday'],
                     }}
                     timezone={{
                         zones: [
