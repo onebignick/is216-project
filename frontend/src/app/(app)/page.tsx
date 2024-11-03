@@ -5,18 +5,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { EventService } from "@/server/service/EventService";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import FrontpageCalendar from "@/components/frontpage-calendar";
 
 export default async function Home() {
   const eventService: EventService = new EventService();
   const user = await currentUser();
   const eventsOrganizedByUser = await eventService.getAllEventsRelatedToUser(user!.id);
+  if (!user) return <p>Please log in to view events.</p>;
+  const allEvents = await eventService.getAllEvents(user.id);
 
   return (
     <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
       <WelcomeCard className="hidden md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <ExampleCard className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8"/>
+      <FrontpageCalendar events={allEvents} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
       <RecentActivityCard clerkUserId={user!.id} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
   );
