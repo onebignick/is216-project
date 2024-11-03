@@ -52,15 +52,25 @@ export function Availability({ eventInformation } : AvailabilityProps) {
         handleUserAvailability();
     }, [])
 
+    // Generate 15-minute time intervals
+    function generateTimeIntervals() {
+        const intervals = [];
+        for (let i = 0; i < 1440; i += 15) {
+            const hours = String(Math.floor(i / 60)).padStart(2, '0');
+            const minutes = String(i % 60).padStart(2, '0');
+            intervals.push(`${hours}:${minutes}`);
+        }
+        return intervals;
+    }
 
     function generateTableHeaders() {
-        const headers = [];
+        const headers = [<TableHeader title="Time" key="time-header" />];
         const curDate = startDate;
         const options = { weekday: "short", day: "2-digit", month: "short" }
         
         curDate.setDate(curDate.getDate());
         for (let i=0; i <= diff; i++) {
-            headers.push(<TableHeader title={curDate.toLocaleDateString("en-GB", options)}/>)
+            headers.push(<TableHeader title={curDate.toLocaleDateString("en-GB", options)} key={`header-${i}`} />)
             curDate.setDate(curDate.getDate() + 1)
         }
 
@@ -70,6 +80,7 @@ export function Availability({ eventInformation } : AvailabilityProps) {
 
     function generateTableBody() {
         const body = Array.from({ length: fifteenMinIntervalInDay }, () => new Array(diff+1).fill(0));
+        const timeIntervals = generateTimeIntervals();
 
         const result = []
         for (let i=0;i<fifteenMinIntervalInDay;i++) {
@@ -79,7 +90,7 @@ export function Availability({ eventInformation } : AvailabilityProps) {
                 }
             }
         }
-        result.push(<TableRow table={body} interval={diff} meetgridAvailability={userAvailabilityObject!}/>)
+        result.push(<TableRow table={body} interval={diff} meetgridAvailability={userAvailabilityObject!} timeIntervals={timeIntervals} />);
 
         return result;
     }
@@ -101,10 +112,10 @@ export function Availability({ eventInformation } : AvailabilityProps) {
 }
 
 function TableHeader({ title }: {title: string}) {
-    return <th className="border border-slate-500">{title}</th>
+    return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
 }
 
-function TableRow({ table, interval, meetgridAvailability }: { table: number[][], interval: number, meetgridAvailability: MeetgridAvailability }) {
+function TableRow({ table, interval, meetgridAvailability, timeIntervals }: { table: number[][], interval: number, meetgridAvailability: MeetgridAvailability, timeIntervals: string[] }) {
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [currentBg, setCurrentBg] = useState<number>(0);
 
@@ -161,6 +172,7 @@ function TableRow({ table, interval, meetgridAvailability }: { table: number[][]
             {table.map(( row, idy ) => {
                 return (
                     <tr key={idy}>
+                        <td className="border border-slate-500 px-2">{timeIntervals[idy]}</td> {/* Timing Column */}
                         {
                             row.map(( col, idx ) => {
                                 return (

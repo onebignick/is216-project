@@ -10,6 +10,7 @@ interface AvailabilityProps {
 
 export function GroupAvailability({ eventInformation } : AvailabilityProps) {
     const [availability, setAvailability] = useState<number[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const startDate = new Date(eventInformation.startDate!);
     const endDate = new Date(eventInformation.endDate!);
@@ -17,12 +18,14 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
 
     useEffect(() => {
         async function getEventAvailability() {
+            setIsLoading(true); // Set loading state to true before fetching
             const res = await fetch("/api/event?" + new URLSearchParams({
                 eventId: eventInformation.id!
-            }))
+            }));
 
             const response = await res.json();
-            setAvailability(response.result)
+            setAvailability(response.result);
+            setIsLoading(false); // Set loading state to false after data is fetched
         }
         getEventAvailability();
     }, [])
@@ -60,22 +63,28 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
 
     return (
         <>
-            <table className="border border-collapse border-slate-500">
-                <thead>
-                    <tr>
-                        {generateTableHeaders()}
-                    </tr>
-                </thead>
-                <tbody>
-                    {generateTableBody()}
-                </tbody>
-            </table>
+            {isLoading ? ( // Conditional rendering for loading state
+                <div className="flex h-full">
+                    <p>Loading availability...</p> {/* Display loading message */}
+                </div>
+            ) : (
+                <table className="border border-collapse border-slate-500">
+                    <thead>
+                        <tr>
+                            {generateTableHeaders()}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {generateTableBody()}
+                    </tbody>
+                </table>
+            )}
         </>
     )
 }
 
 function TableHeader({ title }: {title: string}) {
-    return <th className="border border-slate-500">{title}</th>
+    return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
 }
 
 function TableRow({ table, startTime, endTime }: { table: number[][], startTime: number, endTime: number }) {
