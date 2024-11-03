@@ -171,18 +171,20 @@ const isLightColor = (hexColor: string) => {
     return luminance > 128;
 };
 
-function calculateDaysUntilReminder(reminderDate: string): number {
+function calculateDaysUntilReminder(reminderDate: string, startDate: Date): number {
     const reminder = new Date(reminderDate);
-    const today = new Date();
+    const start = new Date(startDate);
 
-    // Set the time of both dates to midnight for accurate comparison
-    today.setHours(0, 0, 0, 0);
-    reminder.setHours(0, 0, 0, 0);
+    // Calculate the difference in time
+    const timeDifference = start.getTime() - reminder.getTime(); // getTime() returns the time value in milliseconds
 
-    // Calculate the difference in time and convert to days
-    const differenceInTime = reminder.getTime() - today.getTime();
-    return Math.ceil(differenceInTime / (1000 * 3600 * 24)); // Convert milliseconds to days
+    // Calculate the difference in days
+    const daysDifference = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+
+    // Return daysDifference; if the reminder date is in the past, return 0
+    return daysDifference >= 0 ? daysDifference : 0; 
 }
+
 
 function MainEventPage({ events }: { events: any[] }) {
 
@@ -197,6 +199,8 @@ function MainEventPage({ events }: { events: any[] }) {
         // Create Date objects
         const startDate = new Date(startISO);
         const endDate = new Date(endISO);
+
+        const daysUntilReminder = calculateDaysUntilReminder(event.reminder, startDate);
 
         // Automatically set allDay to true
         const isAllDay = true;
@@ -213,6 +217,8 @@ function MainEventPage({ events }: { events: any[] }) {
         const borderColor = getRandomColor();
         const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
         
+        const reminderDate = formatDateToDDMMYYYY(new Date(event.reminder));;
+
         return {
             id: event.id,
             title: event.name || "Untitled Event",
@@ -223,9 +229,12 @@ function MainEventPage({ events }: { events: any[] }) {
             description: event.description,
             participant: event.participantNum,
             eventCode: event.eventCode,
+            reminder: daysUntilReminder,
+            reminderDate: reminderDate.toLocaleString(),
             backgroundColor, // Random background color
             borderColor,     // Random border color
-            color: textColor // Text color (white for readability)
+            color: textColor, // Text color (white for readability)
+            
         };
     });
 
@@ -240,7 +249,9 @@ function MainEventPage({ events }: { events: any[] }) {
         const description = matchedEvent ? matchedEvent.description : "No description available";
         const participant = matchedEvent ? matchedEvent.participant: "No participant available";
         const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
-
+        const reminder = matchedEvent ? matchedEvent.reminder: "No reminder available";
+        const reminderDate = matchedEvent ? matchedEvent.reminderDate: "No reminder available";
+    
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
             id: clickedEvent.id,
@@ -250,7 +261,9 @@ function MainEventPage({ events }: { events: any[] }) {
             allDay: clickedEvent.isAllday || false, // Important for showing as all-day
             description: description, // Fallback to description
             eventCode: eventCode,
-            participant: participant
+            participant: participant,
+            reminder: reminder,
+            reminderDate: reminderDate,
         };
     
         console.log("Formatted Clicked Event Data:", formattedEvent);
@@ -263,6 +276,8 @@ function MainEventPage({ events }: { events: any[] }) {
             description: formattedEvent.description,
             participant: formattedEvent.participant,
             eventCode: formattedEvent.eventCode,
+            reminder: formattedEvent.reminder,
+            reminderDate: formattedEvent.reminderDate,
         });
     
         setIsModalOpen(true);
@@ -336,6 +351,8 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 <p>Event Code: {event.eventCode}</p>
                 <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
                 <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
+                <p>Remind Participant before start date (in days): {event.reminder-1} days</p>
+                <p>Reminder Date: {event.reminderDate}</p>
                 <p>Description: {event.description}</p>
                 <p>Total Participant Number: {event.participant}</p>
                 <br></br>
