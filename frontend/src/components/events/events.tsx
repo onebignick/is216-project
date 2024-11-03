@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
+import { useRouter } from 'next/router';
+import Link from "next/link";
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
@@ -169,12 +171,25 @@ const isLightColor = (hexColor: string) => {
     return luminance > 128;
 };
 
+function calculateDaysUntilReminder(reminderDate: string): number {
+    const reminder = new Date(reminderDate);
+    const today = new Date();
+
+    // Set the time of both dates to midnight for accurate comparison
+    today.setHours(0, 0, 0, 0);
+    reminder.setHours(0, 0, 0, 0);
+
+    // Calculate the difference in time and convert to days
+    const differenceInTime = reminder.getTime() - today.getTime();
+    return Math.ceil(differenceInTime / (1000 * 3600 * 24)); // Convert milliseconds to days
+}
 
 function MainEventPage({ events }: { events: any[] }) {
 
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     console.log(events);
+    
     const formattedEvents = events.map(event => {
         const startISO = convertDateToISO(event.startDate); // Convert start date
         const endISO = convertDateToISO(event.endDate); // Convert end date
@@ -206,6 +221,8 @@ function MainEventPage({ events }: { events: any[] }) {
             allDay: isAllDay, // Mark as all-day
             category: "allday",
             description: event.description,
+            participant: event.participantNum,
+            eventCode: event.eventCode,
             backgroundColor, // Random background color
             borderColor,     // Random border color
             color: textColor // Text color (white for readability)
@@ -221,6 +238,8 @@ function MainEventPage({ events }: { events: any[] }) {
         // Find the matching event in formattedEvents using ID to get the description
         const matchedEvent = formattedEvents.find(e => e.id === clickedEvent.id);
         const description = matchedEvent ? matchedEvent.description : "No description available";
+        const participant = matchedEvent ? matchedEvent.participant: "No participant available";
+        const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
 
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
@@ -230,15 +249,20 @@ function MainEventPage({ events }: { events: any[] }) {
             end: clickedEvent.end.d.d, // Accessing the date string
             allDay: clickedEvent.isAllday || false, // Important for showing as all-day
             description: description, // Fallback to description
+            eventCode: eventCode,
+            participant: participant
         };
     
         console.log("Formatted Clicked Event Data:", formattedEvent);
     
         setSelectedEvent({
+            id: formattedEvent.id,
             title: formattedEvent.title,
             start: new Date(formattedEvent.start).toLocaleString(),
             end: new Date(formattedEvent.end).toLocaleString(),
             description: formattedEvent.description,
+            participant: formattedEvent.participant,
+            eventCode: formattedEvent.eventCode,
         });
     
         setIsModalOpen(true);
@@ -301,23 +325,23 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6 w-1/3">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-center flex-grow">{event.title}</h2>
+                    <h2 className="text-xl font-bold text-center flex-grow">Event Name: {event.title}</h2>
                     <button 
                         onClick={onClose} 
                         className="text-gray-500 hover:text-gray-800"
                     >
                         &times;
                     </button>
-                </div>
+                </div> 
+                <p>Event Code: {event.eventCode}</p>
                 <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
                 <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
                 <p>Description: {event.description}</p>
-                <button 
-                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-                    onClick={onClose}
-                >
-                    Close
-                </button>
+                <p>Total Participant Number: {event.participant}</p>
+                <br></br>
+                <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                    <Link href={'/event/' + event.id}>View More Details</Link>
+                </Button>
             </div>
         </div>
     );

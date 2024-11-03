@@ -11,7 +11,7 @@ import { SettingsForm } from "./forms/settings-form";
 interface AvailabilityCardProps {
   className: string;
   eventInformation: MeetgridEvent;
-  participantsInformation: MeetgridBookEvent;
+  participantsInformation: MeetgridBookEvent[] | null;
 }
 
 export function AvailabilityCard({ className, eventInformation, participantsInformation } : AvailabilityCardProps) {
