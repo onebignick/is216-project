@@ -38,6 +38,7 @@ export const event = createTable("event", {
 	endDate: varchar("endDate", { length: 1000 }),
 	startTime: integer("startTime"),
 	endTime: integer("endTime"),
+	interval: integer("interval"),
 	reminder: varchar("reminder", {length: 1000}),
 	participantNum: varchar("participantNum", {length: 100}),
 	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
