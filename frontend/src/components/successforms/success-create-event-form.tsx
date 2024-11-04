@@ -34,7 +34,7 @@ export function SuccessCreateEventForm() {
                 <br/>
                 <div>
                     <Button variant="outline" asChild>
-                        <Link href="/event/notes">See More at Your Events</Link>
+                        <Link href="/event">See More at Your Events</Link>
                     </Button>
                 </div>
             </div>

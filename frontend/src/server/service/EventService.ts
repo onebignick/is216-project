@@ -136,4 +136,14 @@ export class EventService {
             throw new Error("an error occured")
         }
     }
+    
+    async deleteById(eventId: string): Promise<boolean> {
+        try {
+            const deletedEvents = await this.eventRepository.deleteOne(eventId);
+            return deletedEvents.length > 0; // Return true if at least one event was deleted
+        } catch (e) {
+            console.log("Error deleting event in repository:", e.message);
+            return false; // Return false if an error occurs
+        }
+    }
 }

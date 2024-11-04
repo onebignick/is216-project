@@ -50,7 +50,7 @@ export function CreateEventForm() {
         console.log(values.endDate);
 
         // diff between [startDate, endDate] in interval of 15 minutes
-        const availabilityLength = (values.endDate - values.startDate) / (1000*60*15) + 96
+        const availabilityLength = (values.endDate.getTime() - values.startDate.getTime()) / (1000 * 60 * 15) + 96;
         const eventAvailability = Array(availabilityLength).fill(0)
         
         const newEvent: MeetgridEvent = {

@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../db";
-import { event, user, registration } from "../db/schema";
+import { event, user, registration, availability } from "../db/schema";
 import { MeetgridEvent } from "../entity/event";
 import { IBaseRepository } from "./base-repository";
 import { User } from "../entity/user";
@@ -129,9 +129,25 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
     
     // todo delete logic
     async deleteOne(id: string): Promise<MeetgridEvent[]> {
-        console.log(id);
-        return [];
+        try {
+            const existingEvent = await db.select().from(event).where(eq(event.id, id));
+    
+            if (existingEvent.length === 0) {
+                throw new Error(`Event with id ${id} not found`); // Throw custom error
+            }
+    
+            await db.delete(registration).where(eq(registration.eventId, id));
+            await db.delete(availability).where(eq(availability.eventId, id));
+            await db.delete(event).where(eq(event.id, id));
+            
+            console.log(`Event with id: ${id} deleted successfully.`);
+            return existingEvent; // Return deleted event(s)
+        } catch (error) {
+            console.error(`Error deleting event with id ${id}:`, error.message);
+            throw new Error(`Unable to delete event: ${error.message}`);
+        }
     }
+    
 
     async deleteMany(ids: string[]): Promise<MeetgridEvent[]> {
         console.log(ids);
