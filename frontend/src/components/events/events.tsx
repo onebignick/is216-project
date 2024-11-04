@@ -185,6 +185,16 @@ function calculateDaysUntilReminder(reminderDate: string, startDate: Date): numb
     return daysDifference >= 0 ? daysDifference : 0; 
 }
 
+function convertMinutesToTime(minutes: number): string {
+    const hours = Math.floor(minutes / 60); // Calculate hours
+    const remainingMinutes = minutes % 60;  // Calculate remaining minutes
+
+    // Pad single-digit minutes with a leading zero
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = remainingMinutes.toString().padStart(2, '0');
+
+    return `${formattedHours}:${formattedMinutes}`;
+}
 
 function MainEventPage({ events }: { events: any[] }) {
 
@@ -219,6 +229,9 @@ function MainEventPage({ events }: { events: any[] }) {
         
         const reminderDate = formatDateToDDMMYYYY(new Date(event.reminder));;
 
+        const startTime = convertMinutesToTime(event.startTime);
+        const endTime = convertMinutesToTime(event.endTime);
+
         return {
             id: event.id,
             title: event.name || "Untitled Event",
@@ -231,6 +244,8 @@ function MainEventPage({ events }: { events: any[] }) {
             eventCode: event.eventCode,
             reminder: daysUntilReminder,
             reminderDate: reminderDate.toLocaleString(),
+            startTime: startTime,
+            endTime: endTime,
             backgroundColor, // Random background color
             borderColor,     // Random border color
             color: textColor, // Text color (white for readability)
@@ -251,7 +266,9 @@ function MainEventPage({ events }: { events: any[] }) {
         const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
         const reminder = matchedEvent ? matchedEvent.reminder: "No reminder available";
         const reminderDate = matchedEvent ? matchedEvent.reminderDate: "No reminder available";
-    
+        const startTime =  matchedEvent ? matchedEvent.startTime: "No Start Time available";
+        const endTime =  matchedEvent ? matchedEvent.endTime: "No End Time available";
+
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
             id: clickedEvent.id,
@@ -262,6 +279,8 @@ function MainEventPage({ events }: { events: any[] }) {
             description: description, // Fallback to description
             eventCode: eventCode,
             participant: participant,
+            startTime: startTime,
+            endTime: endTime,
             reminder: reminder,
             reminderDate: reminderDate,
         };
@@ -278,6 +297,8 @@ function MainEventPage({ events }: { events: any[] }) {
             eventCode: formattedEvent.eventCode,
             reminder: formattedEvent.reminder,
             reminderDate: formattedEvent.reminderDate,
+            startTime: formattedEvent.startTime,
+            endTime: formattedEvent.endTime
         });
     
         setIsModalOpen(true);
@@ -351,10 +372,11 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 <p>Event Code: {event.eventCode}</p>
                 <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
                 <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
-                <p>Remind Participant before start date (in days): {event.reminder-1} days</p>
-                <p>Reminder Date: {event.reminderDate}</p>
-                <p>Description: {event.description}</p>
+                <p>Start Time: {event.startTime}</p>
+                <p>End Time: {event.endTime}</p>
+                <p>Reminder Participant Date: {event.reminderDate} ({event.reminder-1} days)</p>
                 <p>Total Participant Number: {event.participant}</p>
+                <p>Description: {event.description}</p>
                 <br></br>
                 <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                     <Link href={'/event/' + event.id}>View More Details</Link>
