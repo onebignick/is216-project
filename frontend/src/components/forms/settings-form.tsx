@@ -168,7 +168,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
         <div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <div className = "grid grid-cols-2 gap-4">
+                    <div className = "grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <Card className = "col-span-2">
                             <CardHeader>
                                 <CardTitle>Event Name</CardTitle>
@@ -209,7 +209,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                 />
                             </CardContent>
                         </Card>
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event Reminder Days</CardTitle>
                                 <CardDescription>Your Remind Participants Days</CardDescription>
@@ -229,7 +229,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                 />
                             </CardContent>
                         </Card>
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event Participants Number</CardTitle>
                                 <CardDescription>Your event total number of participants</CardDescription>
@@ -250,7 +250,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                             </CardContent>
                         </Card>
 
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event Start Date</CardTitle>
                                 <CardDescription>Your event start date</CardDescription>
@@ -290,7 +290,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                 />
                             </CardContent>
                         </Card>
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event end Date</CardTitle>
                                 <CardDescription>Your event end date</CardDescription>
@@ -330,7 +330,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                 />
                             </CardContent>
                         </Card>
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event Start Time</CardTitle>
                                 <CardDescription>Your event start time</CardDescription>
@@ -385,7 +385,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className = "col-span-1">
+                        <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
                                 <CardTitle>Event End Time</CardTitle>
                                 <CardDescription>Your event end time</CardDescription>
@@ -442,7 +442,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                             </CardContent>
                         </Card>
                     </div>    
-                    <div className="grid grid-cols-4 gap-4">    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">    
                          { successMessage &&
                             <div className="col-start-4 col-span-1 px-4 py-2 bg-green-200 text-white rounded col-span-1">          
                                 <div className="text-green-600 text-center">{successMessage}</div>
@@ -454,14 +454,14 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                             </div>
                         }      
                     </div>  
-                    <div className = "grid grid-cols-4 gap-4">              
+                    <div className = "grid md:grid-cols-2 lg:grid-cols-4 gap-4">              
                         <Button 
                             type="button" 
                             onClick={() => setShowDeleteModal(true)} 
                             className="px-4 py-2 bg-red-600 text-white rounded col-span-1">
                             Delete Event
                         </Button>
-                        <Button type="submit" className="col-start-4 col-span-1">Save Changes</Button>
+                        <Button type="submit" className="px-4 py-2 col-start-4 rounded col-span-1">Save Changes</Button>
                     </div>
 
   

@@ -19,18 +19,18 @@ export function AvailabilityCard({ className, eventInformation, participantsInfo
   return (
     <Card className={className}>
       <Tabs defaultValue="group">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
           <TabsTrigger value="group">Group Availability</TabsTrigger>
           <TabsTrigger value="individual">Your Availability</TabsTrigger>
           <TabsTrigger value="interviews">Interviews Notes</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="group">
+        <TabsContent value="group" className="grid w-full mt-4">
             <CardHeader>
               <CardTitle>Group Availability</CardTitle>
               <CardDescription>Shows availability across your group</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto">
               <GroupAvailability period={15} eventInformation={eventInformation}/>
             </CardContent>
         </TabsContent>

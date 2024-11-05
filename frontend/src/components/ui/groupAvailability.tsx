@@ -30,7 +30,7 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
     }, [])
 
     function generateTableHeaders() {
-        const headers = [<th key={-1}></th>];
+        const headers = [<TableHeader title="Time" key="time-header" />];
         const curDate = startDate;
         const options = { weekday: "short", day: "2-digit", month: "short" }
         
@@ -62,22 +62,24 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
 
     return (
         <>
-            {isLoading ? ( // Conditional rendering for loading state
-                <div className="flex h-full">
-                    <p>Loading availability...</p> {/* Display loading message */}
-                </div>
-            ) : (
-                <table className="border border-collapse border-slate-500">
-                    <thead>
-                        <tr>
-                            {generateTableHeaders()}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {generateTableBody()}
-                    </tbody>
-                </table>
-            )}
+            <div className="overflow-x-auto w-full"> {/* Set width to full to ensure scrolling works */}
+                {isLoading ? (
+                    <div className="flex h-full">
+                        <p>Loading availability...</p>
+                    </div>
+                ) : (
+                    <table className="min-w-[800px] border border-collapse border-slate-500"> {/* Ensure minimum width for scrolling */}
+                        <thead>
+                            <tr>
+                                {generateTableHeaders()}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {generateTableBody()}
+                        </tbody>
+                    </table>
+                )}
+            </div>
         </>
     )
 }
@@ -104,8 +106,8 @@ function TableRow({ table, startTime, endTime }: { table: number[][], startTime:
                                     let startMinute = (curTime%60).toString();
                                     if (startMinute.length == 1) startMinute = "0" + startMinute;
 
-                                    return <td key={idx} className="h-[10px] w-[30px] border border-slate-500">
-                                        {startHour + startMinute}
+                                    return <td key={idx} className="w-10 border border-slate-500 px-2">
+                                        {startHour + ":" + startMinute}
                                     </td>
                                 }
                                 else if (col === 0) {

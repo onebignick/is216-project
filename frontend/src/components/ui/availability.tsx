@@ -97,16 +97,18 @@ export function Availability({ eventInformation } : AvailabilityProps) {
 
     return (
         <>
-            <table className="border border-collapse border-slate-500">
-                <thead>
-                    <tr>
-                        {userAvailability ? generateTableHeaders() : null}
-                    </tr>
-                </thead>
-                <tbody>
-                    {userAvailability ? generateTableBody() : null}                   
-                </tbody>
-            </table>
+            <div className="overflow-x-auto w-full"> {/* Make the div scrollable */}
+                <table className="min-w-[800px] md:min-w-[600px] border border-collapse border-slate-500"> {/* Responsive min width */}
+                    <thead>
+                        <tr>
+                            {userAvailability ? generateTableHeaders() : null}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {userAvailability ? generateTableBody() : null}                   
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }
@@ -175,7 +177,7 @@ function TableRow({ table, interval, meetgridAvailability, timeIntervals, startT
 
                 return (
                     <tr key={idy}>
-                        <td className="border border-slate-500 px-2">{timeIntervals[idy]}</td> {/* Timing Column */}
+                        <td className="w-10 border border-slate-500 px-2">{timeIntervals[idy]}</td> {/* Timing Column */}
                         {
                             row.map(( col, idx ) => {
                                 return (
