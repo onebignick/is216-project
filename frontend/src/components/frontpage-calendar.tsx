@@ -19,7 +19,8 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
     .filter(event => {
         const endISO = convertDateToISO(event.endDate); // Convert end date to ISO format
         const endDate = new Date(endISO);
-        return endDate > new Date(); // Only include events that are not in the past
+        endDate.setUTCDate(endDate.getUTCDate() + 1);
+        return endDate >= new Date(); // Only include events that are not in the past
     })
     .map(event => {
         const startISO = convertDateToISO(event.startDate);
@@ -29,14 +30,15 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
         const isAllDay = true;
 
         if (isAllDay) {
-            endDate.setUTCDate(endDate.getUTCDate() + 1);
+            console.log(event.name);
+            console.log(endDate.getUTCDate());
             endDate.setUTCHours(0, 0, 0, 0);
         }
 
         return {
             id: event.id,
             title: event.name || "Untitled Event",
-            start: startISO,
+            start: startDate.toISOString(),
             end: endDate.toISOString(),
             allDay: isAllDay,
             category: "allday",
