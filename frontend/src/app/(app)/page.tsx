@@ -14,11 +14,39 @@ export default async function Home() {
   if (!user) return <p>Please log in to view events.</p>;
   const allEvents = await eventService.getAllEvents(user.id);
 
+  // Get today's date
+  const today = new Date();
+  const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+  
+  // Filter today's events with null check for event.startDate
+  const todaysEvents = allEvents.filter(event => {
+    // Ensure event.startDate is a valid string
+    if (event.startDate) {
+      const eventDate = new Date(event.startDate); // Create Date only if startDate is valid
+      return eventDate >= startOfDay && eventDate <= endOfDay;
+    }
+    return false; // If startDate is null, do not include this event
+  });
+
+  // Calculate start and end of the week (assuming week starts on Sunday)
+  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+
+  // Filter this week's events
+  const weeksEvents = allEvents.filter(event => {
+    if (event.startDate) {
+      const eventDate = new Date(event.startDate);
+      return eventDate >= startOfWeek && eventDate <= endOfWeek;
+    }
+    return false;
+  });
+
   return (
     <main className="grid grid-cols-12 grid-rows-4 gap-4 p-4">
       <WelcomeCard className="hidden md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
-      <TodaysMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <WeeksMeetings chartData={[{meetings: `${eventsOrganizedByUser.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
+      <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
+      <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <FrontpageCalendar events={allEvents} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
       <RecentActivityCard clerkUserId={user!.id} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
