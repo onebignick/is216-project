@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+//import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+//import { Input } from "@/components/ui/input";
 import { MeetgridBookEvent } from "@/server/entity/booking";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+//import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // Types for event and booking events
 interface Question {
@@ -32,27 +32,27 @@ interface participantsInformationProps {
 export function InterviewNotes({ participantsInformation }: participantsInformationProps) {
     const hasParticipants = participantsInformation && participantsInformation.length > 0;
 
-    const [questions, setQuestions] = useState<Question[]>([]);
-    const [newQuestion, setNewQuestion] = useState("");
+    //const [questions, setQuestions] = useState<Question[]>([]);
+    //const [newQuestion, setNewQuestion] = useState("");
 
     // Function to add a new question
-    const handleAddQuestion = () => {
-        if (newQuestion.trim() !== "") {
-            setQuestions([...questions, { key: `${Date.now()}`, prompt: newQuestion.trim() }]);
-            setNewQuestion("");
-        }
-    };
+    // const handleAddQuestion = () => {
+    //     if (newQuestion.trim() !== "") {
+    //         setQuestions([...questions, { key: `${Date.now()}`, prompt: newQuestion.trim() }]);
+    //         setNewQuestion("");
+    //     }
+    // };
 
     // Function to handle drag end and update order
-    const handleOnDragEnd = (result) => {
-        if (!result.destination) return; // If dropped outside the list, do nothing
+    // const handleOnDragEnd = (result) => {
+    //     if (!result.destination) return; // If dropped outside the list, do nothing
 
-        const reorderedQuestions = Array.from(questions);
-        const [reorderedItem] = reorderedQuestions.splice(result.source.index, 1);
-        reorderedQuestions.splice(result.destination.index, 0, reorderedItem);
+    //     const reorderedQuestions = Array.from(questions);
+    //     const [reorderedItem] = reorderedQuestions.splice(result.source.index, 1);
+    //     reorderedQuestions.splice(result.destination.index, 0, reorderedItem);
 
-        setQuestions(reorderedQuestions); // Update questions with the new order
-    };
+    //     setQuestions(reorderedQuestions); // Update questions with the new order
+    // };
 
     return (
         <div className="relative p-6 h-screen flex flex-col space-y-6">
@@ -85,7 +85,7 @@ export function InterviewNotes({ participantsInformation }: participantsInformat
             )}
 
             {/* Section for adding and reordering interview questions */}
-            <Card className="mt-4">
+            {/* <Card className="mt-4">
                 <CardHeader>
                     <CardTitle>Interview Questions</CardTitle>
                     <CardDescription>Add and reorder questions to ask participants during the interview.</CardDescription>
@@ -99,10 +99,10 @@ export function InterviewNotes({ participantsInformation }: participantsInformat
                             onChange={(e) => setNewQuestion(e.target.value)}
                         />
                         <Button onClick={handleAddQuestion}>Add Question</Button>
-                    </div>
+                    </div> */}
 
                     {/* Drag and Drop for Reordering Questions */}
-                    <DragDropContext onDragEnd={handleOnDragEnd}>
+                    {/* <DragDropContext onDragEnd={handleOnDragEnd}>
                         <Droppable droppableId="questions">
                             {(provided) => (
                                 <ul
@@ -130,7 +130,7 @@ export function InterviewNotes({ participantsInformation }: participantsInformat
                         </Droppable>
                     </DragDropContext>
                 </CardContent>
-            </Card>
+            </Card> */}
         </div>
     );
 }

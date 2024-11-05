@@ -3,20 +3,27 @@ import { BookingService } from "@/server/service/BookingService";
 import { Card, CardHeader, CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { AvailabilityCard } from "@/components/availability-card";
 import { MeetgridEvent } from "@/server/entity/event";
+import { QuestionService } from "@/server/service/QuestionService";
 
-export default async function EventPage({params}: {params: {eventId:string}}) {
+
+export default async function EventPage({params}: {params: {eventId:string, bookId:string}}) {
     const eventService: EventService = new EventService();
     const eventInformation = await eventService.getOneEventById(params.eventId);
 
     const bookingService = new BookingService();
     const participantsInformation = await bookingService.getOneBookEventById(eventInformation![0].eventCode!);
 
+
+    const questionService: QuestionService = new QuestionService();
+    const eventQuestions = await questionService.getAllQuestionsRelatedToNotes(params.bookId);
+
     return (
         <div className="grid grid-cols-12 gap-4 p-4">
             <InviteCard event={eventInformation![0]} className="col-span-12"/>
-            <AvailabilityCard eventInformation={eventInformation![0]} participantsInformation={participantsInformation} className="col-span-12"/>
+            <AvailabilityCard eventInformation={eventInformation![0]} participantsInformation={participantsInformation} eventQuestions={eventQuestions} className="col-span-12"/>
             <ExampleCard className="hidden lg:block col-span-12"/>
             <AdminCard className="col-span-12" event={eventInformation![0]}/>
+           
         </div>
     )
 }
