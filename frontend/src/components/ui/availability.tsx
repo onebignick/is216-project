@@ -177,7 +177,7 @@ function TableRow({ table, interval, meetgridAvailability, timeIntervals, startT
 
                 return (
                     <tr key={idy}>
-                        <td className="w-10 border border-slate-500 px-2">{timeIntervals[idy]}</td> {/* Timing Column */}
+                        <td className="w-10 border border-slate-500 px-2 text-center">{timeIntervals[idy]}</td> {/* Timing Column */}
                         {
                             row.map(( col, idx ) => {
                                 return (

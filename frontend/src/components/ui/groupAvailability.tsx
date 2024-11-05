@@ -61,14 +61,13 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
     }
 
     return (
-        <>
-            <div className="overflow-x-auto w-full"> {/* Set width to full to ensure scrolling works */}
+        <>{/* Set width to full to ensure scrolling works */}
                 {isLoading ? (
                     <div className="flex h-full">
                         <p>Loading availability...</p>
                     </div>
                 ) : (
-                    <table className="min-w-[800px] border border-collapse border-slate-500"> {/* Ensure minimum width for scrolling */}
+                    <table className="min-w-[800px] md:min-w-[600px] border border-collapse border-slate-500"> {/* Ensure minimum width for scrolling */}
                         <thead>
                             <tr>
                                 {generateTableHeaders()}
@@ -79,7 +78,7 @@ export function GroupAvailability({ eventInformation } : AvailabilityProps) {
                         </tbody>
                     </table>
                 )}
-            </div>
+  
         </>
     )
 }
@@ -106,7 +105,7 @@ function TableRow({ table, startTime, endTime }: { table: number[][], startTime:
                                     let startMinute = (curTime%60).toString();
                                     if (startMinute.length == 1) startMinute = "0" + startMinute;
 
-                                    return <td key={idx} className="w-10 border border-slate-500 px-2">
+                                    return <td key={idx} className="w-3 border border-slate-500 px-2 text-center">
                                         {startHour + ":" + startMinute}
                                     </td>
                                 }
