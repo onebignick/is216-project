@@ -26,7 +26,7 @@ function ExampleCard({ className } : {className:string}) {
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>This is a test</CardTitle>
+        <CardTitle>Question</CardTitle>
         <CardDescription>This is a test</CardDescription>
       </CardHeader>
       <CardContent>
