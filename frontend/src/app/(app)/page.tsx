@@ -114,7 +114,17 @@ interface RecentActivity {
   role: "organizer" | "admin" | "attendee";
   event: string | null | undefined
 }
-function RecentActivityComponent({ activity } : { activity: RecentActivity }) {
+
+function RecentActivityComponent({ activity }: { activity: RecentActivity }) {
+  let result;
+  if (activity.role === "attendee") {
+    result = "has registered for " + activity.event;
+  } else if (activity.role === "admin") {
+    result = "was given admin permission for " + activity.event;
+  } else {
+    result = "created " + activity.event;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -122,21 +132,7 @@ function RecentActivityComponent({ activity } : { activity: RecentActivity }) {
           {activity?.username}
         </CardTitle>
         <CardDescription>
-          {
-            function() {
-              let result;
-              if (activity.role === "attendee") {
-                result = "has registered for " + activity.event;
-              }
-              else if (activity.role === "admin") {
-                result = "was given admin permission for " + activity.event;
-              }
-              else {
-                result = "created " + activity.event;
-              }
-              return <p>{result}</p>
-            }()
-          }
+          <span>{result}</span> {/* Changed <p> to <span> */}
         </CardDescription>
       </CardHeader>
     </Card>
