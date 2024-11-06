@@ -30,4 +30,27 @@ export class BookingController {
             return NextResponse.json({message: "An error occured"}, {status: 500});
         }
     }
+
+    // New method to handle event deletion
+    async handleDeleteBookEvent(eventId: string, request: Request) {
+        try {
+            // Check if eventId is valid (you can add additional validation if necessary)
+            if (!eventId) {
+                return NextResponse.json({ message: "Book ID is required" }, { status: 400 });
+            }
+    
+            const result = await this.BookingService.deleteById(eventId); // Call to service to delete the event
+    
+            if (result) {
+                return NextResponse.json({ message: "Book Event deleted successfully" }, { status: 200 });
+            } else {
+                return NextResponse.json({ message: "Book Event not found" }, { status: 404 });
+            }
+    
+        } catch (error) {
+            console.error("Error deleting book event:", error);
+            return NextResponse.json({ message: "An error occurred while deleting the book event" }, { status: 500 });
+        }
+    }
+
 }

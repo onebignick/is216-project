@@ -51,7 +51,17 @@ export class BookingService {
             console.log("Error boook event:", e.message);
             return "";
         }
+        
     }
 
+    async deleteById(bookId: string): Promise<boolean> {
+        try {
+            const deletedEvents = await this.BookEventRepository.deleteOne(bookId);
+            return deletedEvents.length > 0; // Return true if at least one event was deleted
+        } catch (e) {
+            console.log("Error deleting event in repository:", e.message);
+            return false; // Return false if an error occurs
+        }
+    }
     
 }

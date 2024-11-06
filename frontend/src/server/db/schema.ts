@@ -32,7 +32,7 @@ export const registration = createTable("user_event", {
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}),
-	eventCode: varchar("EventCode", {length: 1000000}).unique(),
+	eventCode: varchar("eventCode", {length: 1000000}).unique(),
 	description: varchar("description", {length: 10000}),
 	startDate: varchar("startDate", { length: 1000 }),
 	endDate: varchar("endDate", { length: 1000 }),
