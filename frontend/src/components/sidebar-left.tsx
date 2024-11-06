@@ -225,10 +225,12 @@ export function SidebarLeft({
       if (result.result.length === 0) return;
       const organizedEvents = result.result[0].organizedEvents;
       for(let i=0;i<organizedEvents.length;i++) {
-        newMeetingData.push({
-          name: organizedEvents[i].name,
-          url: "/event/"+organizedEvents[i].id,
-        } as SidebarComponent);
+        if (organizedEvents[i]?.name) { // Only add events with a valid name
+          newMeetingData.push({
+            name: organizedEvents[i].name,
+            url: "/event/" + organizedEvents[i].id,
+          } as SidebarComponent);
+        }
       }
 
       const adminEvents = result.result[0].adminEvents;
