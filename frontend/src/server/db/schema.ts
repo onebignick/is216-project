@@ -61,7 +61,8 @@ export const booking = createTable("booking", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}),
 	date: varchar("date", { length: 1000 }),
-	time: timestamp("time"),
+	startTime: integer("startTime"),
+	endTime: integer("endTime"),
 	notes: varchar("description", {length: 10000}),
 	status: varchar("status", {length: 10000}),
 	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId, {

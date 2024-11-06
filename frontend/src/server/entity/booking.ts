@@ -2,7 +2,8 @@ export type MeetgridBookEvent = {
     id?: string;
     name: string | null;
     date: string | null;
-    time: Date | null;
+    startTime?: number | null;
+    endTime?: number | null;
     notes: string | null;
     status: string | null;
     participantId: string | null; 
