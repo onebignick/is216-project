@@ -70,6 +70,7 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
                     week={{
                         hourStart: 0,  // Start of day in 24-hour format
                         hourEnd: 24,   // End of day in 24-hour format
+                        startDayOfWeek: new Date().getDay(), //set start day of the week as current day
                         taskView: false,
                         eventView: ['time', 'allday'],
                     }}
