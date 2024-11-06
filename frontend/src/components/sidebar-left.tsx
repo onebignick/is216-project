@@ -46,12 +46,12 @@ const data = {
       isActive: true,
     },
     {
-      title: "Create an Event",
+      title: "Create a Meeting",
       url: "/event/create",
       icon: Plus,
     },
     {
-      title: "Your Events",
+      title: "Your Meetings",
       url: "/event",
       icon: Calendar,
     },
@@ -61,7 +61,7 @@ const data = {
       icon: MapPin,
     },
     {
-      title: "Notes",
+      title: "Meeting Notes",
       url: "/event/notes",
       icon: Inbox,
       badge: "10",
