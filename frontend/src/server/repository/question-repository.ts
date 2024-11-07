@@ -1,68 +1,38 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
-import { notes_questions} from "../db/schema"; // Ensure this path is correct
-import { MeetgridQuestions } from "../entity/question"; // Ensure this path is correct
-import { IBaseRepository } from "./base-repository";
+import { notes_questions } from "../db/schema";
+import { MeetgridQuestions } from "../entity/question";
 
-export class QuestionRepository implements IBaseRepository<MeetgridQuestions> {
+export class QuestionRepository {
+  async getById(id: string): Promise<MeetgridQuestions[]> {
+    return db.query.notes_questions.findMany({ where: { id } });
+  }
 
-    async getById(id: string): Promise<MeetgridQuestions[]> {
-        const result = await db.query.notes_questions.findMany({
-            with: {
-                id: id
-            },
-        });
-        return result
-    }
+  async getAll(): Promise<MeetgridQuestions[]> {
+    return db.query.notes_questions.findMany();
+  }
 
-    async getAll(): Promise<MeetgridQuestions[]> {
-        const result = await db.query.notes_questions.findMany();
-        return result;
-    }
+  async createOne(item: MeetgridQuestions): Promise<{ id: string }[]> {
+    console.log("Inserting item to DB:", item);  // Log before DB insert
+    return db.insert(notes_questions).values(item).returning();
+}
 
-    async createOne(item: MeetgridQuestions): Promise<{id: string}[]> {
-        const result: {id: string}[] = await db.insert(notes_questions).values(item).returning();
-        return result
-    }
+  async createMany(items: MeetgridQuestions[]): Promise<{ id: string }[]> {
+    const sanitizedItems = items.map(item => ({
+      ...item,
+      createdAt: item.createdAt || new Date(),
+      updatedAt: item.updatedAt || new Date().toISOString(),
+    }));
+    return db.insert(notes_questions).values(sanitizedItems).returning();
+  }
 
-    // Create multiple notes
-    async createMany(items: MeetgridQuestions[]): Promise<{ id: string }[]> {
-        // Ensure all items have valid Date for createdAt and updatedAt, converted to string
-        const sanitizedItems = items.map(item => ({
-            ...item,
-            createdAt: item.createdAt ? item.createdAt : new Date(),  // Convert Date to ISO string
-            updatedAt: item.updatedAt ? item.updatedAt.toString() : new Date().toISOString()   // Convert Date to ISO string
-        }));
+  async updateOne(id: string, item: MeetgridQuestions): Promise<{ id: string }[]> {
+    return db.update(notes_questions).set(item).where(eq(notes_questions.id, id)).returning();
+  }
 
-        // Insert items into the database
-        const result: { id: string }[] = await db.insert(notes_questions).values(sanitizedItems).returning();
-        return result;
-    }
-    
-    async updateOne(id: string, item: MeetgridQuestions): Promise<{id: string}[]> {
-        const result: {id: string}[] = await db.update(notes_questions).set(item).where(eq(notes_questions.id, id)).returning();
-        return result;
-    }
-
-    // Method to get an event by its unique code
-    async getQuestionsByEventId(eventId: string): Promise<MeetgridQuestions[]> {
-        const result = await db.query.notes_questions.findMany({
-            where: eq(notes_questions.eventId, eventId), // Ensure this is correctly filtering notes by bookingId
-        });
-    
-        // Always return an array
-        return result || []; // Use empty array as fallback
-    }
-
-    // todo delete logic
-    async deleteOne(id: string): Promise<MeetgridQuestions[]> {
-        console.log(id);
-        return [];
-    }
-
-    async deleteMany(ids: string[]): Promise<MeetgridQuestions[]> {
-        console.log(ids);
-        return []
-    }
-
+  async getQuestionsByEventId(eventId: string): Promise<MeetgridQuestions[]> {
+    return db.query.notes_questions.findMany({
+      where: eq(notes_questions.eventId, eventId),
+    });
+  }
 }
