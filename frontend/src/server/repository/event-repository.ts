@@ -25,7 +25,7 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
             .where(eq(registration.userId, clerkUserId))
 
         if (result.length == 0 ) {
-            console.log("No events found for user:", clerkUserId);
+            // console.log("No events found for user:", clerkUserId);
             return [];
         }
 
@@ -71,7 +71,7 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
             .leftJoin(user, eq(registration.userId, user.clerkUserId))
             .where(eq(registration.userId, clerkUserId))
         
-        console.log(result);
+        // console.log(result);
         if (result.length == 0 ) {
             return [];
         }
@@ -141,9 +141,9 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
 
     async updateOne(id: string, item: MeetgridEvent): Promise<{id: string}[]> {
         try {
-            console.log(id, item)
+            // console.log(id, item)
             const result = await db.update(event).set(item).where(eq(event.id, id)).returning();
-            console.log(result);
+            // console.log(result);
             return result;
         } catch (e) {
             console.log(e.message);
