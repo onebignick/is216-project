@@ -225,11 +225,6 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             endDate.setUTCDate(endDate.getUTCDate()); // Move end date to the next day
             endDate.setUTCHours(0, 0, 0, 0); // Reset time to start of the day
         }
-
-        // Assign random colors
-        // const backgroundColor = getRandomColor();
-        // const borderColor = getRandomColor();
-        // const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
         
         const reminderDate = formatDateToDDMMYYYY(new Date(event.reminder));;
 
@@ -521,14 +516,12 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 {event.type === 'event' && (
                     <>
                         <p>Event Code: {event.eventCode}</p>
-                        <p>Starts at: {formatDateToDDMMYYYY(startDate)}</p>
-                        <p>Ends at: {formatDateToDDMMYYYY(endDate)}</p>
-                        <p>Start Time: {event.startTime}</p>
-                        <p>End Time: {event.endTime}</p>
+                        <p>Event Duration: {formatDateToDDMMYYYY(startDate)} - {formatDateToDDMMYYYY(endDate)}</p>
+                        <p>Event Timing: {event.startTime} - {event.endTime}</p>
                         <p>Reminder Participant Date: {event.reminderDate} ({event.reminder - 1} days)</p>
                         <p>Total Participant Number: {event.participant}</p>
                         <p>Description: {event.description}</p>
-                        <p>Zoom Link: {event.zoomLink}</p>
+                        <p>Zoom Link: <Link href={event.zoomLink} className='underline decoration text-blue-500'>Link</Link></p>
                         <br />
                         <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                             <Link href={`/event/${event.id}`}>View More Details</Link>
@@ -539,11 +532,10 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 {/* Booking event details */}
                 {event.type === 'booking' && (
                     <>
-                        <p>Starts Date: {formatDateToDDMMYYYY(startDate)}</p>
-                        <p>Start Time: {event.startTime}</p>
-                        <p>End Time: {event.endTime}</p>
+                        <p>Date: {formatDateToDDMMYYYY(startDate)}</p>
+                        <p>Booking Period: {event.startTime} - {event.endTime}</p>
                         <p>Description: {event.description}</p>
-                        <p>Zoom Link: {event.zoomLink}</p>
+                        <p>Zoom Link: <Link href={event.zoomLink} className='underline decoration text-blue-500'>Link</Link></p>
                         <br />
                         <div className="flex justify-between gap-2">
                             <Button 
