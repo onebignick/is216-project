@@ -121,7 +121,7 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
         setEventFilters(initialFilters);
     }, [bookingEvents]);
 
-    Handle input change for event questions
+    //Handle input change for event questions
     const handleInputChange = (eventId: string, questionKey: string, value: string) => {
         if (selectedEvent && selectedEvent.id === eventId) {
             setSelectedEvent((prev) => ({
@@ -134,7 +134,7 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
         }
     };
 
-    Filter events based on the search query and selected filters
+    //Filter events based on the search query and selected filters
     const filteredEvents = bookingEvents.filter((event) =>
         event.name !== null && event.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -234,7 +234,7 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
     );
 };
 
-Modal Component
+//Modal Component
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: Event | null }) => {
     const [questions, setQuestions] = useState<Question[]>(event?.questions || []);
     const [newQuestionPrompt, setNewQuestionPrompt] = useState<string>(""); // For new question prompt
