@@ -8,21 +8,21 @@ export class QuestionService {
         this.questionRepository = new QuestionRepository();
     }
      // Creates a new event and ensures the code is unique
-     async createOneNote(newQuestionsEvent: MeetgridQuestions) {
+     async createOneQuestion(newQuestionsEvent: MeetgridQuestions) {
         try {
 
             // Attempt to create the event in the repository
             const result = await this.questionRepository.createOne(newQuestionsEvent);
 
             if (result.length === 0) {
-                console.log("Failed to create note");
+                console.log("Failed to create question");
                 return "";
             } else {
-                console.log("Create note successfully:", result[0].id);
+                console.log("Create question successfully:", result[0].id);
                 return { id: result[0].id};
             }
         } catch (e) {
-            console.log("Error creating note:", e.message);
+            console.log("Error creating question:", e.message);
             return "";
         }
     }
