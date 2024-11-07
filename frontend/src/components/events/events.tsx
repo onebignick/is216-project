@@ -108,14 +108,14 @@ function EventPageSidebar({ events, bookings, setEventFilters, eventFilters, sea
 
     return (
         <div className="w-full lg:w-1/3 bg-white shadow-lg rounded-lg p-6 mb-4 lg:mb-0">
-            <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events & Bookings</h2>
+            <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Organizers & Attendee Meetings</h2>
             <Input 
-                placeholder="Search Events & Bookings" 
+                placeholder="Search Meetings" 
                 className="mb-4 border rounded-md focus:outline-none focus:ring focus:ring-blue-300" 
                 value={searchTerm} 
                 onChange={(e) => setSearchTerm(e.target.value)} 
             />
-            <h3 className="font-bold text-md mb-2 hidden lg:block">Filter Events:</h3>
+            <h3 className="font-bold text-md mb-2 hidden lg:block">Filter Organizer Meetings:</h3>
             <div className="space-y-2 hidden lg:block">
                 {formattedEventTitles.map((title, index) => (
                     <label key={index} className="flex items-center">
@@ -130,7 +130,7 @@ function EventPageSidebar({ events, bookings, setEventFilters, eventFilters, sea
                     </label>
                 ))}
 
-                <h3 className="font-bold text-md mt-4">Filter Bookings:</h3>
+                <h3 className="font-bold text-md mt-4">Filter My Meetings:</h3>
                 {formattedBookingTitles.map((title, index) => (
                     <label key={index} className="flex items-center">
                         <input
