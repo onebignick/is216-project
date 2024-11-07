@@ -90,16 +90,48 @@ export class EventRepository implements IBaseRepository<MeetgridEvent> {
         return resultUserActvity;
     }
 
-    async createOne(item: MeetgridEvent): Promise<{id: string}[]> {
-        const newEvent : {id: string}[] = await db.insert(event).values(item).returning();
+    async createOne(item: MeetgridEvent): Promise<{ id: string }[]> {
+        // Generate random colors if not provided
+        const backgroundColor = item.backgroundColor || this.getRandomColor();
+        const borderColor = item.borderColor || this.getRandomColor();
+        const textColor = item.textColor || (this.isLightColor(backgroundColor) ? '#000000' : '#ffffff');
+
+        const newEvent: { id: string }[] = await db.insert(event).values({
+            ...item,
+            backgroundColor,  // Store background color in the database
+            borderColor,      // Store border color in the database
+            textColor,        // Store text color in the database
+        }).returning();
+
         const newRelation = {
             eventId: newEvent[0].id,
             userId: item.createdBy,
             role: "organizer",
-        } as Registration
+        } as Registration;
+
+        // Create the relation between the event and the user
         await this.createOneUserEventRelation(newRelation);
 
-        return newEvent
+        return newEvent;
+    }
+
+    // Method to generate a random color
+    getRandomColor(): string {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Method to check if a color is light or dark
+    isLightColor(color: string): boolean {
+        const r = parseInt(color.substr(1, 2), 16);
+        const g = parseInt(color.substr(3, 2), 16);
+        const b = parseInt(color.substr(5, 2), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        return luminance > 0.5;  // Return true if light color
     }
 
     async createMany(items: MeetgridEvent[]): Promise<{id: string}[]> {

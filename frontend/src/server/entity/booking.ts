@@ -8,4 +8,7 @@ export type MeetgridBookEvent = {
     status: string | null;
     participantId: string | null; 
     eventCode: string | null;
+    backgroundColor: string;
+    borderColor: string;
+    textColor: string;
 }

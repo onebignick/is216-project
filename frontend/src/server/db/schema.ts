@@ -42,6 +42,9 @@ export const event = createTable("event", {
 	reminder: varchar("reminder", {length: 1000}),
 	participantNum: varchar("participantNum", {length: 100}),
 	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
+	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
+    borderColor: varchar("borderColor", { length: 7 }),  // hex color
+    textColor: varchar("textColor", { length: 7 }),  // hex color
 });
 
 export const availability = createTable("availability", {
@@ -65,6 +68,9 @@ export const booking = createTable("booking", {
 	endTime: integer("endTime"),
 	notes: varchar("description", {length: 10000}),
 	status: varchar("status", {length: 10000}),
+	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
+    borderColor: varchar("borderColor", { length: 7 }),  // hex color
+    textColor: varchar("textColor", { length: 7 }),  // hex color
 	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId, {
 		onDelete: "cascade"
 	}),

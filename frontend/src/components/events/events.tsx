@@ -173,29 +173,6 @@ function convertDateToISO(dateString: string): string {
     return date.toISOString();
 }
 
-// Function to generate a random color
-const getRandomColor = () => {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-};
-
-// Function to check if color is light or dark
-const isLightColor = (hexColor: string) => {
-    // Convert hex to RGB
-    const r = parseInt(hexColor.slice(1, 3), 16);
-    const g = parseInt(hexColor.slice(3, 5), 16);
-    const b = parseInt(hexColor.slice(5, 7), 16);
-
-    // Calculate luminance
-    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-    // If luminance is greater than a threshold (128), it's a light color
-    return luminance > 128;
-};
 
 function calculateDaysUntilReminder(reminderDate: string, startDate: Date): number {
     const reminder = new Date(reminderDate);
@@ -227,7 +204,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    console.log(events);
+    console.log(events, bookings);
     
     const formattedEvents = events.map(event => {
         const startISO = convertDateToISO(event.startDate); // Convert start date
@@ -249,10 +226,10 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             endDate.setUTCHours(0, 0, 0, 0); // Reset time to start of the day
         }
 
-         // Assign random colors
-        const backgroundColor = getRandomColor();
-        const borderColor = getRandomColor();
-        const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
+        // Assign random colors
+        // const backgroundColor = getRandomColor();
+        // const borderColor = getRandomColor();
+        // const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
         
         const reminderDate = formatDateToDDMMYYYY(new Date(event.reminder));;
 
@@ -273,14 +250,14 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             reminderDate: reminderDate.toLocaleString(),
             startTime: startTime,
             endTime: endTime,
-            backgroundColor, // Random background color
-            borderColor,     // Random border color
-            color: textColor, // Text color (white for readability)
+            backgroundColor: event.backgroundColor, // Random background color
+            borderColor: event.borderColor,     // Random border color
+            color: event.textColor, // Text color (white for readability)
             type: "event",
             
         };
     });
-    console.log(bookings);
+    console.log("Formatted Events", formattedEvents);
 
     const formattedBookings = bookings.map(booking => {
         // Parse the booking.date which is already in Singapore time
@@ -303,11 +280,6 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
         const startTimeLocal = formatDate(startTimeDate);  // Local SGT start time
         const endTimeLocal = formatDate(endTimeDate);      // Local SGT end time
     
-        // Assign random colors for the event
-        const backgroundColor = getRandomColor();
-        const borderColor = getRandomColor();
-        const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
-    
          // Generate title based on booking type and name, assuming 'booking' object has the necessary properties
         const title = booking.type === 'organizer' 
         ? `Meeting with ${booking.participantName || "Unnamed Organizer"}`
@@ -327,9 +299,9 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             reminderDate: null,
             startTime: booking.startTime,
             endTime: booking.endTime,
-            backgroundColor,
-            borderColor,
-            color: textColor,
+            backgroundColor: booking.backgroundColor, // Random background color
+            borderColor: booking.borderColor,     // Random border color
+            color: booking.textColor, // Text color (white for readability)
             type: "booking",
         };
     });

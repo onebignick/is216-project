@@ -57,6 +57,9 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
                 status: booking.status || '',         // Status from the booking, if available
                 participantId: booking.participantId, // Participant ID
                 eventCode: event.eventCode,            // Event code from the event
+                backgroundColor: booking.backgroundColor,
+                textColor: booking.textColor,
+                borderColor: booking.borderColor,
                 type: "attendee"
             };
         });
@@ -96,6 +99,9 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
                 status: booking.status || '',         // Status from the booking, if available
                 participantId: booking.participantId, // Participant ID
                 eventCode: event.eventCode,            // Event code from the event
+                backgroundColor: booking.backgroundColor,
+                textColor: booking.textColor,
+                borderColor: booking.borderColor,
                 type: "organizer"
             };
         });
@@ -104,9 +110,44 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
     }
     
     async createOne(item: MeetgridBookEvent): Promise<{id: string}[]> {
-        const result: {id: string}[] = await db.insert(booking).values(item).returning();
-        return result
+        // Generate random colors
+        const backgroundColor = this.getRandomColor();
+        const borderColor = this.getRandomColor();
+        const textColor = this.isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
+        
+        // Prepare the item with the color properties
+        const newItem = {
+            ...item,
+            backgroundColor,
+            borderColor,
+            textColor
+        };
+        
+        // Insert the new item into the database
+        const result: {id: string}[] = await db.insert(booking).values(newItem).returning();
+        
+        return result;
     }
+
+    // Helper functions for generating random color and checking luminance
+    getRandomColor(): string {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    // Method to check if a color is light or dark
+    isLightColor(color: string): boolean {
+        const r = parseInt(color.substr(1, 2), 16);
+        const g = parseInt(color.substr(3, 2), 16);
+        const b = parseInt(color.substr(5, 2), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+        return luminance > 0.5;  // Return true if light color
+    }
+
 
     async createMany(items: MeetgridBookEvent[]): Promise<{id: string}[]> {
         const result: {id: string}[] = await db.insert(booking).values(items).returning();
