@@ -49,7 +49,7 @@ export const event = createTable("event", {
 
 export const availability = createTable("availability", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	availabilityString: varchar("availabilityString", {length: 2000}),
+	availabilityString: varchar("availabilityString", {length: 10000}),
 	clerkUserId: varchar("clerkUserId", {length: 32}).references(() => user.clerkUserId, {
 		onDelete: "cascade",
 	}),
