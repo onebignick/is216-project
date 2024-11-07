@@ -564,7 +564,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 {showDeleteModal && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                         <div className="bg-white rounded-lg p-6 w-1/3">
-                            <h3 className="text-xl mb-4 text-center">Are you sure you want to delete this event?</h3>
+                            <h3 className="text-xl mb-4 text-center">Are you sure you want to cancel this timing?</h3>
                             {successMessage && <p className="text-green-500">{successMessage}</p>}
                             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
                             <div className="flex justify-between gap-2">
