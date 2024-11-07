@@ -163,11 +163,8 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
             if (result.length === 0) {
                 throw new Error(`Booking Event with id ${id} not found`);
             }
-    
-            console.log(`Booking Event with id: ${id} deleted successfully.`);
             return result;
         } catch (error) {
-            console.error(`Error deleting book event with id ${id}:`, error.message);
             throw new Error("An error occurred while deleting the book event");
         }
     }

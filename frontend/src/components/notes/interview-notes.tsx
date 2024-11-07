@@ -82,7 +82,6 @@ export function InterviewNotes({ participantsInformation, questions }: Interview
       ) : (
         <div className="flex flex-col items-center justify-center h-full">
           <p>No participants yet. Invite people to join your event.</p>
-          <Button className="mt-4">Add Participants</Button>
         </div>
       )}
     </div>
