@@ -24,6 +24,15 @@ export class BookingService {
         }
     }
     
+    async getAllBookEventsJoinByUser(userId: string) {
+        try {
+            return await this.BookEventRepository.getAllBookEventsJoinByUser(userId)
+        } catch (e) {
+            console.log(e.message);
+            return [];
+        }
+    }
+
     async getAllBookEventsOrganizedByUser(userId: string) {
         try {
             return await this.BookEventRepository.getAllBookEventsOrganizedByUser(userId)

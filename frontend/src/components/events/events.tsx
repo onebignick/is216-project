@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import { title } from 'process';
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
 interface EventPageProps {
@@ -17,7 +18,7 @@ interface EventPageProps {
 export default function EventPage({ events, bookings }: EventPageProps) {
     const [isClient, setIsClient] = useState(false);
     const [filteredEvents, setFilteredEvents] = useState(events);
-    const [filteredBookings, setFilteredBookings] = useState(bookings); // Add bookings state
+    const [filteredBookings, setFilteredBookings] = useState(bookings); // Bookings state
     const [eventFilters, setEventFilters] = useState<{ [key: string]: boolean }>({});
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -27,34 +28,28 @@ export default function EventPage({ events, bookings }: EventPageProps) {
 
     useEffect(() => {
         const activeFilters = Object.keys(eventFilters).filter(key => eventFilters[key]);
-        
-        const filtered = events.filter(event => {
-            // Check if event matches the selected filters
-            const matchesFilters = activeFilters.length === 0 || activeFilters.includes(event.name || "Untitled Event");
-            
-            // Check if event matches the search term
-            const matchesSearch = 
-                event.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                event.description?.toLowerCase().includes(searchTerm.toLowerCase());
-            
-            // Both conditions must be true for an event to be included
+
+        const filteredEvents = events.filter(event => {
+            const eventTitle = event.name || "Untitled Event";
+            const matchesFilters = activeFilters.length === 0 || activeFilters.includes(`Event: ${eventTitle}`);
+            const matchesSearch = event.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                  event.description?.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesFilters && matchesSearch;
         });
-        
-        setFilteredEvents(filtered);
-    }, [eventFilters, searchTerm, events]);
 
-    useEffect(() => {
-        const filtered = bookings.filter(booking => {
-            const matchesSearch = 
-                booking.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                booking.details?.toLowerCase().includes(searchTerm.toLowerCase());
-            
-            return matchesSearch;
+        const filteredBookings = bookings.filter(booking => {
+            const bookingTitle = booking.type === 'organizer' 
+                ? `Organizer: ${booking.name || "Untitled Booking"} - ${booking.participantName || "Unnamed Organizer"}`
+                : `Attendee: ${booking.name || "Untitled Booking"}`;
+            const matchesFilters = activeFilters.length === 0 || activeFilters.includes(`Booking: ${bookingTitle}`);
+            const matchesSearch = booking.name?.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                  booking.participantName?.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesFilters && matchesSearch;
         });
-        
-        setFilteredBookings(filtered); // Filter bookings based on search term
-    }, [searchTerm, bookings]);
+
+        setFilteredEvents(filteredEvents);
+        setFilteredBookings(filteredBookings);
+    }, [eventFilters, searchTerm, events, bookings]);
 
     return (
         <div className="p-4 flex flex-col lg:flex-row gap-4">
@@ -68,7 +63,10 @@ export default function EventPage({ events, bookings }: EventPageProps) {
                         searchTerm={searchTerm} 
                         setSearchTerm={setSearchTerm} 
                     />
-                    <MainEventPage events={filteredEvents} bookings={filteredBookings}/>
+                    <MainEventPage 
+                        events={filteredEvents} 
+                        bookings={filteredBookings}
+                    />
                 </>
             ) : (
                 <p>Loading...</p>
@@ -92,8 +90,13 @@ function EventPageSidebar({ events, bookings, setEventFilters, eventFilters, sea
     searchTerm: string, 
     setSearchTerm: React.Dispatch<React.SetStateAction<string>> 
 }) {
-    const formattedEventTitles = events.map(event => event.name || "Untitled Event");
-    const formattedBookingTitles = bookings.map(booking => booking.name || "Untitled Booking");
+    const formattedEventTitles = events.map(event => `Event: ${event.name || "Untitled Event"}`);
+    const formattedBookingTitles = bookings.map((booking) => {
+        if (booking.type === 'organizer') {
+            return `Booking: Organizer: ${booking.name || "Untitled Booking"} - ${booking.participantName || "Unnamed Organizer"}`;
+        }
+        return `Booking: Attendee: ${booking.name || "Untitled Booking"}`;
+    });
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, checked } = event.target;
@@ -104,7 +107,7 @@ function EventPageSidebar({ events, bookings, setEventFilters, eventFilters, sea
     };
 
     return (
-         <div className="w-full lg:w-1/3 bg-white shadow-lg rounded-lg p-6 mb-4 lg:mb-0">
+        <div className="w-full lg:w-1/3 bg-white shadow-lg rounded-lg p-6 mb-4 lg:mb-0">
             <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-200 pb-2">My Events & Bookings</h2>
             <Input 
                 placeholder="Search Events & Bookings" 
@@ -112,45 +115,34 @@ function EventPageSidebar({ events, bookings, setEventFilters, eventFilters, sea
                 value={searchTerm} 
                 onChange={(e) => setSearchTerm(e.target.value)} 
             />
-            <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
-                Search Event/Booking
-            </Button>
             <h3 className="font-bold text-md mb-2 hidden lg:block">Filter Events:</h3>
             <div className="space-y-2 hidden lg:block">
-                {formattedEventTitles.length > 0 ? (
-                    formattedEventTitles.map((title, index) => (
-                        <label key={index} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name={title} 
-                                checked={eventFilters[title] || false}
-                                onChange={handleCheckboxChange}
-                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                            />
-                            <span className="text-gray-700">{title}</span>
-                        </label>
-                    ))
-                ) : (
-                    <p>No events available</p>
-                )}
+                {formattedEventTitles.map((title, index) => (
+                    <label key={index} className="flex items-center">
+                        <input
+                            type="checkbox"
+                            name={title} 
+                            checked={eventFilters[title] || false}
+                            onChange={handleCheckboxChange}
+                            className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                        />
+                        <span className="text-gray-700">{title.replace("Event: ", "")}</span>
+                    </label>
+                ))}
 
                 <h3 className="font-bold text-md mt-4">Filter Bookings:</h3>
-                {formattedBookingTitles.length > 0 ? (
-                    formattedBookingTitles.map((title, index) => (
-                        <label key={index} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                name={title} 
-                                checked={eventFilters[title] || false} // Reuse the filter logic for bookings
-                                onChange={handleCheckboxChange}
-                                className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
-                            />
-                            <span className="text-gray-700">{title}</span>
-                        </label>
-                    ))
-                ) : (
-                    <p>No bookings available</p>
-                )}
+                {formattedBookingTitles.map((title, index) => (
+                    <label key={index} className="flex items-center">
+                        <input
+                            type="checkbox"
+                            name={title} 
+                            checked={eventFilters[title] || false}
+                            onChange={handleCheckboxChange}
+                            className="mr-2 h-4 w-4 border-gray-300 rounded focus:ring-blue-500 transition duration-200 hover:bg-gray-200"
+                        />
+                        <span className="text-gray-700">{title.replace("Booking: ", "")}</span>
+                    </label>
+                ))}
             </div>
         </div>
     );
@@ -316,9 +308,14 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
         const borderColor = getRandomColor();
         const textColor = isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
     
+         // Generate title based on booking type and name, assuming 'booking' object has the necessary properties
+        const title = booking.type === 'organizer' 
+        ? `Meeting with ${booking.participantName || "Unnamed Organizer"}`
+        : `Attendee: ${booking.name || "Untitled Booking"}`;
+
         return {
             id: booking.id,
-            title: booking.name,
+            title: title, // Fallback if no matching booking found,
             start: startTimeLocal, // Use local Singapore time
             end: endTimeLocal,     // Use local Singapore time
             allDay: false,
@@ -529,7 +526,13 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white rounded-lg p-6 w-1/3">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-bold text-center flex-grow">Event Name: {event.title}</h2>
+                    {event.type === 'event' && (
+                        <h2 className="text-xl font-bold text-center flex-grow">Event Name: {event.title}</h2>
+                    )}
+
+                    {event.type === 'booking' && (
+                        <h2 className="text-xl font-bold text-center flex-grow">{event.title}</h2>
+                    )}
                     <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
                         &times;
                     </button>
@@ -561,12 +564,18 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                         <p>End Time: {event.endTime}</p>
                         <p>Description: {event.description}</p>
                         <br />
-                        <Button 
-                            type="button" 
-                            onClick={() => setShowDeleteModal(true)} 
-                            className="px-4 py-2 bg-red-600 text-white rounded col-span-1">
-                            Delete Event
-                        </Button>
+                        <div className="flex justify-between gap-2">
+                            <Button 
+                                className="w-1/2 bg-blue-600 text-white hover:bg-gray-600 rounded-md">
+                                Update Timeslot
+                            </Button>
+                            <Button 
+                                type="button" 
+                                onClick={() => setShowDeleteModal(true)} 
+                                className="w-1/2 bg-red-600 text-white hover:bg-gray-600 rounded-md">
+                                Cancel Timeslot
+                            </Button>
+                        </div>
                     </>
                 )}
 

@@ -26,7 +26,7 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
     //     return result;
     // }
 
-    async getAllBookEventsOrganizedByUser(userId: string): Promise<MeetgridBookEvent[]> {
+    async getAllBookEventsJoinByUser(userId: string): Promise<MeetgridBookEvent[]> {
         const result = await db
             .select()
             .from(booking)
@@ -47,6 +47,7 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
             // Return the transformed event and booking data
             return {
                 id: booking.id,
+                participantName: booking.name,
                 name: event.name,                     // Event name
                 date: event.startDate,                // Event start date (if that's what's needed)
                 startTime: booking.startTime,         // Booking's start time
@@ -55,7 +56,47 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
                 notes: booking.notes || '',           // Notes from the booking, if available
                 status: booking.status || '',         // Status from the booking, if available
                 participantId: booking.participantId, // Participant ID
-                eventCode: event.eventCode            // Event code from the event
+                eventCode: event.eventCode,            // Event code from the event
+                type: "attendee"
+            };
+        });
+    
+        return bookedEvents;
+    }
+
+
+    async getAllBookEventsOrganizedByUser(userId: string): Promise<MeetgridBookEvent[]> {
+        const result = await db
+            .select()
+            .from(booking)
+            .innerJoin(event, eq(booking.eventCode, event.eventCode))  // Join booking and event by eventCode
+            .where(eq(event.createdBy, userId));  // Ensure the participant is the user
+        
+        // If no events are found, return an empty array
+        if (result.length === 0) {
+            console.log("No booked events found for Organizer:", userId);
+            return [];
+        }
+    
+        // Map over the result and transform the data into the correct MeetgridBookEvent format
+        const bookedEvents: MeetgridBookEvent[] = result.map(row => {
+            const event = row.event;
+            const booking = row.booking;
+    
+            // Return the transformed event and booking data
+            return {
+                id: booking.id,
+                participantName: booking.name,
+                name: event.name,                     // Event name
+                date: event.startDate,                // Event start date (if that's what's needed)
+                startTime: booking.startTime,         // Booking's start time
+                description: event.description,
+                endTime: booking.endTime,             // Booking's end time
+                notes: booking.notes || '',           // Notes from the booking, if available
+                status: booking.status || '',         // Status from the booking, if available
+                participantId: booking.participantId, // Participant ID
+                eventCode: event.eventCode,            // Event code from the event
+                type: "organizer"
             };
         });
     
