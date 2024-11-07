@@ -10,26 +10,38 @@ export class QuestionsController {
     }
 
     async handleNoteCreation(request: Request) {
-      try {
-          const newNote = await request.json();
-           // Optionally, validate the structure of newEvent here
-          if (typeof newNote.startDate !== 'string' || typeof newNote.endDate !== 'string') {
-              throw new Error("Invalid date format");
+        try {
+          const { eventId, questions } = await request.json();
+      
+          // Ensure the data is structured correctly
+          if (!Array.isArray(questions)) {
+            throw new Error("Expected an array of questions");
           }
-
-          // Convert date strings to Date objects if necessary
-          if (newNote.reminder && typeof newNote.reminder === 'string') {
-              newNote.reminder = new Date(newNote.reminder);
+      
+          if (typeof eventId !== "string") {
+            throw new Error("Invalid eventId format");
           }
-
-          // Proceed with creating the event
-          const result = await this.questionsService.createOneNote(newNote);
-          return NextResponse.json({ message: "success",  eventCode: newNote.eventCode, result: result}, { status: 200 })
-          
-      } catch {
-          return NextResponse.json({ message: "An Error occured"}, { status: 500 })
-      }
-    }
+      
+          // Process the questions and associate them with the eventId
+          const results = [];
+          for (const question of questions) {
+            if (typeof question.prompt !== "string") {
+              throw new Error("Invalid question prompt format");
+            }
+      
+            const result = await this.questionsService.createOneQuestion({
+              ...question,
+              eventId,  // Add the eventId to each question
+            });
+            results.push(result);
+          }
+      
+          return NextResponse.json({ message: "Questions created successfully", results }, { status: 200 });
+        } catch (error) {
+          console.error(error);
+          return NextResponse.json({ message: error.message || "An error occurred" }, { status: 500 });
+        }
+      }      
 
     async handleGetAllRelatedQuestionsToNotes() {
         try {

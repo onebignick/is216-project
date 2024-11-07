@@ -63,7 +63,7 @@ export function AvailabilityCard({ className, eventInformation, participantsInfo
               <CardDescription>Enter interview questions here</CardDescription>
           </CardHeader>
           <CardContent>
-              <InterviewQuestions eventQuestions={eventQuestions} />
+              <InterviewQuestions eventQuestions={eventQuestions || []} />
           </CardContent>
       </TabsContent>
         <TabsContent value="settings">
