@@ -321,6 +321,8 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
         console.log(matchedBooking);
         const matchedEventtype = matchedEvent ? matchedEvent.type : "No type available";
         const matchedBookingtype = matchedBooking ? matchedBooking.type : "No type available";
+
+        const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API
         
         if (matchedEvent) {
             console.log(matchedEventtype);
@@ -347,6 +349,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 reminder: reminder,
                 reminderDate: reminderDate,
                 type: matchedEventtype,
+                zoomLink: zoomLink
             };
 
             setSelectedEvent({
@@ -362,6 +365,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 startTime: formattedEvent.startTime,
                 endTime: formattedEvent.endTime,
                 type: matchedEventtype,
+                zoomLink: zoomLink
             });
 
             console.log("Formatted Clicked Event Data:", formattedEvent);
@@ -373,6 +377,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             const description = matchedBooking ? matchedBooking.description : "No description available";
             const startTime =  matchedBooking ? matchedBooking.startTime: "No Start Time available";
             const endTime = matchedBooking ? matchedBooking.endTime: "No End Time available";
+            const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API
 
             // Map the `clickedEvent` data to the simpler structure
             const formattedEvent = {
@@ -385,6 +390,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 startTime: convertMinutesToTime(startTime),
                 endTime:  convertMinutesToTime(endTime),
                 type: matchedBookingtype,
+                zoomLink: zoomLink
             };
 
             setSelectedEvent({
@@ -396,6 +402,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 startTime: formattedEvent.startTime,
                 endTime: formattedEvent.endTime,
                 type: matchedBookingtype,
+                zoomLink: zoomLink
             });
             
             console.log("Formatted Clicked Book Event Data:", formattedEvent);
@@ -521,6 +528,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                         <p>Reminder Participant Date: {event.reminderDate} ({event.reminder - 1} days)</p>
                         <p>Total Participant Number: {event.participant}</p>
                         <p>Description: {event.description}</p>
+                        <p>Zoom Link: {event.zoomLink}</p>
                         <br />
                         <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                             <Link href={`/event/${event.id}`}>View More Details</Link>
@@ -535,6 +543,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                         <p>Start Time: {event.startTime}</p>
                         <p>End Time: {event.endTime}</p>
                         <p>Description: {event.description}</p>
+                        <p>Zoom Link: {event.zoomLink}</p>
                         <br />
                         <div className="flex justify-between gap-2">
                             <Button 

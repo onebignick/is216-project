@@ -15,6 +15,7 @@ interface Question {
 
 interface eventQuestionsProps {
     eventQuestions: MeetgridQuestions[];
+    onAddQuestion: (newQuestion: string) => void; // New prop for adding questions
 }
 
 export function InterviewQuestions({ eventQuestions }: eventQuestionsProps){

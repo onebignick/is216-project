@@ -16,6 +16,7 @@ export default async function Home() {
   const bookings = await bookingService.getAllBookEventsOrganizedByUser(user!.id);
   if (!user) return <p>Please log in to view events.</p>;
   const allEvents = await eventService.getAllEvents(user.id);
+  // const allCalendarEntries = [...allEvents, ...bookings];
 
   // Get today's date
   const today = new Date();
