@@ -15,6 +15,9 @@ interface EventPageProps {
 }
 
 export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
     console.log(events);
     const formattedEvents = events
     .filter(event => {
@@ -44,6 +47,7 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             allDay: isAllDay,
             category: "allday",
             description: event.description,
+
         };
     });
     console.log("Formatted Events for Calendar:", formattedEvents);
@@ -105,7 +109,7 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
         <Card className={className}>
             <CardHeader>
                 <CardTitle>Upcoming Events</CardTitle>
-                    <CardDescription>This is a test</CardDescription>
+                    <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
                 <Calendar
@@ -157,3 +161,24 @@ function convertDateToISO(dateString:string): string{
 
     return date.toISOString();
 }
+
+const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+const isLightColor = (hexColor: string) => {
+    // Convert hex to RGB
+    const r = parseInt(hexColor.slice(1, 3), 16);
+    const g = parseInt(hexColor.slice(3, 5), 16);
+    const b = parseInt(hexColor.slice(5, 7), 16);
+
+    // Calculate luminance
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+    // If luminance is greater than a threshold (128), it's a light color
+    return luminance > 128;
+};
