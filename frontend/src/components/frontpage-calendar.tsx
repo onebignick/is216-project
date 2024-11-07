@@ -11,9 +11,10 @@ const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false 
 interface EventPageProps {
     events: any[];
     className?: string;
+    bookings: any[];
 }
 
-export default function FrontpageCalendar({ events, className }: EventPageProps){
+export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
     console.log(events);
     const formattedEvents = events
     .filter(event => {
@@ -47,7 +48,54 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
     });
     console.log("Formatted Events for Calendar:", formattedEvents);
 
+    console.log(bookings);
+
+    const formattedBookings = bookings.map(booking => {
+        // Parse the booking.date which is already in Singapore time
+        const startTimeDate = new Date(booking.date);
+        startTimeDate.setMinutes(startTimeDate.getMinutes() + booking.startTime); // Apply start time offset
+        
+        const endTimeDate = new Date(booking.date);
+        endTimeDate.setMinutes(endTimeDate.getMinutes() + booking.endTime); // Apply end time offset
     
+        // Format the dates as local Singapore time strings
+        const formatDate = (date: Date) => {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${year}-${month}-${day}T${hours}:${minutes}:00`; // ISO 8601 format
+        };
+    
+        const startTimeLocal = formatDate(startTimeDate);  // Local SGT start time
+        const endTimeLocal = formatDate(endTimeDate);      // Local SGT end time
+
+        return {
+            id: booking.id,
+            title: booking.name,
+            start: startTimeLocal, // Use local Singapore time
+            end: endTimeLocal,     // Use local Singapore time
+            allDay: false,
+            category: "time",
+            description: booking.description,
+            participant: null,
+            eventCode: booking.eventCode,
+            reminder: null,
+            reminderDate: null,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+            // backgroundColor,
+            // borderColor,
+            // color: textColor,
+            type: "booking",
+        };
+    });
+    
+    console.log("Formatted Bookings:", formattedBookings);
+
+    const allCalendarEntries = [...formattedEvents, ...formattedBookings];
+
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -64,7 +112,7 @@ export default function FrontpageCalendar({ events, className }: EventPageProps)
                     height="600px"
                     usageStatistics={false}
                     view="week"
-                    events={formattedEvents}
+                    events={allCalendarEntries}
                     useCreationPopup={true}
                     useDetailPopup={true}
                     week={{

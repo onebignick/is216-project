@@ -5,12 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { EventService } from "@/server/service/EventService";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { BookingService } from "@/server/service/BookingService";
 import FrontpageCalendar from "@/components/frontpage-calendar";
 
 export default async function Home() {
   const eventService: EventService = new EventService();
   const user = await currentUser();
   const eventsOrganizedByUser = await eventService.getAllEventsRelatedToUser(user!.id);
+  const bookingService = new BookingService();
+  const bookings = await bookingService.getAllBookEventsOrganizedByUser(user!.id);
   if (!user) return <p>Please log in to view events.</p>;
   const allEvents = await eventService.getAllEvents(user.id);
 
@@ -47,7 +50,7 @@ export default async function Home() {
       <WelcomeCard className="hidden md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <FrontpageCalendar events={allEvents} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
+      <FrontpageCalendar events={allEvents} bookings={bookings} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
       <RecentActivityCard clerkUserId={user!.id} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
   );
