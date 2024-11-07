@@ -15,6 +15,7 @@ interface EventPageProps {
 }
 
 export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
+    
     console.log(events);
     const formattedEvents = events
     .filter(event => {
@@ -44,6 +45,10 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             allDay: isAllDay,
             category: "allday",
             description: event.description,
+            backgroundColor: event.backgroundColor, // Random background color
+            borderColor: event.borderColor,     // Random border color
+            color: event.textColor, // Text color (white for readability)
+
         };
     });
     console.log("Formatted Events for Calendar:", formattedEvents);
@@ -85,9 +90,9 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             reminderDate: null,
             startTime: booking.startTime,
             endTime: booking.endTime,
-            // backgroundColor,
-            // borderColor,
-            // color: textColor,
+            backgroundColor: booking.backgroundColor, // Random background color
+            borderColor: booking.borderColor,     // Random border color
+            color: booking.textColor, // Text color (white for readability)
             type: "booking",
         };
     });
@@ -105,7 +110,7 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
         <Card className={className}>
             <CardHeader>
                 <CardTitle>Upcoming Events</CardTitle>
-                    <CardDescription>This is a test</CardDescription>
+                    <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
                 <Calendar
@@ -113,8 +118,6 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
                     usageStatistics={false}
                     view="week"
                     events={allCalendarEntries}
-                    useCreationPopup={true}
-                    useDetailPopup={true}
                     week={{
                         hourStart: 0,  // Start of day in 24-hour format
                         hourEnd: 24,   // End of day in 24-hour format

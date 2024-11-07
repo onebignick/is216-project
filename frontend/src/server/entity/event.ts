@@ -12,4 +12,7 @@ export type MeetgridEvent = {
     reminder: Date | null;
     participantNum: string | null;
     eventAvailability?: string;
+    backgroundColor: string;
+    borderColor: string;
+    textColor: string;
 }

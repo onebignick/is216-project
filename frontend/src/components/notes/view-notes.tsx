@@ -235,6 +235,7 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
 };
 
 //Modal Component
+//Modal Component
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: Event | null }) => {
     const [questions, setQuestions] = useState<Question[]>(event?.questions || []);
     const [newQuestionPrompt, setNewQuestionPrompt] = useState<string>(""); // For new question prompt

@@ -4,5 +4,5 @@ import { NotesController } from "@/server/controller/AnswerController";
 const notesController: NotesController = new NotesController();
 
 export async function POST(request: Request) {
-  return await notesController.handleNotesCreation(request);
+  return await notesController.handleNoteCreation(request);
 }

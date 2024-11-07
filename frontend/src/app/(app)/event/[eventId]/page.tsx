@@ -21,7 +21,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
         <div className="grid grid-cols-12 gap-4 p-4">
             <InviteCard event={eventInformation![0]} className="col-span-12"/>
             <AvailabilityCard eventInformation={eventInformation![0]} participantsInformation={participantsInformation} eventQuestions={eventQuestions} className="col-span-12"/>
-            <ExampleCard className="hidden lg:block col-span-12"/>
+            {/* <ExampleCard className="hidden lg:block col-span-12"/> */}
             <AdminCard className="col-span-12" event={eventInformation![0]}/>
            
         </div>
@@ -44,6 +44,7 @@ function ExampleCard({ className } : {className:string}) {
 }
 
 function InviteCard({ className, event } : {className:string, event: MeetgridEvent}) {
+  const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API
   return (
     <Card className={className}>
       <CardHeader>
@@ -51,6 +52,7 @@ function InviteCard({ className, event } : {className:string, event: MeetgridEve
       </CardHeader>
       <CardContent>
         <p>Invite people to join your event with this code : {event.eventCode}</p>
+        <p>Zoom link: {zoomLink}</p>
       </CardContent>
     </Card>
   )

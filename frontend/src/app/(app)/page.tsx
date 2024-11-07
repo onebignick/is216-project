@@ -13,9 +13,12 @@ export default async function Home() {
   const user = await currentUser();
   const eventsOrganizedByUser = await eventService.getAllEventsRelatedToUser(user!.id);
   const bookingService = new BookingService();
-  const bookings = await bookingService.getAllBookEventsOrganizedByUser(user!.id);
   if (!user) return <p>Please log in to view events.</p>;
   const allEvents = await eventService.getAllEvents(user.id);
+
+  const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.id); //attend booking
+  const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
+  const combinedBookings = [...attendeeBookings, ...organizerBookings];
 
   // Get today's date
   const today = new Date();
@@ -50,7 +53,7 @@ export default async function Home() {
       <WelcomeCard className="hidden md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <FrontpageCalendar events={allEvents} bookings={bookings} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
+      <FrontpageCalendar events={allEvents} bookings={combinedBookings} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-8" />
       <RecentActivityCard clerkUserId={user!.id} className="row-span-2 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
   );

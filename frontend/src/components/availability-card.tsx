@@ -29,7 +29,8 @@ export function AvailabilityCard({ className, eventInformation, participantsInfo
           <TabsTrigger value="questions">Interview Questions</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="group" className="grid w-full mt-4">
+        <br></br>
+        <TabsContent value="group" className="grid w-full mt-6">
             <CardHeader>
               <CardTitle>Group Availability</CardTitle>
               <CardDescription>Shows availability across your group</CardDescription>
