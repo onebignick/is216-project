@@ -532,11 +532,10 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 {/* Booking event details */}
                 {event.type === 'booking' && (
                     <>
-                        <p>Starts Date: {formatDateToDDMMYYYY(startDate)}</p>
-                        <p>Start Time: {event.startTime}</p>
-                        <p>End Time: {event.endTime}</p>
+                        <p>Date: {formatDateToDDMMYYYY(startDate)}</p>
+                        <p>Booking Period: {event.startTime} - {event.endTime}</p>
                         <p>Description: {event.description}</p>
-                        <p>Zoom Link: {event.zoomLink}</p>
+                        <p>Zoom Link: <Link href={event.zoomLink} className='underline decoration text-blue-500'>Link</Link></p>
                         <br />
                         <div className="flex justify-between gap-2">
                             <Button 
