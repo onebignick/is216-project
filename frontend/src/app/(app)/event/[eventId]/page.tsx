@@ -21,7 +21,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
         <div className="grid grid-cols-12 gap-4 p-4">
             <InviteCard event={eventInformation![0]} className="col-span-12"/>
             <AvailabilityCard eventInformation={eventInformation![0]} participantsInformation={participantsInformation} eventQuestions={eventQuestions} className="col-span-12"/>
-            <ExampleCard className="hidden lg:block col-span-12"/>
+            {/* <ExampleCard className="hidden lg:block col-span-12"/> */}
             <AdminCard className="col-span-12" event={eventInformation![0]}/>
            
         </div>
