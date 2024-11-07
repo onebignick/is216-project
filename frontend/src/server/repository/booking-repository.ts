@@ -33,12 +33,6 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
             .innerJoin(event, eq(booking.eventCode, event.eventCode))  // Join booking and event by eventCode
             .where(eq(booking.participantId, userId));  // Ensure the participant is the user
         
-        // If no events are found, return an empty array
-        if (result.length === 0) {
-            console.log("No booked events found for user:", userId);
-            return [];
-        }
-    
         // Map over the result and transform the data into the correct MeetgridBookEvent format
         const bookedEvents: MeetgridBookEvent[] = result.map(row => {
             const event = row.event;
@@ -74,12 +68,6 @@ export class BookEventRepository implements IBaseRepository<MeetgridBookEvent> {
             .from(booking)
             .innerJoin(event, eq(booking.eventCode, event.eventCode))  // Join booking and event by eventCode
             .where(eq(event.createdBy, userId));  // Ensure the participant is the user
-        
-        // If no events are found, return an empty array
-        if (result.length === 0) {
-            console.log("No booked events found for Organizer:", userId);
-            return [];
-        }
     
         // Map over the result and transform the data into the correct MeetgridBookEvent format
         const bookedEvents: MeetgridBookEvent[] = result.map(row => {

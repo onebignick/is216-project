@@ -204,7 +204,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    console.log(events, bookings);
+    // console.log(events, bookings);
     
     const formattedEvents = events.map(event => {
         const startISO = convertDateToISO(event.startDate); // Convert start date
@@ -252,7 +252,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
             
         };
     });
-    console.log("Formatted Events", formattedEvents);
+    // console.log("Formatted Events", formattedEvents);
 
     const formattedBookings = bookings.map(booking => {
         // Parse the booking.date which is already in Singapore time
@@ -301,26 +301,26 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
         };
     });
     
-    console.log("Formatted Bookings:", formattedBookings);    
+    // console.log("Formatted Bookings:", formattedBookings);    
     
     // Combine events and bookings for the calendar
     const allCalendarEntries = [...formattedEvents, ...formattedBookings];
 
     const handleEventClick = (event: any) => {
         const clickedEvent = event.event; // Access the nested 'event' object
-        console.log("Original Event Data:", clickedEvent);
+        // console.log("Original Event Data:", clickedEvent);
 
         // Find the matching event in formattedEvents using ID to get the description
         const matchedEvent = formattedEvents.find(e => e.id === clickedEvent.id);
         const matchedBooking = formattedBookings.find(e => e.id ===  clickedEvent.id);
-        console.log(matchedBooking);
+        // console.log(matchedBooking);
         const matchedEventtype = matchedEvent ? matchedEvent.type : "No type available";
         const matchedBookingtype = matchedBooking ? matchedBooking.type : "No type available";
 
         const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API
         
         if (matchedEvent) {
-            console.log(matchedEventtype);
+            // console.log(matchedEventtype);
             const description = matchedEvent ? matchedEvent.description : "No description available";
             const participant = matchedEvent ? matchedEvent.participant: "No participant available";
             const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
@@ -363,12 +363,12 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 zoomLink: zoomLink
             });
 
-            console.log("Formatted Clicked Event Data:", formattedEvent);
+            // console.log("Formatted Clicked Event Data:", formattedEvent);
 
         } 
         
         if (matchedBooking){
-            console.log(matchedBookingtype);
+            // console.log(matchedBookingtype);
             const description = matchedBooking ? matchedBooking.description : "No description available";
             const startTime =  matchedBooking ? matchedBooking.startTime: "No Start Time available";
             const endTime = matchedBooking ? matchedBooking.endTime: "No End Time available";
@@ -400,7 +400,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
                 zoomLink: zoomLink
             });
             
-            console.log("Formatted Clicked Book Event Data:", formattedEvent);
+            // console.log("Formatted Clicked Book Event Data:", formattedEvent);
         }
     
         setIsModalOpen(true);
@@ -452,7 +452,7 @@ function formatDateToDDMMYYYY(date: Date): string {
 }
 
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: any }) => {
-    console.log("Modal Event:", event); // Log the event in the modal
+    // console.log("Modal Event:", event); // Log the event in the modal
     
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState(""); // State for error messages

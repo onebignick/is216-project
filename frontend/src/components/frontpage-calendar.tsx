@@ -14,9 +14,13 @@ interface EventPageProps {
     bookings: any[];
 }
 
+interface CalendarProps{
+
+}
+
 export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
     
-    console.log(events);
+    // console.log(events);
     const formattedEvents = events
     .filter(event => {
         const endISO = convertDateToISO(event.endDate); // Convert end date to ISO format
@@ -32,8 +36,8 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
         const isAllDay = true;
 
         if (isAllDay) {
-            console.log(event.name);
-            console.log(endDate.getUTCDate());
+            // console.log(event.name);
+            // console.log(endDate.getUTCDate());
             endDate.setUTCHours(0, 0, 0, 0);
         }
 
@@ -51,9 +55,9 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
 
         };
     });
-    console.log("Formatted Events for Calendar:", formattedEvents);
+    // console.log("Formatted Events for Calendar:", formattedEvents);
 
-    console.log(bookings);
+    // console.log(bookings);
 
     const formattedBookings = bookings.map(booking => {
         // Parse the booking.date which is already in Singapore time
@@ -97,11 +101,15 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
         };
     });
     
-    console.log("Formatted Bookings:", formattedBookings);
+    // console.log("Formatted Bookings:", formattedBookings);
 
     const allCalendarEntries = [...formattedEvents, ...formattedBookings];
 
     const [isClient, setIsClient] = useState(false);
+
+    const calendarOptions= {
+
+    }
 
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
@@ -114,7 +122,6 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             </CardHeader>
             <CardContent>
                 <Calendar
-                    height="600px"
                     usageStatistics={false}
                     view="week"
                     events={allCalendarEntries}
