@@ -69,7 +69,7 @@ export function InterviewQuestions({ eventQuestions, onSaveQuestions }: eventQue
             }
     
             const payload = { eventId, questions };  // Explicitly include eventId
-            console.log("Payload being sent:", payload);  // Log the payload
+            console.log("Payload being sent:", payload);  // Log the payload to verify
     
             const response = await fetch(`/api/questions/save/${eventId}`, {
                 method: "POST",

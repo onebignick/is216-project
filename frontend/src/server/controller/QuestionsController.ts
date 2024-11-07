@@ -7,7 +7,7 @@ export class QuestionsController {
     async handleQuestionCreation(request: Request) {
         try {
             const body = await request.json();
-            console.log("Received request body:", body);  // Verify received data
+            console.log("Received request body:", body);  // Log received body to ensure it's correct
     
             const { eventId, questions } = body;
             if (!eventId || typeof eventId !== "string") {
@@ -19,11 +19,15 @@ export class QuestionsController {
                 throw new Error("Questions must be an array");
             }
     
-            // Save questions logic
+            // Log each question for further debugging
+            questions.forEach((question, index) => {
+                console.log(`Question ${index + 1}:`, question);
+            });
+    
             const result = await this.questionService.createManyQuestions(questions, eventId);
             return NextResponse.json({ message: "Questions saved successfully", result }, { status: 200 });
         } catch (error) {
-            console.error("Error in handleQuestionCreation:", error.message);
+            console.error("Error in handleQuestionCreation:", error);  // Log the full error object
             return NextResponse.json({ message: error.message || "An error occurred" }, { status: 500 });
         }
     }
