@@ -57,7 +57,7 @@ export class BookingService {
                 return { id: result[0].id};
             }
         } catch (e) {
-            console.log("Error boook event:", e.message);
+            console.log("Error book event:", e.message);
             return "";
         }
         
