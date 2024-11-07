@@ -436,7 +436,7 @@ function MainEventPage({ events, bookings }: { events: any[], bookings: any[]  }
 
         <div className="w-full lg:w-2/3 bg-white shadow-lg rounded-lg p-6">
             <h2 className="text-2xl font-bold mb-4">Calendar (Current Month)</h2>
-            <p className="mb-4">This will be the main event page</p>
+            <p className="mb-4">Your Monthly Meetings Events</p>
             <Calendar 
                 height="700px" 
                 events={allCalendarEntries} 
