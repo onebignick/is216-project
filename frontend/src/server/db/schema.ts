@@ -77,9 +77,9 @@ export const booking = createTable("booking", {
 export const notes_questions = createTable("notes_questions", {
     id: uuid("id").defaultRandom().primaryKey(),
     questions: varchar("questions", { length: 10000 }).notNull(),
-    bookingId: uuid("bookingId").references(() => booking.id, { // Add this line to connect to booking
-        onDelete: "cascade", // If the booking is deleted, delete related notes
-    }),
+	eventId: uuid("eventId").references(() => event.id, {
+		onDelete: "cascade",
+	}).notNull(),
     createdAt: timestamp("createdAt")
         .default(sql`CURRENT_TIMESTAMP`)
         .notNull(),
