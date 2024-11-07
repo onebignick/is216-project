@@ -44,6 +44,7 @@ function ExampleCard({ className } : {className:string}) {
 }
 
 function InviteCard({ className, event } : {className:string, event: MeetgridEvent}) {
+  const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API
   return (
     <Card className={className}>
       <CardHeader>
@@ -51,6 +52,7 @@ function InviteCard({ className, event } : {className:string, event: MeetgridEve
       </CardHeader>
       <CardContent>
         <p>Invite people to join your event with this code : {event.eventCode}</p>
+        <p>Zoom link: {zoomLink}</p>
       </CardContent>
     </Card>
   )
