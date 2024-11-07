@@ -15,8 +15,6 @@ interface EventPageProps {
 }
 
 export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
-    const [selectedEvent, setSelectedEvent] = useState<any>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     
     console.log(events);
     const formattedEvents = events
@@ -47,6 +45,9 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             allDay: isAllDay,
             category: "allday",
             description: event.description,
+            backgroundColor: event.backgroundColor, // Random background color
+            borderColor: event.borderColor,     // Random border color
+            color: event.textColor, // Text color (white for readability)
 
         };
     });
@@ -89,9 +90,9 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             reminderDate: null,
             startTime: booking.startTime,
             endTime: booking.endTime,
-            // backgroundColor,
-            // borderColor,
-            // color: textColor,
+            backgroundColor: booking.backgroundColor, // Random background color
+            borderColor: booking.borderColor,     // Random border color
+            color: booking.textColor, // Text color (white for readability)
             type: "booking",
         };
     });
@@ -117,8 +118,6 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
                     usageStatistics={false}
                     view="week"
                     events={allCalendarEntries}
-                    useCreationPopup={true}
-                    useDetailPopup={true}
                     week={{
                         hourStart: 0,  // Start of day in 24-hour format
                         hourEnd: 24,   // End of day in 24-hour format
