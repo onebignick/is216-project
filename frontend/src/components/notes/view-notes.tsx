@@ -121,23 +121,23 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
         setEventFilters(initialFilters);
     }, [bookingEvents]);
 
-    // Handle input change for event questions
-    // const handleInputChange = (eventId: string, questionKey: string, value: string) => {
-    //     if (selectedEvent && selectedEvent.id === eventId) {
-    //         setSelectedEvent((prev) => ({
-    //             ...prev!,
-    //             questions: {
-    //                 ...prev!.questions,
-    //                 [questionKey]: value,
-    //             },
-    //         }));
-    //     }
-    // };
+    //Handle input change for event questions
+    const handleInputChange = (eventId: string, questionKey: string, value: string) => {
+        if (selectedEvent && selectedEvent.id === eventId) {
+            setSelectedEvent((prev) => ({
+                ...prev!,
+                questions: {
+                    ...prev!.questions,
+                    [questionKey]: value,
+                },
+            }));
+        }
+    };
 
-    // Filter events based on the search query and selected filters
-    // const filteredEvents = bookingEvents.filter((event) =>
-    //     event.name !== null && event.name.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
+    //Filter events based on the search query and selected filters
+    const filteredEvents = bookingEvents.filter((event) =>
+        event.name !== null && event.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     console.log(filteredEvents);
 
@@ -234,7 +234,7 @@ export function ViewNotePage({ bookingEvents }: ViewNotePageProps) {
     );
 };
 
-// Modal Component
+//Modal Component
 const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: Event | null }) => {
     const [questions, setQuestions] = useState<Question[]>(event?.questions || []);
     const [newQuestionPrompt, setNewQuestionPrompt] = useState<string>(""); // For new question prompt
@@ -353,6 +353,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
 };
 
 export default ViewNotePage;
+
 
 
 // "use client";
