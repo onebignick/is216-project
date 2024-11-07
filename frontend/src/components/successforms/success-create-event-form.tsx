@@ -8,6 +8,7 @@ import Link from "next/link";
 export function SuccessCreateEventForm() {
     const router = useRouter();
     const [eventCode, setEventCode] = useState('');
+    const zoomLink = "https://smu-sg.zoom.us/j/96930333437?pwd=CeObmi1R8m1pICDs8faWPzEzngjGmD.1"; //replace with API later
     
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -30,7 +31,7 @@ export function SuccessCreateEventForm() {
                 <br></br>
                 <h1 className="text-2xl">Confirmation Code: {eventCode}</h1> {/* Display the event code */}
                 <br></br>
-                <h1 className="text-2xl">Your Zoom Link is: </h1>
+                <h1 className="text-2xl">Your Zoom Link is: {zoomLink}</h1>
                 <br></br>
                 <Button variant="outline" asChild>
                     <Link href="/event">See More at Your Events</Link>
