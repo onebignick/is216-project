@@ -30,6 +30,19 @@ export function InterviewNotes({ participantsInformation, questions }: Interview
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
+   // Helper function to format time (in minutes since midnight) into AM/PM format
+   const formatTime = (minutes: number | null) => {
+    if (minutes === null) return '';
+    const hours = Math.floor(minutes / 60);
+    const minutesRemaining = minutes % 60;
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+    const formattedMinutes = minutesRemaining < 10 ? `0${minutesRemaining}` : minutesRemaining;
+
+    return `${formattedHours}:${formattedMinutes} ${period}`;
+  };
+
+
   return (
     <div className="relative p-6 h-screen flex flex-col space-y-6">
       {hasParticipants ? (
@@ -56,7 +69,7 @@ export function InterviewNotes({ participantsInformation, questions }: Interview
               <TableRow key={index}>
                 <TableCell className="border px-4 py-2">{participant.name}</TableCell>
                 <TableCell className="border px-4 py-2">{formatDate(participant.date)}</TableCell>
-                <TableCell className="border px-4 py-2">{participant.startTime?.toString()}</TableCell>
+                <TableCell className="border px-4 py-2">{formatTime(participant.startTime ?? null)}</TableCell>
                 {safeQuestions.map((q) => (
                   <TableCell key={q.key} className="border px-4 py-2">
                     {q.answer || ""}
