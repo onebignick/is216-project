@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { NotesService } from "../service/NotesService"; // Adjust the import path as necessary
+import { AnswerService } from "../service/AnswerService"; // Adjust the import path as necessary
 import { auth } from "@clerk/nextjs/server";
 
 export class NotesController {
-    notesService: NotesService;
+    answerService: AnswerService ;
 
     constructor() {
-        this.notesService = new NotesService();
+        this.answerService = new AnswerService();
     }
 
     async handleNoteCreation(request: Request) {
@@ -23,7 +23,7 @@ export class NotesController {
           }
 
           // Proceed with creating the event
-          const result = await this.notesService.createOneNote(newNote);
+          const result = await this.answerService.createOneNote(newNote);
           return NextResponse.json({ message: "success",  eventCode: newNote.eventCode, result: result}, { status: 200 })
           
       } catch {

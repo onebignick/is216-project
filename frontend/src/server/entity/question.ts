@@ -1,7 +1,8 @@
 export type MeetgridQuestions = {
     id?: string;
-    noteId?: string | null;
-    questionText: string;
+    name?: string | null;
+    questions: string;
+    eventId: string;
     createdAt?: Date;
     updatedAt?: string | null;
 }

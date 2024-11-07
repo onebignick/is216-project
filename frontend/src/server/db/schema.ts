@@ -73,7 +73,7 @@ export const booking = createTable("booking", {
 	}), 
 })
 
-// New notes table
+// New question table
 export const notes_questions = createTable("notes_questions", {
     id: uuid("id").defaultRandom().primaryKey(),
     questions: varchar("questions", { length: 10000 }).notNull(),
@@ -86,15 +86,16 @@ export const notes_questions = createTable("notes_questions", {
     updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
-// New questions table
+// Modified notes_answer table to link to booking and notes_questions
 export const notes_answer = createTable("notes_answer", {
-    id: uuid("id").defaultRandom().primaryKey(),
-    noteId: uuid("noteId").references(() => notes_questions.id, {
-        onDelete: "cascade", // If the note is deleted, delete related questions
-    }),
-    answers: varchar("answer", { length: 10000 }).notNull(), // Text of the question
-    createdAt: timestamp("createdAt")
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(), // Timestamp of when the question was created
+	id: uuid("id").defaultRandom().primaryKey(),
+	answer: varchar("answer", { length: 10000 }).notNull(),
+	noteId: uuid("noteId").references(() => notes_questions.id, {
+		onDelete: "cascade",
+	}).notNull(),
+	participantId: uuid("participantId").references(() => booking.participantId, {
+		onDelete: "cascade",
+	}),
+	createdAt: timestamp("createdAt").default(sql`CURRENT_TIMESTAMP`).notNull(),
 	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });

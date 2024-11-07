@@ -1,5 +1,5 @@
 // pages/api/notes/create.route.ts
-import { NotesController } from "@/server/controller/NotesController";
+import { NotesController } from "@/server/controller/AnswerController";
 
 const notesController: NotesController = new NotesController();
 

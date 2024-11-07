@@ -28,9 +28,9 @@ export class QuestionService {
     }
 
     // Fetch all notes related to a specific booking ID
-    async getAllQuestionsRelatedToNotes(bookId: string): Promise<MeetgridQuestions[]> {
+    async getAllQuestionsRelatedToNotes(eventId: string): Promise<MeetgridQuestions[]> {
         try {
-            const notes = await this.questionRepository.getQuestionsByNoteId(bookId);
+            const notes = await this.questionRepository.getQuestionsByEventId(eventId);
             return notes; // This should now be an array of MeetgridNote
         } catch (e) {
             console.log("Error fetching notes:", e.message);
