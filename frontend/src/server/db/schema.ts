@@ -15,6 +15,17 @@ export const user = createTable("user", {
 	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
+export const registration = createTable("user_event", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	userId: varchar("userId", {length: 32}).references(() => user.clerkUserId, {
+		onDelete: "cascade",
+	}),
+	eventId: uuid("eventId").references(() => event.id, {
+		onDelete: "cascade",
+	}).notNull(),
+	role: varchar("role"),
+});
+
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
 	name: varchar("name", {length: 100}).notNull(),

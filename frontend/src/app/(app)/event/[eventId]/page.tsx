@@ -10,6 +10,7 @@ import { MeetgridEventParticipantService } from "@/server/service/MeetgridEventP
 import { auth } from "@clerk/nextjs/server";
 import { FormDialogButton } from "@/components/FormDialogButton";
 import { AddAdminToEventForm } from "@/components/forms/AddAdminToEventForm";
+import { DisplayTotalAvailability } from "@/components/DisplayTotalAvailability";
 
 
 // const eventService: EventService = new EventService();
@@ -26,20 +27,22 @@ export default async function EventPage({params}: {params: {eventId:string, book
 
   const meetgridEventService: MeetgridEventService = new MeetgridEventService();
   const meetgridEventParticipantService: MeetgridEventParticipantService = new MeetgridEventParticipantService();
+  
+
 
   try {
     const meetgridEventArray = await meetgridEventService.findById(params.eventId);
+
     if (meetgridEventArray.length === 0) throw new Error("event not found");
+
       const meetgridEvent: MeetgridEvent = meetgridEventArray[0];
-      
       const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId);
+
       if (totalAvailability.length === 0) throw new Error("No availability found");
-      console.log(totalAvailability)
 
       return (
         <div>
-          Welcome to {meetgridEvent.name}
-
+          <div>Welcome to {meetgridEvent.name}</div>
           <FormDialogButton
             title="Invite people to join your event!"
             description="Fill in the form below with the person's username"
@@ -47,12 +50,13 @@ export default async function EventPage({params}: {params: {eventId:string, book
             form={<AddAdminToEventForm eventId={params.eventId}/>}
           />
           total group availability
+          <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
         </div>
       )
   } catch {
     return <p>An error occured</p>
   }
-
+}
     // return (
     //     <div className="grid grid-cols-12 gap-4 p-4">
     //         <InviteCard event={eventInformation![0]} className="col-span-12"/>
@@ -62,7 +66,6 @@ export default async function EventPage({params}: {params: {eventId:string, book
            
     //     </div>
     // )
-}
 
 
 // function ExampleCard({ className } : {className:string}) {
