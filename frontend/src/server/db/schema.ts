@@ -31,20 +31,29 @@ export const registration = createTable("user_event", {
 
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	name: varchar("name", {length: 100}),
-	eventCode: varchar("eventCode", {length: 1000000}).unique(),
-	description: varchar("description", {length: 10000}),
-	startDate: varchar("startDate", { length: 1000 }),
-	endDate: varchar("endDate", { length: 1000 }),
-	startTime: integer("startTime"),
-	endTime: integer("endTime"),
-	interval: integer("interval"),
-	reminder: varchar("reminder", {length: 1000}),
-	participantNum: varchar("participantNum", {length: 100}),
-	createdBy: varchar("createdBy", {length: 32}).references(() => user.clerkUserId),
+	name: varchar("name", {length: 100}).notNull(),
+	code: varchar("code", {length: 100}).notNull(),
+	description: varchar("description", {length: 10000}).notNull(),
+	startDate: varchar("startDate", { length: 1000 }).notNull(),
+	endDate: varchar("endDate", { length: 1000 }).notNull(),
+	startTimeMinutes: integer("startTimeMinutes").notNull(),
+	endTimeMinutes: integer("endTime").notNull(),
+	meetingPeriod: integer("meetingPeriod").notNull(),
 	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
     borderColor: varchar("borderColor", { length: 7 }),  // hex color
     textColor: varchar("textColor", { length: 7 }),  // hex color
+});
+
+export const eventParticipant = createTable("eventParticipant", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	role: rolesEnum("role").default("attendee").notNull(),
+	userId: varchar("userId", { length: 32 }).references(() => user.clerkUserId, {
+		onDelete: "cascade",
+	}).notNull(),
+	eventId: uuid("eventId").references(() => event.id, {
+		onDelete: "cascade"
+	}).notNull(),
+	availabilityString: varchar("availabilityString", {length: 10000}),
 });
 
 export const availability = createTable("availability", {
@@ -74,7 +83,7 @@ export const booking = createTable("booking", {
 	participantId: varchar("participantId", {length: 32}).references(() => user.clerkUserId, {
 		onDelete: "cascade"
 	}),
-	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.eventCode, {
+	eventCode: varchar("eventCode", {length: 1000000}).references(() => event.code, {
 		onDelete: "cascade"
 	}), 
 })

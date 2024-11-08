@@ -1,18 +1,14 @@
 export type MeetgridEvent = {
-    id?: string;
-    name: string | null;
-    eventCode: string | null;
-    description: string | null;
-    createdBy: string | null;
-    startDate: string | null;
-    endDate: string | null;
-    startTime?: number | null;
-    endTime?: number | null;
-    interval?: number | null;
-    reminder: Date | null;
-    participantNum: string | null;
-    eventAvailability?: string;
-    backgroundColor: string;
-    borderColor: string;
-    textColor: string;
+	id?: string;
+	name: string;
+	code?: string;
+	description: string;
+	startDate: string;
+	endDate: string;
+	startTimeMinutes: number;
+	endTimeMinutes: number;
+	meetingPeriod: number;
+	backgroundColor?: string;
+    borderColor?: string;
+    textColor?: string;
 }

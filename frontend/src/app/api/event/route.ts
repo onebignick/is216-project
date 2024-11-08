@@ -1,14 +1,12 @@
-import { EventController } from "@/server/controller/EventController";
-import { MeetgridAvailabilityController } from "@/server/controller/MeetgridAvailabilityController";
+import { MeetgridEventController } from "@/server/controller/MeetgridEventController";
 import { NextRequest } from "next/server";
 
-const meetgridAvailabilityController: MeetgridAvailabilityController = new MeetgridAvailabilityController();
-const eventController: EventController = new EventController();
+const meetgridEventController: MeetgridEventController = new MeetgridEventController();
 
 export async function GET(request: NextRequest) {
-    return await meetgridAvailabilityController.handleGetTotalEventAvailability(request);
+    return await meetgridEventController.find(request);
 }
 
-export async function PUT(request: Request) {
-    return await eventController.handleUpdateEvent(request);
+export async function POST(request: NextRequest) {
+    return await meetgridEventController.save(request);
 }

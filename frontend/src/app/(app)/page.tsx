@@ -11,8 +11,8 @@ import FrontpageCalendar from "@/components/frontpage-calendar";
 export default async function Home() {
   const eventService: EventService = new EventService();
   const user = await currentUser();
-  const eventsOrganizedByUser = await eventService.getAllEventsRelatedToUser(user!.id);
   const bookingService = new BookingService();
+
   if (!user) return <p>Please log in to view events.</p>;
   const allEvents = await eventService.getAllEvents(user.id);
 
