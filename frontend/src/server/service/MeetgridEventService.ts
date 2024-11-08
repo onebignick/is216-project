@@ -32,6 +32,7 @@ export class MeetgridEventService {
         const createdEventArray = await this.meetgridEventRepository.createOne(eventToCreate);
 
         if (createdEventArray.length == 0) return createdEventArray;
+
         const createdEvent = createdEventArray[0]
 
         if (createdEvent.id) {
@@ -45,7 +46,7 @@ export class MeetgridEventService {
             console.log(createdEventParticipant);
         }
 
-        return createdEvent;
+        return createdEventArray;
     }
 
     async updateOneEvent(eventToUpdate: MeetgridEvent) {

@@ -215,37 +215,37 @@ export function SidebarLeft({
 }: React.ComponentProps<typeof Sidebar>) {
   const [meetingData, setMeetingData] = React.useState<SidebarComponent[]>([]);
 
-  React.useEffect(() => {
-    const fetchUserData = async () => {
-      const res = await fetch("/api/event/user");
-      const result = await res.json();
+  // React.useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const res = await fetch("/api/event/user");
+  //     const result = await res.json();
 
-      const newMeetingData: SidebarComponent[] = [];
+  //     const newMeetingData: SidebarComponent[] = [];
 
-      if (result.result.length === 0) return;
-      const organizedEvents = result.result[0].organizedEvents;
-      for(let i=0;i<organizedEvents.length;i++) {
-        if (organizedEvents[i]?.name) { // Only add events with a valid name
-          newMeetingData.push({
-            name: organizedEvents[i].name,
-            url: "/event/" + organizedEvents[i].id,
-          } as SidebarComponent);
-        }
-      }
+  //     if (result.result.length === 0) return;
+  //     const organizedEvents = result.result[0].organizedEvents;
+  //     for(let i=0;i<organizedEvents.length;i++) {
+  //       if (organizedEvents[i]?.name) { // Only add events with a valid name
+  //         newMeetingData.push({
+  //           name: organizedEvents[i].name,
+  //           url: "/event/" + organizedEvents[i].id,
+  //         } as SidebarComponent);
+  //       }
+  //     }
 
-      const adminEvents = result.result[0].adminEvents;
-      for(let i=0;i<adminEvents.length;i++) {
-        newMeetingData.push({
-          name: adminEvents[i].name,
-          url: "/event/"+adminEvents[i].id,
-        } as SidebarComponent)
-      }
+  //     const adminEvents = result.result[0].adminEvents;
+  //     for(let i=0;i<adminEvents.length;i++) {
+  //       newMeetingData.push({
+  //         name: adminEvents[i].name,
+  //         url: "/event/"+adminEvents[i].id,
+  //       } as SidebarComponent)
+  //     }
 
-      setMeetingData(newMeetingData);
-      return result;
-    }
-    fetchUserData();
-  }, [])
+  //     setMeetingData(newMeetingData);
+  //     return result;
+  //   }
+  //   fetchUserData();
+  // }, [])
 
   return (
     <Sidebar className="border-r-0" {...props}>
