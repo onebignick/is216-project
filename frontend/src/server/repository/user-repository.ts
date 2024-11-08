@@ -4,7 +4,7 @@ import { user } from "../db/schema";
 import { User } from "../entity/user";
 
 export class UserRepository {
-    async getUserById(id: string) : Promise<User[]> {
+    async getUserById(id: string) {
         const result = await db.select().from(user).where(eq(user.id, id));
         return result;
     }
@@ -14,9 +14,14 @@ export class UserRepository {
         return targetUser;
     }
 
-    async getAllUsers() : Promise<User[]> {
+    async getAllUsers() {
         const result = await db.select().from(user);
         return result;
+    }
+
+    async findUserByEmail(email: string) {
+        const targetUser = await db.select().from(user).where(eq(user.email, email));
+        return targetUser;
     }
 
     async createOneUser(newUser: User) {

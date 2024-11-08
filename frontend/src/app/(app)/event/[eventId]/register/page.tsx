@@ -19,7 +19,7 @@ export default async function RegisterForEvent({ params }: {params : { eventId: 
         return(
             <div>
                 <div>Welcome to {meetgridEvent.name}</div>
-                <RegisterForAvailableSessions/>
+                <RegisterForAvailableSessions totalAvailability={totalAvailability} event={meetgridEvent}/>
             </div>
         )
     } catch {
