@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { Button } from "../ui/button";
-import { MeetgridEvent } from "@/server/entity/event";
+import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { format } from 'date-fns'; // Add this line
@@ -29,7 +29,6 @@ const formSchema = z.object({
     endHour: z.coerce.number(),
     endMinute: z.coerce.number(),
     participantNum: z.string(),
-    reminder:  z.string().optional(), // New field for reminder  
 }).refine(data => {
     // Validate that end date is after start date
     return data.endDate > data.startDate;
@@ -69,13 +68,6 @@ export function SettingsForm({ event } : SettingsFormInterface) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const router = useRouter(); // Initialize useRouter
 
-    const startDate = toDate(event.startDate);
-    const reminderDate = toDate(event.reminder);
-    // Calculate days difference only if both dates are defined
-    const reminderDays = startDate && reminderDate
-    ? Math.round((startDate.getTime() - reminderDate.getTime()) / (24 * 60 * 60 * 1000)).toString()
-    : "No reminder set";
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -83,12 +75,10 @@ export function SettingsForm({ event } : SettingsFormInterface) {
             description: event.description || "",
             startDate: toDate(event.startDate), // Correctly use event.startDate
             endDate: toDate(event.endDate), // Correctly use event.endDate
-            startHour: Math.floor(event.startTime! / 60) || 0,
-            startMinute: event.startTime! % 60 || 0,
-            endHour: Math.floor(event.endTime! / 60) || 0,
-            endMinute: event.endTime! % 60 || 0,
-            participantNum: event.participantNum || "",
-            reminder: reminderDays, // Set the reminder days as string
+            startHour: Math.floor(event.startTimeMinutes! / 60) || 0,
+            startMinute: event.startTimeMinutes! % 60 || 0,
+            endHour: Math.floor(event.endTimeMinutes! / 60) || 0,
+            endMinute: event.endTimeMinutes! % 60 || 0,
         },
     });
 
@@ -97,14 +87,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
         const endTime = values.endHour * 60 + values.endMinute;
 
         // Convert reminder to a number (assuming it's in days)
-        const reminderValue = values.reminder !== undefined && values.reminder !== null 
-        ? Number(values.reminder) 
-        : undefined;
-      
         // Calculate the reminder date based on the start date and reminder in days
-        const reminderDate = reminderValue 
-        ? new Date(values.startDate.getTime() - reminderValue * 24 * 60 * 60 * 1000) // Convert days to milliseconds
-        : null; // Set to null if no reminder is specified
 
         // const newEvent = {...event};
         // newEvent.startTime = startTime;
@@ -116,7 +99,6 @@ export function SettingsForm({ event } : SettingsFormInterface) {
             startTime: startTime,
             endTime: endTime,
             participantNum: values.participantNum,
-            reminder: reminderDate,
             startDate: values.startDate.toString(),
             endDate: values.endDate.toString(),
         };
@@ -127,6 +109,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                 updatedEvent: newEvent
             })
         })       
+
         const response = await res.json();
         console.log(response);
 
@@ -202,26 +185,6 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                         <FormItem className="col-span-2">
                                             <FormControl>
                                                 <Textarea placeholder="Tell us more about your event" {...field}/>
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card className = "col-span-2 lg:col-span-1">
-                            <CardHeader>
-                                <CardTitle>Event Reminder Days</CardTitle>
-                                <CardDescription>Your Remind Participants Days</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <FormField
-                                    control={form.control}
-                                    name="reminder"
-                                    render={({field}) => (
-                                        <FormItem className="col-span-2">
-                                            <FormControl>
-                                                <Input placeholder="Event name" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>

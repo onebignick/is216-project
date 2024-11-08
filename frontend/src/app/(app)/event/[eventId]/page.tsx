@@ -13,6 +13,7 @@ import { AddAdminToEventForm } from "@/components/forms/AddAdminToEventForm";
 import { DisplayTotalAvailability } from "@/components/DisplayTotalAvailability";
 import IndicateAvailability from "@/components/IndicateAvailability";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { SettingsForm } from "@/components/forms/settings-form";
 
 
 // const eventService: EventService = new EventService();
@@ -95,7 +96,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
               <CardTitle>Edit your event settings</CardTitle>
             </CardHeader>
             <CardContent>
-
+              <SettingsForm event={meetgridEvent}/>
             </CardContent>
           </Card>
         </div>
