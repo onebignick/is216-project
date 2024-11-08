@@ -1,9 +1,7 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator, timestamp, varchar, uuid, pgEnum, unique, integer } from "drizzle-orm/pg-core";
+import { pgTableCreator, timestamp, varchar, uuid, unique, integer } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
-
-export const rolesEnum = pgEnum("roles", ["owner", "admin", "attendee"]);
 
 export const user = createTable("user", {
 	id: uuid("id").defaultRandom().primaryKey(),
@@ -16,18 +14,6 @@ export const user = createTable("user", {
 		.notNull(),
 	updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
-
-export const registration = createTable("user_event", {
-	id: uuid("id").defaultRandom().primaryKey(),
-	userId: varchar("userId", {length: 32}).references(() => user.clerkUserId, {
-		onDelete: "cascade",
-	}),
-	eventId: uuid("eventId").references(() => event.id, {
-		onDelete: "cascade",
-	}).notNull(),
-	role: rolesEnum("role").default("attendee"),
-});
-
 
 export const event = createTable("event", {
 	id: uuid("id").defaultRandom().primaryKey(),
@@ -46,7 +32,7 @@ export const event = createTable("event", {
 
 export const eventParticipant = createTable("eventParticipant", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	role: rolesEnum("role").default("attendee").notNull(),
+	role: varchar("role", {length: 20}).notNull(),
 	userId: varchar("userId", { length: 32 }).references(() => user.clerkUserId, {
 		onDelete: "cascade",
 	}).notNull(),

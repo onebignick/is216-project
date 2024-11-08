@@ -22,6 +22,21 @@ export class MeetgridEventParticipantService {
         return targetEventParticipant;
     }
 
+    async findByEventId(eventId: string) {
+        const targetEventParticipants = await this.meetgridEventParticipantRepository.findByEventId(eventId);
+        return targetEventParticipants;
+    }
+
+    async findByUserId(userId: string) {
+        const targetEvents = await this.meetgridEventParticipantRepository.findByUserId(userId);
+        return targetEvents;
+    }
+
+    async findByEventIdAndUserId(eventId: string, userId: string) {
+        const targetEventParticipant = await this.meetgridEventParticipantRepository.findByEventIdAndUserId(eventId, userId);
+        return targetEventParticipant;
+    }
+
     async createOneEventParticipant(eventParticipantToCreate: MeetgridEventParticipant) {
         console.log("MeetgridEventParticipantService.createOneEventPartcipant: creating event participant")
         if (eventParticipantToCreate.availabilityString === "" && eventParticipantToCreate.eventId) {
@@ -36,14 +51,14 @@ export class MeetgridEventParticipantService {
         return createdEventParticipant;
     }
 
-    async updateOneEventParticipant(eventToUpdate: MeetgridEvent) {
-        const updatedEvent = await this.meetgridEventParticipantRepository.updateOne(eventToUpdate);
-        return updatedEvent;
+    async updateOneEventParticipant(eventParticipantToUpdate: MeetgridEventParticipant) {
+        const updatedEventParticipant = await this.meetgridEventParticipantRepository.updateOne(eventParticipantToUpdate);
+        return updatedEventParticipant;
     }
 
-    async deleteOneEventParticipant(eventToDelete: MeetgridEvent) {
-        const deletedEvent = await this.meetgridEventParticipantRepository.deleteOne(eventToDelete);
-        return deletedEvent;
+    async deleteOneEventParticipant(eventParticipantToDelete: MeetgridEventParticipant) {
+        const deletedEventParticipant = await this.meetgridEventParticipantRepository.deleteOne(eventParticipantToDelete);
+        return deletedEventParticipant;
     }
 
     generateAvailabilityString(startDate: Date, endDate: Date) {

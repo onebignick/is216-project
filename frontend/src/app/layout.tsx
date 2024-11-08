@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { fontSans } from "@/lib/fonts";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "IS216 Project",
@@ -21,6 +22,7 @@ export default function RootLayout({
         <body className={cn("min-h-screen bg-background text-foreground font-sans antialiased", fontSans.variable)}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}
+            <Toaster/>
           </ThemeProvider>
         </body>
       </html>
