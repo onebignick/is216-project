@@ -3,7 +3,7 @@ import { pgTableCreator, timestamp, varchar, uuid, pgEnum, unique, integer } fro
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
-export const rolesEnum = pgEnum("roles", ["organizer", "admin", "attendee"]);
+export const rolesEnum = pgEnum("roles", ["owner", "admin", "attendee"]);
 
 export const user = createTable("user", {
 	id: uuid("id").defaultRandom().primaryKey(),

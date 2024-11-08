@@ -1,4 +1,4 @@
-import { MeetgridEvent } from "../entity/event";
+import { MeetgridEvent } from "../entity/MeetgridEvent";
 import { EventRepository } from "../repository/event-repository";
 
 export class EventService {

@@ -1,12 +1,17 @@
-import { MeetgridEvent } from "../entity/event";
+import { auth } from "@clerk/nextjs/server";
+import { MeetgridEvent } from "../entity/MeetgridEvent";
+import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository"
+import { MeetgridEventParticipantService } from "./MeetgridEventParticipantService";
 
 export class MeetgridEventService {
 
     meetgridEventRepository: MeetgridEventRepository;
+    meetgridEventParticipantService: MeetgridEventParticipantService;
 
     constructor() {
         this.meetgridEventRepository = new MeetgridEventRepository();
+        this.meetgridEventParticipantService = new MeetgridEventParticipantService();
     }
 
     async findAll() {
@@ -20,8 +25,26 @@ export class MeetgridEventService {
     }
 
     async createOneEvent(eventToCreate: MeetgridEvent) {
+        
+        const user = auth();
+
         eventToCreate.code = this.generateRandomCode();
-        const createdEvent = await this.meetgridEventRepository.createOne(eventToCreate);
+        const createdEventArray = await this.meetgridEventRepository.createOne(eventToCreate);
+
+        if (createdEventArray.length == 0) return createdEventArray;
+        const createdEvent = createdEventArray[0]
+
+        if (createdEvent.id) {
+            const eventParticipantToCreate = {
+                eventId: createdEvent.id,
+                userId: user.userId,
+                role: "owner",
+                availabilityString: "",
+            } as MeetgridEventParticipant
+            const createdEventParticipant = await this.meetgridEventParticipantService.createOneEventParticipant(eventParticipantToCreate);
+            console.log(createdEventParticipant);
+        }
+
         return createdEvent;
     }
 

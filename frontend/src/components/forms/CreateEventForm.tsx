@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { MeetgridEvent } from "@/server/entity/event";
+import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 
 const formSchema = z.object({
     name: z.string(),

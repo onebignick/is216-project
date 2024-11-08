@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../db";
 import { event, user, registration, availability } from "../db/schema";
-import { MeetgridEvent } from "../entity/event";
+import { MeetgridEvent } from "../entity/MeetgridEvent";
 import { IBaseRepository } from "./base-repository";
 import { User } from "../entity/user";
 import { Registration } from "../entity/registration";

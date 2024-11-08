@@ -1,5 +1,5 @@
 import { db } from "@/server/db"
-import { MeetgridEvent } from "../entity/event";
+import { MeetgridEvent } from "../entity/MeetgridEvent";
 import { event } from "../db/schema";
 import { eq } from "drizzle-orm";
 
@@ -26,7 +26,7 @@ export class MeetgridEventRepository {
     }
 
     async deleteOne(eventToDelete: MeetgridEvent) {
-        const deletedEvent = await db.delete(event).where(eq(event.id, eventToDelete.id))
+        const deletedEvent = await db.delete(event).where(eq(event.id, eventToDelete.id!))
         return deletedEvent
     }
 

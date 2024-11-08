@@ -1,4 +1,4 @@
-import { MeetgridEvent } from "./event";
+import { MeetgridEvent } from "./MeetgridEvent";
 
 export type User = {
     id?: string;
