@@ -11,6 +11,7 @@ import { auth } from "@clerk/nextjs/server";
 import { FormDialogButton } from "@/components/FormDialogButton";
 import { AddAdminToEventForm } from "@/components/forms/AddAdminToEventForm";
 import { DisplayTotalAvailability } from "@/components/DisplayTotalAvailability";
+import IndicateAvailability from "@/components/IndicateAvailability";
 
 
 // const eventService: EventService = new EventService();
@@ -37,6 +38,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
 
       const meetgridEvent: MeetgridEvent = meetgridEventArray[0];
       const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId);
+      const currentUserAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventIdAndUserId(params.eventId, user.userId!);
 
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
@@ -51,6 +53,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
           />
           total group availability
           <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
+          <IndicateAvailability eventParticipant={currentUserAvailability[0]} event={meetgridEvent} userEmail="snoopdogg"/>
         </div>
       )
   } catch {

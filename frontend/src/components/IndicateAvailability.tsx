@@ -10,11 +10,9 @@ interface IndicateAvailabilityProps {
     userEmail: string;
 }
 
-export default function IndicateAvailability({eventParticipant, event} : IndicateAvailabilityProps) {
+export default function IndicateAvailability({eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
     
-    const [availability, setAvailability] = useState<string[][][]>(JSON.parse(eventParticipant.availabilityString))
     const diff = +(new Date(event.startDate)) - +(new Date(event.endDate)) + 1;
-
 
     function generateTableHeaders() {
         const headers = [<TableHeader title="Time" key="time-header" />];
@@ -37,6 +35,7 @@ export default function IndicateAvailability({eventParticipant, event} : Indicat
                     {generateTableHeaders()}
                 </tr>
             </thead>
+            <TableBody event={event} eventParticipant={eventParticipant} userEmail={userEmail}/>
         </table>
     )
 }
@@ -45,27 +44,87 @@ function TableHeader({ title }: {title: string}) {
     return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
 }
 
-function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: string[][], maxAvailability: number}) {
-  const currentTimeTotalMinutes = currentTimeIdx * 15
-  
-  let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
-  let currentTimeHours = (currentTimeTotalMinutes / 60 >> 0).toString();
+interface TableBodyProps {
+    eventParticipant: MeetgridEventParticipant;
+    userEmail: string;
+    event: MeetgridEvent;
+}
 
-  if (currentTimeHours.length === 1) currentTimeHours = "0" + currentTimeHours
-  if (currentTimeMinutes.length === 1) currentTimeMinutes = "0" + currentTimeMinutes
+function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
 
-  return (
-    <tr key={currentTimeIdx}>
-      <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
-      {row.map((col, idx) => {
-        if (col.length === 0) {
-          return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
-        } else if (col.length === maxAvailability) {
-          return <td key={idx} className="border border-slate-500 bg-green-800 w-[30px] h-[10px]"></td>
+    const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
+    const availability: {[key: string]: string}[][] = JSON.parse(eventParticipant.availabilityString);
+
+    function handleOnMouseDown(timeIntervalIdx: number, dayIdx: number) {
+        if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
+            delete availability[timeIntervalIdx][dayIdx][userEmail];
+            setIsDelete(true);
         } else {
-          return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(col.length/maxAvailability * 100))}></td>
+            availability[timeIntervalIdx][dayIdx][userEmail] = "";
+            setIsDelete(false);
         }
-      })}
-    </tr>
-  )
+        setIsMouseDown(true);
+    }
+
+    function handleOnMouseEnter(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, timeIntervalIdx: number, dayIdx: number) {
+        if (!isMouseDown) return;
+
+        const { target } = e;
+        console.log(target)
+        if (target instanceof HTMLElement) {
+            if (isDelete) {
+                delete availability[timeIntervalIdx][dayIdx][userEmail];
+                target.classList.remove("bg-green-800");
+                target.classList.add("bg-red-200");
+            } else {
+                availability[timeIntervalIdx][dayIdx][userEmail] = "";
+                target.classList.remove("bg-red-200");
+                target.classList.add("bg-green-800");
+            }
+        }
+    }
+
+    async function handleOnMouseUp() {
+        setIsMouseDown(false);
+
+        eventParticipant.availabilityString = JSON.stringify(availability);
+        const result = await fetch("/api/eventParticipant", {
+            "method": "PUT",
+            "body": JSON.stringify(eventParticipant)
+        });
+
+        console.log(result);
+    }
+
+    return(
+        <tbody>
+            {availability.map((timeInterval, timeIntervalIdx) => {
+                const currentTimeTotalMinutes = timeIntervalIdx * 15
+
+                if (currentTimeTotalMinutes < event.startTimeMinutes || currentTimeTotalMinutes >= event.endTimeMinutes) return;
+                
+                let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
+                let currentTimeHours = (currentTimeTotalMinutes / 60 >> 0).toString();
+
+                if (currentTimeHours.length === 1) currentTimeHours = "0" + currentTimeHours
+                if (currentTimeMinutes.length === 1) currentTimeMinutes = "0" + currentTimeMinutes
+
+                return (
+                    <tr key={timeIntervalIdx}>
+                        <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
+                        {
+                            timeInterval.map((day, dayIdx) => {
+                                if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
+                                    return <td onMouseDown={() => handleOnMouseDown(timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 w-[30px] h-[10px] bg-green-800"/>
+                                } else {
+                                    return <td onMouseDown={() => handleOnMouseDown(timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 w-[30px] h-[10px] bg-red-200"/>
+                                }
+                            })
+                        }
+                    </tr>
+                )   
+            })}
+        </tbody>
+    )
 }

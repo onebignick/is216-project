@@ -96,7 +96,7 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
       {row.map((col, idx) => {
         if (Object.keys(col).length === 0) {
           return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
-        } else if (col.length === maxAvailability) {
+        } else if (Object.keys(col).length === maxAvailability) {
           return <td key={idx} className="border border-slate-500 bg-green-800 w-[30px] h-[10px]"></td>
         } else {
           return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}></td>
