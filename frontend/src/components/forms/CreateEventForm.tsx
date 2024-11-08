@@ -62,7 +62,18 @@ export function CreateEventForm() {
             method: "POST",
             body: JSON.stringify(newEvent),
         });
-        console.log(createdEventResponse);
+
+        // if event was created
+        if (createdEventResponse.ok) {
+
+            const { events } = await createdEventResponse.json();           
+            if (events.length == 0) return;
+
+            const createdEvent: MeetgridEvent = events[0];
+            console.log(createdEvent.code)
+            
+            // todo push to create page
+        }
 
     }
 

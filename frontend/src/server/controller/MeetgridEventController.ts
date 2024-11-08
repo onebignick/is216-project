@@ -29,4 +29,18 @@ export class MeetgridEventController {
         return NextResponse.json({ message: "success", events: createdEvent }, { status: 200 });
     }
 
+    // PUT /api/event
+    async update(request: NextRequest) {
+        const eventToUpdate = await request.json();
+        const updatedEvent = await this.meetgridEventService.updateOneEvent(eventToUpdate);
+        return NextResponse.json({ message: "success", events: updatedEvent }, { status: 200 });
+    }
+
+
+    // DELETE /api/event
+    async delete(request: NextRequest) {
+        const eventToDelete = await request.json();
+        const deletedEvent = await this.meetgridEventService.deleteOneEvent(eventToDelete);
+        return NextResponse.json({ message: "success", events: deletedEvent }, { status: 200 });
+    }
 }
