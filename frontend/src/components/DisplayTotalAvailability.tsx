@@ -8,7 +8,7 @@ interface DisplayTotalAvailabilityProps {
 
 export function DisplayTotalAvailability({totalAvailability, event} : DisplayTotalAvailabilityProps) {
 
-  const diff = +(new Date(event.startDate)) - +(new Date(event.endDate)) + 1;
+  const diff = (+(new Date(event.endDate)) - +(new Date(event.startDate))) / (1000*60*60*24);
   let maxAvailability = 0;
   const availability = mergeTotalAvailabilityArray(totalAvailability);
 
@@ -56,7 +56,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
     let startTimeIdx = event.startTimeMinutes/15 >> 0;
     const endTimeIdx = event.endTimeMinutes/15 >> 0;
 
-    while (startTimeIdx <= endTimeIdx) {
+    while (startTimeIdx < endTimeIdx) {
       body.push(<TableRow key={startTimeIdx} currentTimeIdx={startTimeIdx} row={availability[startTimeIdx]} maxAvailability={maxAvailability}/>);
       startTimeIdx++;
     }
@@ -64,7 +64,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
   }
 
   return (
-    <table>
+    <table className="w-full overflow-x-auto">
         <thead>
             <tr>
                 {generateTableHeaders()}

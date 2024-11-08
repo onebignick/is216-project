@@ -9,6 +9,7 @@ export const user = createTable("user", {
 	username: varchar("username", { length: 100 }),
 	firstname: varchar("firstname", { length: 100 }),
 	lastname: varchar("lastname", { length: 100 }),
+	email: varchar("email", { length: 100 }),
 	createdAt: timestamp("createdAt")
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),

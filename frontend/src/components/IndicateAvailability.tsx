@@ -10,9 +10,10 @@ interface IndicateAvailabilityProps {
     userEmail: string;
 }
 
-export default function IndicateAvailability({eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
+export default function IndicateAvailability({ eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
     
-    const diff = +(new Date(event.startDate)) - +(new Date(event.endDate)) + 1;
+    const diff = (+(new Date(event.endDate)) - +(new Date(event.startDate))) / (1000*60*60*24);
+    console.log(diff)
 
     function generateTableHeaders() {
         const headers = [<TableHeader title="Time" key="time-header" />];
@@ -29,7 +30,7 @@ export default function IndicateAvailability({eventParticipant, event, userEmail
     }
 
     return (
-        <table>
+        <table className="w-full overflow-x-auto">
             <thead>
                 <tr>
                     {generateTableHeaders()}
@@ -56,15 +57,27 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const availability: {[key: string]: string}[][] = JSON.parse(eventParticipant.availabilityString);
 
-    function handleOnMouseDown(timeIntervalIdx: number, dayIdx: number) {
-        if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
-            delete availability[timeIntervalIdx][dayIdx][userEmail];
-            setIsDelete(true);
-        } else {
-            availability[timeIntervalIdx][dayIdx][userEmail] = "";
-            setIsDelete(false);
+    function handleOnMouseDown(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, timeIntervalIdx: number, dayIdx: number) {
+        const { target } = e;
+
+            if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
+                setIsDelete(true);
+            } else {
+                setIsDelete(false);
+            }
+            setIsMouseDown(true);
+
+        if (target instanceof HTMLElement) {
+            if (isDelete) {
+                delete availability[timeIntervalIdx][dayIdx][userEmail];
+                target.classList.remove("bg-green-800");
+                target.classList.add("bg-red-200");
+            } else {
+                availability[timeIntervalIdx][dayIdx][userEmail] = "";
+                target.classList.remove("bg-red-200");
+                target.classList.add("bg-green-800");
+            }
         }
-        setIsMouseDown(true);
     }
 
     function handleOnMouseEnter(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, timeIntervalIdx: number, dayIdx: number) {
@@ -112,13 +125,13 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
 
                 return (
                     <tr key={timeIntervalIdx}>
-                        <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
+                        <td className="border border-slate-500 select-none">{currentTimeHours} : {currentTimeMinutes}</td>
                         {
                             timeInterval.map((day, dayIdx) => {
                                 if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
-                                    return <td onMouseDown={() => handleOnMouseDown(timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 w-[30px] h-[10px] bg-green-800"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-green-800"/>
                                 } else {
-                                    return <td onMouseDown={() => handleOnMouseDown(timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 w-[30px] h-[10px] bg-red-200"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-red-200"/>
                                 }
                             })
                         }

@@ -11,4 +11,5 @@ export type User = {
     organizedEvents?: MeetgridEvent[];
     adminEvents?: MeetgridEvent[];
     registeredEvents?: MeetgridEvent[];
+    email: string;
 }

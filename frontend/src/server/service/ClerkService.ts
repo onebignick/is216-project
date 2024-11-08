@@ -16,6 +16,7 @@ export class ClerkService {
             username: clerkUserObject.username,
             firstname: clerkUserObject.first_name,
             lastname: clerkUserObject.last_name,
+            email: clerkUserObject.email_addresses[0].email_address,
         }
         const newUserId = await this.userRepository.createOneUser(newUser);
         console.log("newUserId: " + newUserId);

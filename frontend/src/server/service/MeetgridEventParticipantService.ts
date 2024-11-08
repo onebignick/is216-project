@@ -62,13 +62,12 @@ export class MeetgridEventParticipantService {
     }
 
     generateAvailabilityString(startDate: Date, endDate: Date) {
-        const lengthOfEvent = (+endDate - +startDate) + 1;
-        console.log("MeetgridEventParticipantService.generateAvailabilityString: generating availability string for event with length", lengthOfEvent);
+        const lengthOfEvent = (+endDate - +startDate) / (1000 * 60 * 60 * 24) + 1;
 
         const availabilityArray = new Array(96);
         for (let timeInterval=0; timeInterval<96; timeInterval++) {
-            availabilityArray[timeInterval] = new Array(lengthOfEvent+1);
-            for (let days=0; days<=lengthOfEvent; days++) {
+            availabilityArray[timeInterval] = new Array(lengthOfEvent);
+            for (let days=0; days<lengthOfEvent; days++) {
                 availabilityArray[timeInterval][days] = {};
             }
         }

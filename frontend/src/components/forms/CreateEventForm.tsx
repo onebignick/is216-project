@@ -15,6 +15,8 @@ import { format } from "date-fns";
 import { Button } from "../ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
     name: z.string(),
@@ -41,6 +43,9 @@ const durations = [
 
 export function CreateEventForm() {
     
+    const { toast } = useToast();
+    const router = useRouter();
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
     });
@@ -52,7 +57,7 @@ export function CreateEventForm() {
             name: values.name,
             description: values.description,
             startDate: values.startDate.toISOString(),
-            endDate: values.startDate.toISOString(),
+            endDate: values.endDate.toISOString(),
             meetingPeriod: values.meetingPeriod,
             startTimeMinutes: 540,
             endTimeMinutes: 1080,
@@ -70,9 +75,16 @@ export function CreateEventForm() {
             if (events.length == 0) return;
 
             const createdEvent: MeetgridEvent = events[0];
+
             console.log(createdEvent.code)
-            
-            // todo push to create page
+            toast({
+                title: "Event Successfully created!",
+                description: "You will be redirected to the event page in 5 seconds"
+            })
+
+            setTimeout(() => {
+                router.push("/event/" + createdEvent.id)
+            }, 5000);
         }
 
     }
@@ -178,7 +190,7 @@ export function CreateEventForm() {
                             control={form.control}
                             name="meetingPeriod"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="col-span-2">
                                 <FormLabel>Select meeting duration</FormLabel>
                                 <Select onValueChange={field.onChange}>
                                     <FormControl>
