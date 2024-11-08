@@ -23,9 +23,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
       else {
         for(let j=0;j<availability.length;j++) {
           for(let k=0;k<availability[j].length;k++) {
-            for(let l=0;l<currentAvailability[j][k].length;l++) {
-              availability[j][k].push(currentAvailability[j][k][l]);
-            }
+            availability[j][k] = {...availability[j][k], ...currentAvailability[j][k]}
           }
         }
       }
@@ -33,7 +31,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
 
     for (let i=0; i< availability.length; i++) {
       for (let j=0;j<availability[i].length;j++) {
-        maxAvailability = Math.max(maxAvailability, availability[i][j].length)
+        maxAvailability = Math.max(maxAvailability, Object.keys(availability[i][j]).length)
       }
     }
     return availability;
@@ -96,12 +94,12 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
     <tr key={currentTimeIdx}>
       <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
       {row.map((col, idx) => {
-        if (col.length === 0) {
+        if (Object.keys(col).length === 0) {
           return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
         } else if (col.length === maxAvailability) {
           return <td key={idx} className="border border-slate-500 bg-green-800 w-[30px] h-[10px]"></td>
         } else {
-          return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(col.length/maxAvailability * 100))}></td>
+          return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}></td>
         }
       })}
     </tr>

@@ -69,7 +69,7 @@ export class MeetgridEventParticipantService {
         for (let timeInterval=0; timeInterval<96; timeInterval++) {
             availabilityArray[timeInterval] = new Array(lengthOfEvent+1);
             for (let days=0; days<=lengthOfEvent; days++) {
-                availabilityArray[timeInterval][days] = [];
+                availabilityArray[timeInterval][days] = {};
             }
         }
         console.log("MeetgridEventParticipantService.generateAvailabilityString generated the following availability", availabilityArray);
