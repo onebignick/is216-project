@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { pgTableCreator, timestamp, varchar, uuid, unique, integer } from "drizzle-orm/pg-core";
+import { string } from "zod";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
@@ -53,6 +54,16 @@ export const eventParticipant = createTable("eventParticipant", {
 	}).notNull(),
 	availabilityString: varchar("availabilityString", {length: 10000}),
 });
+
+export const eventRegistrant = createTable("eventRegistrant", {
+	id: uuid("id").defaultRandom().primaryKey(),
+	interviewerEmail: varchar("interviewerEmail", { length: 100 }),
+	participantEmail: varchar("participantEmail", { length: 100 }),
+	eventId: uuid("eventId").references(() => event.id, { onDelete: "cascade" }),
+	timeslotIdx: integer("timeslotIdx"),
+	dayIdx: integer("dayIdx"),
+	zoomLink: varchar("zoomLink", { length: 10000 }),
+})
 
 export const availability = createTable("availability", {
 	id: uuid("id").defaultRandom().primaryKey(),

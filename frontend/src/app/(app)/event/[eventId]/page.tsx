@@ -31,8 +31,6 @@ export default async function EventPage({params}: {params: {eventId:string, book
   const userObj = await clerkClient.users.getUser(user.userId!);
   const meetgridEventService: MeetgridEventService = new MeetgridEventService();
   const meetgridEventParticipantService: MeetgridEventParticipantService = new MeetgridEventParticipantService();
-  
-
 
   try {
     const meetgridEventArray = await meetgridEventService.findById(params.eventId);
