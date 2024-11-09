@@ -92,7 +92,7 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
 
   return (
     <tr key={currentTimeIdx}>
-      <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
+      <td className="border border-slate-500 w-[30px] h-[10px] select-none text-center">{currentTimeHours} : {currentTimeMinutes}</td>
       {row.map((col, idx) => {
         if (Object.keys(col).length === 0) {
           return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
