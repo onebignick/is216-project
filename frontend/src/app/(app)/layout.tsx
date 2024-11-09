@@ -12,7 +12,9 @@ export default function RootLayout({
     <SidebarProvider>
       <SidebarLeft/>
       <main className={cn("flex flex-col min-h-screen bg-background text-foreground font-sans antialiased flex-grow", fontSans.variable)}>
-          <SidebarTrigger className="min-h-8 min-w-8 p-4"/>
+        <nav className="flex flex-row items-center justify-between h-[40px] p-4">
+          <SidebarTrigger/>
+        </nav>
           <div className="flex-grow">{children}</div>
           <footer className="p-3 w-full text-center  bg-muted text-muted-foreground mt-auto" >
             <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>

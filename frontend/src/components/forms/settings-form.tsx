@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
     eventName: z.string(),
@@ -28,7 +29,6 @@ const formSchema = z.object({
     startMinute: z.coerce.number(),
     endHour: z.coerce.number(),
     endMinute: z.coerce.number(),
-    participantNum: z.string(),
 }).refine(data => {
     // Validate that end date is after start date
     return data.endDate > data.startDate;
@@ -67,6 +67,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
     const [errorMessage, setErrorMessage] = useState(""); // State for error messages
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const router = useRouter(); // Initialize useRouter
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -85,44 +86,32 @@ export function SettingsForm({ event } : SettingsFormInterface) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const startTime = values.startHour * 60 + values.startMinute;
         const endTime = values.endHour * 60 + values.endMinute;
+        console.log(startTime);
 
-        // Convert reminder to a number (assuming it's in days)
-        // Calculate the reminder date based on the start date and reminder in days
+        const eventToUpdate: MeetgridEvent = { ...event };
+        eventToUpdate.name = values.eventName;
+        eventToUpdate.description = values.description;
+        eventToUpdate.startDate = values.startDate.toISOString();
+        eventToUpdate.endDate = values.endDate.toISOString();
+        eventToUpdate.startTimeMinutes = startTime;
+        eventToUpdate.endTimeMinutes = endTime;
 
-        // const newEvent = {...event};
-        // newEvent.startTime = startTime;
-        // newEvent.endTime = endTime;
-        const newEvent = {
-            ...event,
-            name: values.eventName,
-            description: values.description,
-            startTime: startTime,
-            endTime: endTime,
-            participantNum: values.participantNum,
-            startDate: values.startDate.toString(),
-            endDate: values.endDate.toString(),
-        };
-
-        const res = await fetch("/api/event", {
+        const updatedEventResponse = await fetch("/api/event", {
             method: "PUT",
-            body: JSON.stringify({
-                updatedEvent: newEvent
-            })
+            body: JSON.stringify(eventToUpdate)
         })       
 
-        const response = await res.json();
-        console.log(response);
-
-        if (response.message === "success") {
-            setSuccessMessage("Event updated successfully!");
-            console.log("success");
+        if (updatedEventResponse.ok) {
+            toast({
+                title: "Event updated successfully"
+            })
         } else {
-            // Handle case where success is false
-            setSuccessMessage("Failed to update event.");
+            toast({
+                title: "Uh oh something went wrong!",
+                description: "Something went wrong when trying to update event" 
+            })
         }
     }
-
-    console.log(event);
 
     // Handle delete function
     const handleDelete = async () => {
@@ -185,26 +174,6 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                         <FormItem className="col-span-2">
                                             <FormControl>
                                                 <Textarea placeholder="Tell us more about your event" {...field}/>
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card className = "col-span-2 lg:col-span-1">
-                            <CardHeader>
-                                <CardTitle>Event Participants Number</CardTitle>
-                                <CardDescription>Your event total number of participants</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <FormField
-                                    control={form.control}
-                                    name="participantNum"
-                                    render={({field}) => (
-                                        <FormItem className="col-span-2">
-                                            <FormControl>
-                                                <Input placeholder="Event name" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>

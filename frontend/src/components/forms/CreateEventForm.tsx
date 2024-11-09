@@ -94,7 +94,7 @@ export function CreateEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-lg">
                     <CardHeader>
-                        <CardTitle className = "text-center">Create an event</CardTitle>
+                        <CardTitle className = "text-center">Create an Inteview Schedule</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
                         <FormField
@@ -103,7 +103,7 @@ export function CreateEventForm() {
                             render={({field}) => (
                                 <FormItem className="col-span-2">
                                     <FormControl>
-                                        <Input placeholder="Event name here" {...field} />
+                                        <Input placeholder="Enter the name of your interview here" {...field} />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -115,7 +115,7 @@ export function CreateEventForm() {
                             render={({field}) => (
                                 <FormItem className="col-span-2">
                                     <FormControl>
-                                        <Textarea placeholder="Tell us more about your event" {...field}/>
+                                        <Textarea placeholder="Tell us more about your interview" {...field}/>
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -191,11 +191,11 @@ export function CreateEventForm() {
                             name="meetingPeriod"
                             render={({ field }) => (
                                 <FormItem className="col-span-2">
-                                <FormLabel>Select meeting duration</FormLabel>
+                                <FormLabel>Select interview duration</FormLabel>
                                 <Select onValueChange={field.onChange}>
                                     <FormControl>
                                     <SelectTrigger>
-                                        <SelectValue placeholder="Select the duration of each meeting" />
+                                        <SelectValue placeholder="Select the duration of each interview" />
                                     </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
