@@ -5,18 +5,23 @@ import { MeetgridEventRepository } from "../repository/MeetgridEventRepository"
 import { MeetgridEventParticipantService } from "./MeetgridEventParticipantService";
 import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRegistrantRepository";
 import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
-import nodemailer from 'nodemailer';
+import { EmailNotificationOptions, EmailService } from "./EmailService";
+import { UserRepository } from "../repository/user-repository";
 
 export class MeetgridEventService {
 
     meetgridEventRepository: MeetgridEventRepository;
     meetgridEventParticipantService: MeetgridEventParticipantService;
     meetgridEventRegistrantRepository: MeetgridEventRegistrantRepository;
+    emailService: EmailService;
+    userRepository: UserRepository;
 
     constructor() {
         this.meetgridEventRepository = new MeetgridEventRepository();
         this.meetgridEventParticipantService = new MeetgridEventParticipantService();
         this.meetgridEventRegistrantRepository = new MeetgridEventRegistrantRepository();
+        this.emailService = new EmailService();
+        this.userRepository = new UserRepository();
     }
 
     async findAll() {
@@ -80,41 +85,20 @@ export class MeetgridEventService {
             await this.meetgridEventParticipantService.createOneEventParticipant(eventParticipantToCreate);
         }
 
-         // Send email notification after event creation
-         await this.sendEmailNotification(user.userId, createdEvent);
+        // Send email notification after event creation
+        const targetUsers = await this.userRepository.findUserByClerkId(user.userId!);
+        const targetUser = targetUsers[0];
+
+
+        const mailOptions = {
+            to: targetUser.email,
+            subject: "Congratulations on creating a new Interview Schedule: " + createdEvent.name,
+            text: "Invite people to join with the code: " + createdEvent.code,
+        } as EmailNotificationOptions;
+
+        await this.emailService.sendEmailNotification(mailOptions);
 
         return createdEventArray;
-    }
-
-    async sendEmailNotification(userId, event) {
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',  // Using Gmail service directly
-            auth: {
-                user: process.env.GMAIL_EMAIL,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
-    
-        const mailOptions = {
-            from: process.env.GMAIL_EMAIL, // Sender address
-            to: 'xl.cheng.2023@scis.smu.edu.sg', // Recipient's email
-            subject: `Event Created: ${event.name}`, // Email subject
-            text: `Your event "${event.name}" has been created successfully.`,
-            html: `
-                <p>Your event <strong>${event.name}</strong> has been created successfully.</p>
-                <p>Event Code: ${event.code}</p>
-                <p>Description: ${event.description}</p>
-                <p>Start Date: ${event.startDate}</p>
-                <p>End Date: ${event.endDate}</p>
-            `,
-        };
-    
-        try {
-            const info = await transporter.sendMail(mailOptions);
-            console.log('Email sent: ' + info.response);
-        } catch (error) {
-            console.error('Error sending email:', error);
-        }
     }
 
     async updateOneEvent(eventToUpdate: MeetgridEvent) {

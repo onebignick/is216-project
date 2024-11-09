@@ -24,6 +24,11 @@ export class UserRepository {
         return targetUser;
     }
 
+    async findUserByClerkId(clerkId: string) {
+        const targetUser = await db.select().from(user).where(eq(user.clerkUserId, clerkId));
+        return targetUser;
+    }
+
     async createOneUser(newUser: User) {
         console.log("UserRepository.createOneUser: creating a user")
         const result = await db.insert(user).values(newUser)

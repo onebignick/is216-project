@@ -1,15 +1,21 @@
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
+import { UserRepository } from "../repository/user-repository";
+import { EmailNotificationOptions, EmailService } from "./EmailService";
 
 export class MeetgridEventParticipantService {
 
     meetgridEventParticipantRepository: MeetgridEventParticipantRepository;
     meetgridEventRepository: MeetgridEventRepository
+    userRepository: UserRepository;
+    emailService: EmailService;
 
     constructor() {
         this.meetgridEventParticipantRepository = new MeetgridEventParticipantRepository();
         this.meetgridEventRepository = new MeetgridEventRepository();
+        this.userRepository = new UserRepository();
+        this.emailService = new EmailService();
     }
 
     async findAll() {
@@ -39,15 +45,30 @@ export class MeetgridEventParticipantService {
 
     async createOneEventParticipant(eventParticipantToCreate: MeetgridEventParticipant) {
         console.log("MeetgridEventParticipantService.createOneEventPartcipant: creating event participant")
+        let targetEvent;
         if (eventParticipantToCreate.availabilityString === "" && eventParticipantToCreate.eventId) {
             const targetEventArray = await this.meetgridEventRepository.findById(eventParticipantToCreate.eventId);
             if (targetEventArray.length == 0) throw new Error("Event does not exist");
             
-            const targetEvent = targetEventArray[0];
+            targetEvent = targetEventArray[0];
             eventParticipantToCreate.availabilityString = this.generateAvailabilityString(new Date(targetEvent.startDate), new Date(targetEvent.endDate))
         }
         const createdEventParticipant = await this.meetgridEventParticipantRepository.createOne(eventParticipantToCreate);
         console.log("MeetgridEventParticipantService.createOneEventPartcipant: created event participant")
+
+        const userId = eventParticipantToCreate.userId;
+        const targetUsers = await this.userRepository.findUserByClerkId(userId);
+        const targetUser = targetUsers[0];
+        
+
+        const mailOptions = {
+            to: targetUser.email,
+            subject: "You have just been added to " + targetEvent!.name,
+            text: "Make your fist changes now"
+        } as EmailNotificationOptions;
+
+        await this.emailService.sendEmailNotification(mailOptions);
+
         return createdEventParticipant;
     }
 

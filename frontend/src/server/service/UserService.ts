@@ -17,4 +17,9 @@ export class UserService {
         const targetUser = await this.userRepository.findUserByEmail(email);
         return targetUser;
     }
+
+    async findUserByClerkId(clerkId: string) {
+        const targetUser = await this.userRepository.findUserByClerkId(clerkId);
+        return targetUser;
+    }
 }
