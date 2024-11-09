@@ -24,16 +24,13 @@ export function RegisterEventForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
 
-        const res = await fetch("/api/event/register", {
-            method: "POST",
-            body: JSON.stringify({
-                eventCode: values.eventCode!
-            })
-        })
+        const targetEventResponse = await fetch("/api/event?" + new URLSearchParams({
+            code: values.eventCode,
+        }))
 
-        if (res.ok) {
-            const response = await res.json();
-            router.push("/event/register/" + response.result.id);
+        if (targetEventResponse.ok) {
+            const { targetEvent } = await targetEventResponse.json();
+            router.push("/event/" + targetEvent.id + "/register");
         }
 
 

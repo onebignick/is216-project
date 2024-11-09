@@ -15,6 +15,11 @@ export class MeetgridEventRepository {
         return targetEvent;
     }
 
+    async findByCode(code: string) {
+        const targetEvent = await db.select().from(event).where(eq(event.code, code));
+        return targetEvent;
+    }
+
     async createOne(eventToCreate: MeetgridEvent) {
         const createdEvent = await db.insert(event).values(eventToCreate).returning();
         return createdEvent;

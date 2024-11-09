@@ -12,10 +12,15 @@ export class MeetgridEventController {
     // GET /api/event
     async find(request: NextRequest) {
         const targetEventId = request.nextUrl.searchParams.get("eventId");
+        const targetEventCode = request.nextUrl.searchParams.get("code");
 
         if (targetEventId) {
             const targetEvent = await this.meetgridEventService.findById(targetEventId);
             return NextResponse.json({ message: "success", event: targetEvent}, { status: 200 })
+        } else if (targetEventCode) {
+            const targetEvent = await this.meetgridEventService.findEventByCode(targetEventCode);
+            if (targetEvent.length === 0) return NextResponse.json({ message: "not found" }, {status: 404});
+            return NextResponse.json({ message: "success", targetEvent: targetEvent[0] }, {status: 200});
         }
 
         const allEvents = await this.meetgridEventService.findAll();

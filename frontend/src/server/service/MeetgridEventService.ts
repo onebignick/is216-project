@@ -54,6 +54,11 @@ export class MeetgridEventService {
         return results;
     }
 
+    async findEventByCode(code: string) {
+        const targetEvent = await this.meetgridEventRepository.findByCode(code);
+        return targetEvent;
+    }
+
     async createOneEvent(eventToCreate: MeetgridEvent) {
         
         const user = auth();
