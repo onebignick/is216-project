@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
+import Props from '@toast-ui/react-calendar';
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
@@ -13,11 +13,7 @@ interface EventPageProps {
     className?: string;
     bookings: any[];
 }
-
-interface CalendarProps{
-
-}
-
+// ../../node_modules/@toast-ui/react-calendar/types/index.d.ts
 export default function FrontpageCalendar({ events, className , bookings}: EventPageProps){
     
     // console.log(events);
@@ -46,8 +42,7 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
             title: event.name || "Untitled Event",
             start: startDate.toISOString(),
             end: endDate.toISOString(),
-            allDay: isAllDay,
-            category: "allday",
+            category: "",
             description: event.description,
             backgroundColor: event.backgroundColor, // Random background color
             borderColor: event.borderColor,     // Random border color
@@ -107,13 +102,32 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
 
     const [isClient, setIsClient] = useState(false);
 
-    const calendarOptions= {
-
-    }
 
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
     }, []);
+
+    const calendarProps: typeof Props = {
+        height: '600px', // Adjust as needed
+        view: 'week', // Set default view as 'week'
+        events: allCalendarEntries,
+        week: {
+            hourStart: 0,
+            hourEnd: 24,
+            startDayOfWeek: new Date().getDay(),
+            taskView: false,
+            eventView: ['time', 'allday'],
+        },
+        timezone: {
+            zones: [
+                {
+                    timezoneName: "Asia/Singapore",
+                    displayLabel: "SGT",
+                    tooltip: "Singapore Time (UTC+8)"
+                },
+            ],
+        },
+    };
     return (
         <Card className={className}>
             <CardHeader>
@@ -121,28 +135,7 @@ export default function FrontpageCalendar({ events, className , bookings}: Event
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                <Calendar
-                    usageStatistics={false}
-                    view="week"
-                    events={allCalendarEntries}
-                    week={{
-                        hourStart: 0,  // Start of day in 24-hour format
-                        hourEnd: 24,   // End of day in 24-hour format
-                        startDayOfWeek: new Date().getDay(), //set start day of the week as current day
-                        taskView: false,
-                        eventView: ['time', 'allday'],
-                    }}
-                    timezone={{
-                        zones: [
-                            {
-                                timezoneName: "Asia/Singapore",
-                                displayLabel: "SGT",
-                                tooltip: "Singapore Time (UTC+8)"
-    
-                            },
-                        ],
-                    }}
-                />
+                <Calendar {...calendarProps}/>
             </CardContent>
         </Card>
     )
