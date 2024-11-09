@@ -5,6 +5,7 @@ import { MeetgridEventRepository } from "../repository/MeetgridEventRepository"
 import { MeetgridEventParticipantService } from "./MeetgridEventParticipantService";
 import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRegistrantRepository";
 import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
+import nodemailer from 'nodemailer';
 
 export class MeetgridEventService {
 
@@ -74,7 +75,41 @@ export class MeetgridEventService {
             await this.meetgridEventParticipantService.createOneEventParticipant(eventParticipantToCreate);
         }
 
+         // Send email notification after event creation
+         await this.sendEmailNotification(user.userId, createdEvent);
+
         return createdEventArray;
+    }
+
+    async sendEmailNotification(userId, event) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',  // Using Gmail service directly
+            auth: {
+                user: process.env.GMAIL_EMAIL,
+                pass: process.env.GMAIL_APP_PASSWORD,
+            },
+        });
+    
+        const mailOptions = {
+            from: process.env.GMAIL_EMAIL, // Sender address
+            to: 'xl.cheng.2023@scis.smu.edu.sg', // Recipient's email
+            subject: `Event Created: ${event.name}`, // Email subject
+            text: `Your event "${event.name}" has been created successfully.`,
+            html: `
+                <p>Your event <strong>${event.name}</strong> has been created successfully.</p>
+                <p>Event Code: ${event.code}</p>
+                <p>Description: ${event.description}</p>
+                <p>Start Date: ${event.startDate}</p>
+                <p>End Date: ${event.endDate}</p>
+            `,
+        };
+    
+        try {
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Email sent: ' + info.response);
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
     }
 
     async updateOneEvent(eventToUpdate: MeetgridEvent) {
