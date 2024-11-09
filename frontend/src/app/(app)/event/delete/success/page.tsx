@@ -18,7 +18,7 @@ const SuccessPage = () => {
                 )}
                 <br></br>
                 <Button variant="outline" asChild>
-                    <Link href="/event">See More at Your Events</Link>
+                    <Link href="/event">Go back to Your Events</Link>
                 </Button>
             </div>
         </div>

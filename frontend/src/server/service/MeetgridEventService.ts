@@ -42,8 +42,7 @@ export class MeetgridEventService {
                 role: "owner",
                 availabilityString: "",
             } as MeetgridEventParticipant
-            const createdEventParticipant = await this.meetgridEventParticipantService.createOneEventParticipant(eventParticipantToCreate);
-            console.log(createdEventParticipant);
+            await this.meetgridEventParticipantService.createOneEventParticipant(eventParticipantToCreate);
         }
 
         return createdEventArray;
@@ -55,6 +54,7 @@ export class MeetgridEventService {
     }
 
     async deleteOneEvent(eventToDelete: MeetgridEvent) {
+        console.log(eventToDelete)
         const deletedEvent = await this.meetgridEventRepository.deleteOne(eventToDelete);
         return deletedEvent;
     }

@@ -86,7 +86,6 @@ export function SettingsForm({ event } : SettingsFormInterface) {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const startTime = values.startHour * 60 + values.startMinute;
         const endTime = values.endHour * 60 + values.endMinute;
-        console.log(startTime);
 
         const eventToUpdate: MeetgridEvent = { ...event };
         eventToUpdate.name = values.eventName;
@@ -115,22 +114,17 @@ export function SettingsForm({ event } : SettingsFormInterface) {
 
     // Handle delete function
     const handleDelete = async () => {
-        const res = await fetch(`/api/event/delete/${event.id}`, {
+        const res = await fetch("/api/event/", {
             method: "DELETE",
+            body: JSON.stringify(event),
         });
     
-        const response = await res.json();
-        console.log("API Response:", response); // Log the response to see if deletion was successful
-    
-        if (response.message === "Event deleted successfully") {
-            // Redirect to the success page
-            console.log(response);
+        if (res.ok) {
             router.push(`/event/delete/success?eventName=${event.name}`); // Redirect without useRouter
             setSuccessMessage("Event deleted successfully!");
             setErrorMessage("");
             setShowDeleteModal(false); // Close the modal after deletion
         } else {
-            console.log("An error occurred");
             setSuccessMessage("");
             setErrorMessage("Failed to delete event.");
         }
