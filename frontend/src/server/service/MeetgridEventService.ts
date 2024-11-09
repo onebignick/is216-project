@@ -3,15 +3,19 @@ import { MeetgridEvent } from "../entity/MeetgridEvent";
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository"
 import { MeetgridEventParticipantService } from "./MeetgridEventParticipantService";
+import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRegistrantRepository";
+import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 
 export class MeetgridEventService {
 
     meetgridEventRepository: MeetgridEventRepository;
     meetgridEventParticipantService: MeetgridEventParticipantService;
+    meetgridEventRegistrantRepository: MeetgridEventRegistrantRepository;
 
     constructor() {
         this.meetgridEventRepository = new MeetgridEventRepository();
         this.meetgridEventParticipantService = new MeetgridEventParticipantService();
+        this.meetgridEventRegistrantRepository = new MeetgridEventRegistrantRepository();
     }
 
     async findAll() {
@@ -22,6 +26,31 @@ export class MeetgridEventService {
     async findById(id: string) {
         const targetEvent = await this.meetgridEventRepository.findById(id);
         return targetEvent;
+    }
+
+    async findRelatedEventsByUserId(targetUserId: string) {
+        const results: MeetgridAssociatedEvent[] = [];
+
+        const eventsWhereAdminPlus = await this.meetgridEventParticipantService.findByUserId(targetUserId);
+        for (let i=0; i<eventsWhereAdminPlus.length; i++) {
+            const currentEvent: MeetgridEventParticipant = eventsWhereAdminPlus[i];
+            const targetEvents: MeetgridEvent[] = await this.meetgridEventRepository.findById(currentEvent.eventId); 
+            const targetEvent: MeetgridEvent = targetEvents[0]
+
+            const newMeetgridAssociatedEvent = {
+                id: targetEvent.id,
+                name: targetEvent.name,
+                description: targetEvent.description,
+                startDate: new Date(targetEvent.startDate),
+                endDate: new Date(targetEvent.endDate),
+                role: currentEvent.role,
+                dateCreated: new Date(targetEvent.dateCreated)
+            } as MeetgridAssociatedEvent
+            results.push(newMeetgridAssociatedEvent);
+        }
+
+        results.sort((a, b) => +b.dateCreated - +a.dateCreated)
+        return results;
     }
 
     async createOneEvent(eventToCreate: MeetgridEvent) {

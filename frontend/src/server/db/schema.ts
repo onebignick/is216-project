@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm";
 import { pgTableCreator, timestamp, varchar, uuid, unique, integer } from "drizzle-orm/pg-core";
-import { string } from "zod";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
@@ -41,6 +40,7 @@ export const event = createTable("event", {
 	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
     borderColor: varchar("borderColor", { length: 7 }),  // hex color
     textColor: varchar("textColor", { length: 7 }),  // hex color
+	dateCreated: timestamp("dateCreated").defaultNow(),
 });
 
 export const eventParticipant = createTable("eventParticipant", {

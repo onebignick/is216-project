@@ -60,20 +60,6 @@ export default async function Home() {
 
 }
 
-function ExampleCard({ className } : {className:string}) {
-  return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>This is a test</CardTitle>
-        <CardDescription>This is a test</CardDescription>
-      </CardHeader>
-      <CardContent>
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor, exercitationem harum? Eos ullam a sed culpa cumque! Tempora voluptatibus laudantium impedit, excepturi iure ullam explicabo et nesciunt. Repudiandae, ratione deleniti?
-      </CardContent>
-    </Card>
-  )
-}
-
 function WelcomeCard({ username, className } : { username: string, className: string }) {
   return (
     <Card className={className}>

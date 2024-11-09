@@ -11,4 +11,5 @@ export type MeetgridEvent = {
 	backgroundColor?: string;
     borderColor?: string;
     textColor?: string;
+	dateCreated: string;
 }
