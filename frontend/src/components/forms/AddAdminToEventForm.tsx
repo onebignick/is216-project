@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 
 const formSchema = z.object({
-    username: z.string(),
+    email: z.string().email(),
 })
 
 interface AddAdminToEventFormProps {
@@ -27,7 +27,7 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         const targetUserResponse = await fetch("/api/user?" + new URLSearchParams({
-            username: values.username,
+            email: values.email,
         }))
 
         if (targetUserResponse.ok) {
@@ -71,11 +71,11 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-lg">
                 <FormField
                     control={form.control}
-                    name="username"
+                    name="email"
                     render={({field}) => (
                         <FormItem>
                             <FormControl>
-                                <Input placeholder="Enter a username here" {...field} />
+                                <Input placeholder="Enter an email here" {...field} />
                             </FormControl>
                             <FormMessage/>
                         </FormItem>
