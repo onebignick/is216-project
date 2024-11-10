@@ -114,7 +114,8 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
 
         toast({
             title: "Successfully Registered for event",
-            description: "You will receive an email with the details of the meeting"
+            description: "You will receive an email with the details of the meeting",
+            className: "bg-green-500 text-black",
         })
     }
 

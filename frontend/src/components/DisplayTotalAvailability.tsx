@@ -64,7 +64,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
   }
 
   return (
-    <table className="w-full overflow-x-auto">
+    <table className="table-auto overflow-x-auto">
         <thead>
             <tr>
                 {generateTableHeaders()}

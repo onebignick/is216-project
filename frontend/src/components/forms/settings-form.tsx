@@ -102,12 +102,14 @@ export function SettingsForm({ event } : SettingsFormInterface) {
 
         if (updatedEventResponse.ok) {
             toast({
-                title: "Event updated successfully"
+                title: "Event updated successfully",
+                className: "bg-green-500 text-black",
             })
         } else {
             toast({
                 title: "Uh oh something went wrong!",
-                description: "Something went wrong when trying to update event" 
+                description: "Something went wrong when trying to update event",
+                className: "bg-red-500 text-white", // Error color
             })
         }
     }
@@ -121,12 +123,20 @@ export function SettingsForm({ event } : SettingsFormInterface) {
     
         if (res.ok) {
             router.push(`/event/delete/success?eventName=${event.name}`); // Redirect without useRouter
-            setSuccessMessage("Event deleted successfully!");
-            setErrorMessage("");
+            // setSuccessMessage("Event deleted successfully!");
+            // setErrorMessage("");
+            toast({
+                title: "Event deleted successfully"
+            })
             setShowDeleteModal(false); // Close the modal after deletion
         } else {
-            setSuccessMessage("");
-            setErrorMessage("Failed to delete event.");
+            // setSuccessMessage("");
+            // setErrorMessage("Failed to delete event.");
+            toast({
+                title: "Uh oh something went wrong!",
+                description: "Something went wrong when trying to update event",
+                className: "bg-red-500 text-white", // Error color
+            })
         }
     };
 

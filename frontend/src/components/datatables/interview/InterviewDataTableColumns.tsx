@@ -77,7 +77,7 @@ export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
         },
         cell: ({ row }) => {
             return (
-                <Button variant="link" asChild>
+                <Button variant="link" asChild className="px-0">
                     <Link href={row.getValue("zoomLink")}>Meeting link</Link>
                 </Button>
             )

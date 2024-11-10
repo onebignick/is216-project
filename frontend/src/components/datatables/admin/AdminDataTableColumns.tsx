@@ -4,6 +4,7 @@ import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
+import { useToast } from "@/hooks/use-toast";
 
 export const AdminDataTableColumns: ColumnDef<MeetgridEventAdmin>[] = [
     {
@@ -54,7 +55,7 @@ export const AdminDataTableColumns: ColumnDef<MeetgridEventAdmin>[] = [
         cell: ({ row }) => {
             const user = row.original;
             console.log(user)
-
+            const { toast } = useToast();
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -69,6 +70,11 @@ export const AdminDataTableColumns: ColumnDef<MeetgridEventAdmin>[] = [
                             const res = await fetch("/api/eventParticipant", {
                                 method: "DELETE",
                                 body: JSON.stringify(row.original)
+                            })
+
+                            toast({
+                                title: "Successfully Delete User",
+                                className: "bg-green-500 text-black",
                             })
                         }}>
                             Delete user

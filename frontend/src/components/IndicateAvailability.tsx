@@ -30,7 +30,7 @@ export default function IndicateAvailability({ eventParticipant, event, userEmai
     }
 
     return (
-        <table className="w-full overflow-x-auto">
+        <table className="table-auto overflow-x-auto">
             <thead>
                 <tr>
                     {generateTableHeaders()}

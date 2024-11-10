@@ -71,7 +71,8 @@ export function CreateEventForm() {
             console.log(createdEvent.code)
             toast({
                 title: "Event Successfully created!",
-                description: "You will be redirected to the event page in 5 seconds"
+                description: "You will be redirected to the event page in 5 seconds",
+                className: "bg-green-500 text-black",
             })
 
             setTimeout(() => {

@@ -55,7 +55,7 @@ export default function RegisterForAvailableSessions({totalAvailability, event} 
   }
 
   return (
-    <table className="w-full overflow-x-auto">
+    <table className="table-auto overflow-x-auto">
         <thead>
             <tr>
                 {generateTableHeaders()}
@@ -67,7 +67,7 @@ export default function RegisterForAvailableSessions({totalAvailability, event} 
 }
 
 function TableHeader({ title }: {title: string}) {
-    return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
+    return <th className="border border-slate-500 whitespace-nowrap w-[10px] px-2">{title}</th>
 }
 
 interface TableBodyProps {
@@ -91,7 +91,7 @@ function TableBody({ mergedAvailability, event }: TableBodyProps) {
 
                 return (
                     <tr key={timeslotIdx}>
-                        <td className="border border-slate-500 w-[30px] h-[10px] select-none">{currentTimeHours} : {currentTimeMinutes}</td>
+                        <td className="border border-slate-500 w-[30px] h-[10px] select-none text-center">{currentTimeHours} : {currentTimeMinutes}</td>
                         {timeslot.map((day, dayIdx) => {
                             if (Object.keys(mergedAvailability[timeslotIdx][dayIdx]).length === 0) {
                                 return <td key={dayIdx} className="border border-slate-500 w-[30px] h-[10px]"></td>
@@ -104,16 +104,18 @@ function TableBody({ mergedAvailability, event }: TableBodyProps) {
                                 if (emptyCount === Object.keys(mergedAvailability[timeslotIdx][dayIdx]).length) {
                                     return (
                                         <td key={dayIdx} className="border border-slate-500">
-                                            <FormDialogButton
-                                                label="Book this time slot"
-                                                title={`Confirm booking for ${currentTimeHours}:${currentTimeMinutes}`}
-                                                description="An email will be sent to you to confirm the booking"
-                                                form={<RegisterForTimeslotForm mergedAvailability={mergedAvailability} event={event} timeslotIdx={timeslotIdx} dayIdx={dayIdx}/>}
-                                            />
+                                            <div className="flex justify-center items-center h-full py-1 px-2"> {/* Center the button */}
+                                                <FormDialogButton
+                                                    label="Book This Time Slot"
+                                                    title={`Confirm booking for ${currentTimeHours}:${currentTimeMinutes}`}
+                                                    description="An email will be sent to you to confirm the booking"
+                                                    form={<RegisterForTimeslotForm mergedAvailability={mergedAvailability} event={event} timeslotIdx={timeslotIdx} dayIdx={dayIdx}/>}
+                                                />
+                                            </div>
                                         </td>
                                     )
                                 } else {
-                                    return <td key={dayIdx} className="border border-slate-500 bg-red-200"></td>
+                                    return <td key={dayIdx} className="border border-slate-500 bg-neutral-500"></td>
                                 }
                             }
                         })}

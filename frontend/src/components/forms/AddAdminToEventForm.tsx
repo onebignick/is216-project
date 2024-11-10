@@ -49,12 +49,14 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
             if (addUserToEventResponse.ok) {
                 toast({
                     title: "Person added!",
-                    description: "We managed to add this user!"
+                    description: "We managed to add this user!",
+                    className: "bg-green-500 text-black",
                 })
             } else {
                 toast({
                     title: "Uh oh! Something went wrong",
-                    description: "Something went wrong when adding this user, try again"
+                    description: "Something went wrong when adding this user, try again",
+                    className: "bg-red-500 text-white", // Error color
                 })
             }
         } else {
