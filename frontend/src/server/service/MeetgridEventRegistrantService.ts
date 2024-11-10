@@ -67,6 +67,11 @@ export class MeetgridEventRegistrantService {
         return createdMeetgridEventRegistrant;
     }
 
+    async findEventWithParticipantsByUserId(userId: string) {
+        const targetEvents = await this.meetgridEventRegistrantRepository.findEventWithParticipantsByUserId(userId);
+        return targetEvents;
+    }
+
     // Helper functions for generating random color and checking luminance
     getRandomColor(): string {
         const letters = '0123456789ABCDEF';
