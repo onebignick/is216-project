@@ -79,7 +79,7 @@ export function RegisterEventForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="col-span-2">
+                        <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
                             Submit
                         </Button>
                     </CardContent>

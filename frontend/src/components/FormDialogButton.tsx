@@ -15,7 +15,7 @@ export function FormDialogButton({ title, label, description, form }: FormDialog
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="px-4 py-2 bg-purple-600 hover:bg-purple-400 rounded">
+                <Button className="px-4 py-2 bg-indigo-500 hover:bg-indigo-300 rounded">
                     {label}
                 </Button>
             </DialogTrigger>

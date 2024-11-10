@@ -83,7 +83,7 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Add User</Button>
+                <Button type="submit" className="bg-indigo-500 hover:bg-indigo-300">Add User</Button>
             </form>
         </Form>
     )

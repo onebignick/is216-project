@@ -76,7 +76,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
                   <FormDialogButton
                     title="Invite people to run your meeting!"
                     description="Fill in the form below with the person's email"
-                    label="Add admins"
+                    label="Add Admins"
                     form={<AddAdminToEventForm eventId={params.eventId}/>}
                   />
                 </CardContent>
@@ -143,14 +143,14 @@ export default async function EventPage({params}: {params: {eventId:string, book
             <div className="grid grid-cols-12 gap-4 p-4">
               <Card className="col-span-12">
                 <CardHeader>
-                  <CardTitle>Add a new admin</CardTitle>
+                  <CardTitle>Add a New Admin</CardTitle>
                   <CardDescription>Use this form to add a new admin</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <FormDialogButton
                     title="Invite people to run your meeting!"
                     description="Fill in the form below with the person's email"
-                    label="Add admins"
+                    label="Add Admins"
                     form={<AddAdminToEventForm eventId={params.eventId}/>}
                   />
                 </CardContent>

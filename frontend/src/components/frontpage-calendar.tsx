@@ -151,7 +151,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     return (
         <Card className={className}>
             <CardHeader>
-                <CardTitle>Upcoming Events</CardTitle>
+                <CardTitle>Upcoming Meetings</CardTitle>
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>

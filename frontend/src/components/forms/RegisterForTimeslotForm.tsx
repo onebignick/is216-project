@@ -134,7 +134,7 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit">
+                        <Button type="submit" className="bg-indigo-500 hover:bg-indigo-300">
                             Submit
                         </Button>
                 </form>

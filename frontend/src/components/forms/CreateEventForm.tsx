@@ -87,7 +87,7 @@ export function CreateEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-lg">
                     <CardHeader>
-                        <CardTitle className = "text-center">Create an Inteview Schedule</CardTitle>
+                        <CardTitle className = "text-center">Create an Interview Schedule</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
                         <FormField
@@ -202,7 +202,7 @@ export function CreateEventForm() {
                             )}
                         />
 
-                        <Button type="submit" className="col-span-2">
+                        <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
                             Submit
                         </Button>
                     </CardContent>

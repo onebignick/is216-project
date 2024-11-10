@@ -78,8 +78,8 @@ function WelcomeCard({ username, className } : { username: string, className: st
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button asChild>
-          <Link href="/event/create">Create a new event</Link>
+        <Button asChild className="bg-indigo-500 hover:bg-indigo-300">
+          <Link href="/event/create">Create New Event</Link>
         </Button>
       </CardContent>
     </Card>
