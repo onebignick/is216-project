@@ -26,9 +26,6 @@ export const event = createTable("event", {
 	startTimeMinutes: integer("startTimeMinutes").notNull(),
 	endTimeMinutes: integer("endTime").notNull(),
 	meetingPeriod: integer("meetingPeriod").notNull(),
-	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
-    borderColor: varchar("borderColor", { length: 7 }),  // hex color
-    textColor: varchar("textColor", { length: 7 }),  // hex color
 	dateCreated: varchar("dateCreated", {length: 1000}).default(sql`NOW()`),
 });
 
@@ -52,6 +49,9 @@ export const eventRegistrant = createTable("eventRegistrant", {
 	timeslotIdx: integer("timeslotIdx"),
 	dayIdx: integer("dayIdx"),
 	zoomLink: varchar("zoomLink", { length: 10000 }),
+	backgroundColor: varchar("backgroundColor", { length: 7 }),  // hex color
+    borderColor: varchar("borderColor", { length: 7 }),  // hex color
+    textColor: varchar("textColor", { length: 7 }),  // hex color
 })
 
 // export const availability = createTable("availability", {
