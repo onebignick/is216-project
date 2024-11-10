@@ -3,6 +3,9 @@ import { MeetgridEventRegistrant } from "../entity/MeetgridEventRegistrant";
 import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRegistrantRepository";
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
 import { EmailNotificationOptions, EmailService } from "./EmailService";
+import { UserRepository } from "../repository/user-repository";
+import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
+import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 
 const URL = "http://localhost:3000";
 
@@ -10,12 +13,21 @@ export class MeetgridEventRegistrantService {
 
     meetgridEventRegistrantRepository: MeetgridEventRegistrantRepository;
     meetgridEventRepository: MeetgridEventRepository;
-    emailService: EmailService
+    emailService: EmailService;
+    userRepository: UserRepository;
+    meetgridEventParticipantRepository: MeetgridEventParticipantRepository;
 
     constructor() {
         this.meetgridEventRegistrantRepository = new MeetgridEventRegistrantRepository();
-        this.meetgridEventRepository = new MeetgridEventRepository;
+        this.meetgridEventRepository = new MeetgridEventRepository();
         this.emailService = new EmailService();
+        this.meetgridEventParticipantRepository = new MeetgridEventParticipantRepository();
+        this.userRepository = new UserRepository();
+    }
+
+    async findById(id: string) {
+        const targetEventRegistrant = await this.meetgridEventRegistrantRepository.findById(id);
+        return targetEventRegistrant;
     }
 
     async findByEvent(eventId: string) {
@@ -42,7 +54,17 @@ export class MeetgridEventRegistrantService {
         return result;
     }
 
+    async findEventWithParticipantsByUserId(userId: string) {
+        const targetEvents = await this.meetgridEventRegistrantRepository.findEventWithParticipantsByUserId(userId);
+        return targetEvents;
+    }
+    
     async createOneEventRegistrant(meetgridEventRegistrantToCreate: MeetgridEventRegistrant) {
+        const targetEvent = await this.meetgridEventRepository.findById(meetgridEventRegistrantToCreate.eventId);
+        const curTime = new Date(targetEvent[0].startDate)
+        curTime.setDate(curTime.getDate() + meetgridEventRegistrantToCreate.dayIdx!);
+        curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrantToCreate.timeslotIdx!*15))
+
         const backgroundColor = this.getRandomColor();
         meetgridEventRegistrantToCreate.backgroundColor = backgroundColor;
         meetgridEventRegistrantToCreate.borderColor = this.getRandomColor();
@@ -52,16 +74,32 @@ export class MeetgridEventRegistrantService {
         
         const mailOption = {
             to: createdMeetgridEventRegistrant[0].interviewerEmail,
-            subject: "Interview Scheduled for [time]",
+            subject: "Interview Scheduled for " + curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }),
             text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
-            " if you would like to edit the information you can use this link: " + URL + "interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
+            " if you would like to edit the information you can use this link: " + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(mailOption);
 
         const participantMailOption = {
             to: createdMeetgridEventRegistrant[0].participantEmail,
-            subject: "Interview Scheduled for [time todo]",
+            subject: "Interview Scheduled for " + curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }),
             text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
             " if you would like to edit the information you can use this link: " + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
@@ -71,9 +109,54 @@ export class MeetgridEventRegistrantService {
         return createdMeetgridEventRegistrant;
     }
 
-    async findEventWithParticipantsByUserId(userId: string) {
-        const targetEvents = await this.meetgridEventRegistrantRepository.findEventWithParticipantsByUserId(userId);
-        return targetEvents;
+    async deleteOneEventRegistrant(id: string) {
+        const deletedEventRegistrant = await this.meetgridEventRegistrantRepository.deleteOne(id);
+        
+        const targetEvent = await this.meetgridEventRepository.findById(deletedEventRegistrant[0].eventId!);
+        const curTime = new Date(targetEvent[0].startDate)
+        curTime.setDate(curTime.getDate() + deletedEventRegistrant[0].dayIdx!);
+        curTime.setMinutes(curTime.getMinutes() + (deletedEventRegistrant[0].timeslotIdx!*15))
+
+        const targetUser = await this.userRepository.findUserByEmail(deletedEventRegistrant[0].interviewerEmail!);
+        
+        // update the guys availability;
+        const targetEventParticipant = await this.meetgridEventParticipantRepository.findByEventIdAndUserId(deletedEventRegistrant[0].eventId!, targetUser[0].clerkUserId!);
+        
+        const updatedAvailability = JSON.parse(targetEventParticipant[0].availabilityString!);
+        updatedAvailability[deletedEventRegistrant[0].timeslotIdx!][deletedEventRegistrant[0].dayIdx!][deletedEventRegistrant[0].interviewerEmail!] = "";
+        targetEventParticipant[0].availabilityString = JSON.stringify(updatedAvailability);
+        await this.meetgridEventParticipantRepository.updateOne(targetEventParticipant[0] as MeetgridEventParticipant);
+
+        const participantMailOption = {
+            to: deletedEventRegistrant[0].participantEmail,
+            subject: "Interview at " + curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }) + " was cancelled",
+            text: "The interview was cancelled"
+        } as EmailNotificationOptions;
+
+        const participantMailOption2 = {
+            to: deletedEventRegistrant[0].interviewerEmail,
+            subject: "Interview at " + curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }) + " was cancelled",
+            text: "The interview was cancelled"
+        } as EmailNotificationOptions;
+        this.emailService.sendEmailNotification(participantMailOption);
+        this.emailService.sendEmailNotification(participantMailOption2);
+        return deletedEventRegistrant;
     }
 
     // Helper functions for generating random color and checking luminance

@@ -32,8 +32,8 @@ export class MeetgridEventRegistrantRepository {
         return updatedEventParticipant;
     }
 
-    async deleteOne(eventRegistrantToDelete: MeetgridEventRegistrant) {
-        const deletedEventParticipant = await db.delete(eventRegistrant).where(eq(eventRegistrant.id, eventRegistrantToDelete.id!))
+    async deleteOne(id: string) {
+        const deletedEventParticipant = await db.delete(eventRegistrant).where(eq(eventRegistrant.id, id)).returning();
         return deletedEventParticipant
     }
 

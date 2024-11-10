@@ -2,6 +2,6 @@ export type MeetgridEventParticipant = {
     id?: string;
     eventId: string;
     userId: string;
-    role: "owner" | "admin" | "participant";
+    role: string;
     availabilityString: string;
 }
