@@ -24,7 +24,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
         },
         cell: ({ row }) => {
             return (
-                <Button variant="link" asChild>
+                <Button variant="link" asChild className="px-0">
                     <Link href={"/event/" + row.original.id}>{row.getValue("name")}</Link>
                 </Button>
             )
