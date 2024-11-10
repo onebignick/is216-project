@@ -58,7 +58,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
             )
         },
         cell: ({ row }) => {
-            return row.getValue("startDate").toDateString();
+            return (row.getValue("startDate") as Date).toDateString();
         }
     },
     {
@@ -75,7 +75,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
             )
         },
         cell: ({ row }) => {
-            return row.getValue("endDate").toDateString();
+            return (row.getValue("endDate") as Date).toDateString();
         }
     },
     {
@@ -106,7 +106,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
             )
         },
         cell: ({ row }) => {
-            return row.getValue("dateCreated").toDateString();
+            return (row.getValue("dateCreated") as Date).toDateString();
         }
     },
     // {

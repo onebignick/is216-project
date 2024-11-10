@@ -6,7 +6,6 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import FrontpageCalendar from "@/components/frontpage-calendar";
 import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRegistrantService";
-import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 
 export default async function Home() {
   // const eventService: EventService = new EventService();
@@ -24,35 +23,35 @@ export default async function Home() {
   const user = auth()
   const curUser = await currentUser();
 
-  const meetgridAssociatedEvents: MeetgridAssociatedEvent[] = await meetgridEventRegistrantService.findEventWithParticipantsByUserId(user.userId!);
+  const meetgridAssociatedEvents = await meetgridEventRegistrantService.findEventWithParticipantsByUserId(user.userId!);
 
   // const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.userId!); //attend booking
   // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
   // const combinedBookings = [...attendeeBookings, ...organizerBookings];
 
   // // Get today's date
-  // const today = new Date();
-  // const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-  // const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+  const today = new Date();
+  const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+  const endOfDay = new Date(today.setHours(23, 59, 59, 999));
   
   // Filter today's events with null check for event.startDate
   const todaysEvents = meetgridAssociatedEvents.filter(event => {
     // Ensure event.startDate is a valid string
-    if (event.startDate) {
-      const eventDate = new Date(event.startDate); // Create Date only if startDate is valid
+    if (event.event.startDate) {
+      const eventDate = new Date(event.event.startDate); // Create Date only if startDate is valid
       return eventDate >= startOfDay && eventDate <= endOfDay;
     }
     return false; // If startDate is null, do not include this event
   });
 
   // // Calculate start and end of the week (assuming week starts on Sunday)
-  // const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-  // const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
 
   // Filter this week's events
   const weeksEvents =  meetgridAssociatedEvents.filter(event => {
-    if (event.startDate) {
-      const eventDate = new Date(event.startDate);
+    if (event.event.startDate) {
+      const eventDate = new Date(event.event.startDate);
       return eventDate >= startOfWeek && eventDate <= endOfWeek;
     }
     return false;
@@ -111,32 +110,32 @@ function WelcomeCard({ username, className } : { username: string, className: st
 //   )
 // }
 
-interface RecentActivity {
-  username: string | null | undefined;
-  role: "organizer" | "admin" | "attendee";
-  event: string | null | undefined
-}
+// interface RecentActivity {
+//   username: string | null | undefined;
+//   role: "organizer" | "admin" | "attendee";
+//   event: string | null | undefined
+// }
 
-function RecentActivityComponent({ activity }: { activity: RecentActivity }) {
-  let result;
-  if (activity.role === "attendee") {
-    result = "has registered for " + activity.event;
-  } else if (activity.role === "admin") {
-    result = "was given admin permission for " + activity.event;
-  } else {
-    result = "created " + activity.event;
-  }
+// function RecentActivityComponent({ activity }: { activity: RecentActivity }) {
+//   let result;
+//   if (activity.role === "attendee") {
+//     result = "has registered for " + activity.event;
+//   } else if (activity.role === "admin") {
+//     result = "was given admin permission for " + activity.event;
+//   } else {
+//     result = "created " + activity.event;
+//   }
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>
-          {activity?.username}
-        </CardTitle>
-        <CardDescription>
-          <span>{result}</span> {/* Changed <p> to <span> */}
-        </CardDescription>
-      </CardHeader>
-    </Card>
-  )
-}
+//   return (
+//     <Card>
+//       <CardHeader>
+//         <CardTitle>
+//           {activity?.username}
+//         </CardTitle>
+//         <CardDescription>
+//           <span>{result}</span> {/* Changed <p> to <span> */}
+//         </CardDescription>
+//       </CardHeader>
+//     </Card>
+//   )
+// }

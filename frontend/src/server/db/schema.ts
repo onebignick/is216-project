@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator, timestamp, varchar, uuid, unique, integer } from "drizzle-orm/pg-core";
+import { pgTableCreator, timestamp, varchar, uuid, integer } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `is216_${name}`);
 
@@ -26,7 +26,7 @@ export const event = createTable("event", {
 	startTimeMinutes: integer("startTimeMinutes").notNull(),
 	endTimeMinutes: integer("endTime").notNull(),
 	meetingPeriod: integer("meetingPeriod").notNull(),
-	dateCreated: varchar("dateCreated", {length: 1000}).default(sql`NOW()`),
+	dateCreated: varchar("dateCreated", {length: 1000}).default(sql`NOW()`).notNull(),
 });
 
 export const eventParticipant = createTable("eventParticipant", {
@@ -38,7 +38,7 @@ export const eventParticipant = createTable("eventParticipant", {
 	eventId: uuid("eventId").references(() => event.id, {
 		onDelete: "cascade"
 	}).notNull(),
-	availabilityString: varchar("availabilityString", {length: 10000}),
+	availabilityString: varchar("availabilityString", {length: 10000}).notNull(),
 });
 
 export const eventRegistrant = createTable("eventRegistrant", {

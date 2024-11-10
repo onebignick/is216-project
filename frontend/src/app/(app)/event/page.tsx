@@ -1,7 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
-import { EventService } from "@/server/service/EventService";
-import EventPage from "../../../components/events/events"; // Adjust the path as necessary
-import { BookingService } from "@/server/service/BookingService";
+import { auth } from "@clerk/nextjs/server";
 import { MeetgridEventService } from "@/server/service/MeetgridEventService";
 import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 import { EventDataTable } from "@/components/datatables/events/EventDataTable";

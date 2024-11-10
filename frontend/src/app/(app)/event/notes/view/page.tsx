@@ -23,3 +23,7 @@
 //       />
 //   );
 // }
+
+export default function Scam() {
+    return <p>to remove</p>
+}

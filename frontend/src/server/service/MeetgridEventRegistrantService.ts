@@ -7,7 +7,7 @@ import { UserRepository } from "../repository/user-repository";
 import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 
-const URL = "http://localhost:3000";
+const URL = "https://is216-project.vercel.app";
 
 export class MeetgridEventRegistrantService {
 
