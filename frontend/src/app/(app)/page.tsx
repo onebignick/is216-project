@@ -2,59 +2,58 @@ import { TodaysMeetings } from "@/components/charts/todays-meetings";
 import { WeeksMeetings } from "@/components/charts/weeks-meetings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { EventService } from "@/server/service/EventService";
-import { currentUser } from "@clerk/nextjs/server";
+// import { EventService } from "@/server/service/EventService";
 import Link from "next/link";
-import { BookingService } from "@/server/service/BookingService";
 import FrontpageCalendar from "@/components/frontpage-calendar";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
-  const eventService: EventService = new EventService();
+  // const eventService: EventService = new EventService();
   const user = await currentUser();
-  const bookingService = new BookingService();
+  // // const bookingService = new BookingService();
 
-  if (!user) return <p>Please log in to view events.</p>;
-  const allEvents = await eventService.getAllEvents(user.id);
+  // if (!user) return <p>Please log in to view events.</p>;
+  // const allEvents = await eventService.getAllEvents(user.id);
 
-  const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.id); //attend booking
-  const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
-  const combinedBookings = [...attendeeBookings, ...organizerBookings];
+  // // const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.id); //attend booking
+  // // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
+  // // const combinedBookings = [...attendeeBookings, ...organizerBookings];
 
-  // Get today's date
-  const today = new Date();
-  const startOfDay = new Date(today.setHours(0, 0, 0, 0));
-  const endOfDay = new Date(today.setHours(23, 59, 59, 999));
+  // // Get today's date
+  // const today = new Date();
+  // const startOfDay = new Date(today.setHours(0, 0, 0, 0));
+  // const endOfDay = new Date(today.setHours(23, 59, 59, 999));
   
-  // Filter today's events with null check for event.startDate
-  const todaysEvents = allEvents.filter(event => {
-    // Ensure event.startDate is a valid string
-    if (event.startDate) {
-      const eventDate = new Date(event.startDate); // Create Date only if startDate is valid
-      return eventDate >= startOfDay && eventDate <= endOfDay;
-    }
-    return false; // If startDate is null, do not include this event
-  });
+  // // Filter today's events with null check for event.startDate
+  // const todaysEvents = allEvents.filter(event => {
+  //   // Ensure event.startDate is a valid string
+  //   if (event.startDate) {
+  //     const eventDate = new Date(event.startDate); // Create Date only if startDate is valid
+  //     return eventDate >= startOfDay && eventDate <= endOfDay;
+  //   }
+  //   return false; // If startDate is null, do not include this event
+  // });
 
-  // Calculate start and end of the week (assuming week starts on Sunday)
-  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-  const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+  // // Calculate start and end of the week (assuming week starts on Sunday)
+  // const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
+  // const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
 
-  // Filter this week's events
-  const weeksEvents = allEvents.filter(event => {
-    if (event.startDate) {
-      const eventDate = new Date(event.startDate);
-      return eventDate >= startOfWeek && eventDate <= endOfWeek;
-    }
-    return false;
-  });
+  // // Filter this week's events
+  // const weeksEvents = allEvents.filter(event => {
+  //   if (event.startDate) {
+  //     const eventDate = new Date(event.startDate);
+  //     return eventDate >= startOfWeek && eventDate <= endOfWeek;
+  //   }
+  //   return false;
+  // });
 
   return (
     <main className="grid grid-cols-12 grid-rows-12 gap-4 p-4">
-      <WelcomeCard className="col-span-12 md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
-      <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <FrontpageCalendar events={allEvents} bookings={combinedBookings} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-8" />
-      <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/>
+      <WelcomeCard className="col-span-12 md:block md:col-span-4 lg:col-span-6" username={(user!.username!)}/>
+      {/* <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/> */}
+      {/* <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/> */}
+      {/* <FrontpageCalendar events={allEvents} bookings={combinedBookings} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-8" /> */}
+      {/* <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/> */}
     </main>
   );
 

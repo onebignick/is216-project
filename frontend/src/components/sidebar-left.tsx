@@ -4,7 +4,6 @@ import * as React from "react"
 import {
   Calendar,
   Home,
-  Inbox,
   MapPin,
   Plus,
 } from "lucide-react"
@@ -39,12 +38,6 @@ const data = {
       title: "Register for an Interview",
       url: "/event/register",
       icon: MapPin,
-    },
-    {
-      title: "Your Interview Notes",
-      url: "#",
-      icon: Inbox,
-      badge: "10",
     },
   ],
 }
