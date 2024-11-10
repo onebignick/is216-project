@@ -4,7 +4,6 @@
 
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
-
 import { MeetgridEventService } from "@/server/service/MeetgridEventService";
 import { MeetgridEventParticipantService } from "@/server/service/MeetgridEventParticipantService";
 import { auth, clerkClient } from "@clerk/nextjs/server";

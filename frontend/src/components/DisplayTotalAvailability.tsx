@@ -40,7 +40,7 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
   function generateTableHeaders() {
       const headers = [<TableHeader title="Time" key="time-header" />];
       const curDate = new Date(event.startDate);
-      const options = { weekday: "short", day: "2-digit", month: "short" }
+      const options: Intl.DateTimeFormatOptions = { weekday: "short", day: "2-digit", month: "short" }
       
       curDate.setDate(curDate.getDate());
       for (let i=0; i <= diff; i++) {

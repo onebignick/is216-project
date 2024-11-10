@@ -14,3 +14,7 @@
 //     // Assuming allEvents contains the notes you want to display
 //     return <NotesDisplay notes={allEvents} />;
 // }
+
+export default function Scam() {
+    return <p>to remove</p>
+}
