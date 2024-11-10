@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Props from '@toast-ui/react-calendar';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
@@ -15,6 +17,8 @@ interface EventPageProps {
 // ../../node_modules/@toast-ui/react-calendar/types/index.d.ts
 export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [isClient, setIsClient] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState<any>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     console.log(events);
 
@@ -25,11 +29,9 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
         const timeslot = event.eventRegistrant.timeslotIdx;
         const dayIdx =  event.eventRegistrant.dayIdx;
-        console.log(dayIdx);
+
         const meetingPeriod = event.event.meetingPeriod;
         const {start, end} = convertTimeslotIdxToMinutes(timeslot, meetingPeriod);
-
-        console.log(start, end);
 
         // Parse the booking.date which is already in Singapore time
         const startTimeDate = new Date(event.event.startDate);
@@ -65,13 +67,56 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             color: event.eventRegistrant.textColor, // Text color for the event
             start: startTimeLocal,  // Format start time for calendar
             end: endTimeLocal,  // Format end time for calendar
+            participantEmail: event.eventRegistrant.participantEmail,
         };
     });
 
 
     console.log(formattedEvents);
 
+    const handleEventClick = (event: any) => {
+        const clickedEvent = event.event; // Access the nested 'event' object
+        // console.log("Original Event Data:", clickedEvent);
 
+        // Find the matching event in formattedEvents using ID to get the description
+        const matchedEvent = formattedEvents.find(e => e.id === clickedEvent.id);
+
+        const description = matchedEvent ? matchedEvent.description : "No description available";
+        const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
+        const startTime =  matchedEvent ? matchedEvent.start: "No Start Time available";
+        const endTime =  matchedEvent ? matchedEvent.end: "No End Time available";
+        const participantEmail =  matchedEvent ? matchedEvent.participantEmail: "No participant Email available";
+
+        // Map the `clickedEvent` data to the simpler structure
+        const formattedEvent = {
+            id: clickedEvent.id,
+            title: clickedEvent.title,
+            start: clickedEvent.start.d.d, // Accessing the date string
+            end: clickedEvent.end.d.d, // Accessing the date string
+            allDay: clickedEvent.isAllday || false, // Important for showing as all-day
+            description: description, // Fallback to description
+            eventCode: eventCode,
+            startTime: startTime,
+            endTime: endTime,
+            participantEmail: participantEmail,
+        };
+
+        setSelectedEvent({
+            id: formattedEvent.id,
+            title: formattedEvent.title,
+            start: new Date(formattedEvent.start).toLocaleString(),
+            end: new Date(formattedEvent.end).toLocaleString(),
+            description: formattedEvent.description,
+            eventCode: formattedEvent.eventCode,
+            startTime: formattedEvent.startTime,
+            endTime: formattedEvent.endTime,
+            participantEmail: formattedEvent.participantEmail
+        });
+
+        // console.log("Formatted Clicked Event Data:", formattedEvent);
+        setIsModalOpen(true);
+    } 
+        
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
     }, []);
@@ -104,7 +149,13 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                <Calendar {...calendarProps}/>
+                <Calendar {...calendarProps} onClickEvent={handleEventClick}/>
+                {/* Render the modal with event details */}
+                <EventDetailModal 
+                    isOpen={isModalOpen} 
+                    onClose={() => setIsModalOpen(false)} 
+                    event={selectedEvent}  
+                />
             </CardContent>
         </Card>
     )
@@ -125,6 +176,57 @@ function convertTimeslotIdxToMinutes(timeslotIdx: number, meetingPeriod: number)
         end: endMinutes
     };
 }
+
+function formatTimeToHHMM(dateStr: string) {
+    const date = new Date(dateStr);
+
+    const hours = date.getHours(); // Get the hours from the date
+    const minutes = date.getMinutes(); // Get the minutes from the date
+
+    // Format as hh:mm, padding with 0 if necessary
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
+const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose: () => void; event: any }) => {
+    // console.log("Modal Event:", event); // Log the event in the modal
+    
+    // Ensure the event exists and is not null or undefined
+    if (!isOpen || !event) {
+        return null;
+    }
+
+    const startDate = new Date(event.start);
+    const endDate = new Date(event.end);
+
+    // Check for missing event properties before accessing them
+    if (!event.start || !event.end) {
+        console.error("Event data is incomplete: ", event);
+        return null; // Optionally, display an error message to the user
+    }
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg p-6 w-1/3">
+                <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-bold text-center flex-grow">{event.title}</h2>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-800">
+                        &times;
+                    </button>
+                    
+                </div>
+                <p>Event Code: {event.eventCode}</p>
+                <p>Event Timing: {formatTimeToHHMM(event.startTime)} - {formatTimeToHHMM(event.endTime)} </p>
+                <p>Description: {event.description}</p>
+                <p>Participant Email: {event.participantEmail}</p>
+                <br />
+                <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
+                    <Link href={`/event/${event.id}`}>View More Details</Link>
+                </Button>
+            </div>
+        </div>
+    );
+};
+
 
 
 // function convertTimeslotIdxToTime(timeslotIdx: number): string {
