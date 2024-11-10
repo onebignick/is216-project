@@ -53,8 +53,6 @@ export default async function EventPage({params}: {params: {eventId:string, book
       const totalAdmins: MeetgridEventAdmin[] = await meetgridEventParticipantService.findByEventIdAndRole(params.eventId, "admin")
       const totalRegistrants: MeetgridInterview[] = await meetgridEventRegistrantService.findByEvent(params.eventId);
 
-      console.log(totalRegistrants)
-
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
       return (
@@ -68,7 +66,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
 
        
           <TabsContent value="info">
-            <div className="grid grid-cols-12 gap-4">
+            <div className="grid grid-cols-12 gap-4 p-4">
               <Card className="col-span-12 md:col-span-6">
                 <CardHeader>
                   <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>

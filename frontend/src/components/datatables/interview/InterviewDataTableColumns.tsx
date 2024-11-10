@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 // import Link from "next/link";
 import { MeetgridInterview } from "@/types/MeetgridInterview";
+import Link from "next/link";
 
 
 export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
@@ -22,7 +23,7 @@ export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
             )
         },
         cell: ({ row }) => {
-            return row.getValue("time").toLocaleString('en-SG', {
+            return (row.getValue("time") as Date).toLocaleString('en-SG', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -74,6 +75,13 @@ export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
                 </Button>
             )
         },
+        cell: ({ row }) => {
+            return (
+                <Button variant="link" asChild>
+                    <Link href={row.getValue("zoomLink")}>Meeting link</Link>
+                </Button>
+            )
+        }
     },
     // {
     //     id: "actions",
