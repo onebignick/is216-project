@@ -2,7 +2,6 @@ import { TodaysMeetings } from "@/components/charts/todays-meetings";
 import { WeeksMeetings } from "@/components/charts/weeks-meetings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { EventService } from "@/server/service/EventService";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import FrontpageCalendar from "@/components/frontpage-calendar";
@@ -12,7 +11,7 @@ import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 export default async function Home() {
   // const eventService: EventService = new EventService();
   // const user = await currentUser();
-  const bookingService = new BookingService();
+  // const bookingService = new BookingService();
 
   // if (!user) return <p>Please log in to view events.</p>;
   // const allEvents = await eventService.getAllEvents(user.id);
@@ -23,6 +22,7 @@ export default async function Home() {
 
   const meetgridEventRegistrantService: MeetgridEventRegistrantService= new MeetgridEventRegistrantService();
   const user = auth()
+  const curUser = await currentUser();
 
   const meetgridAssociatedEvents: MeetgridAssociatedEvent[] = await meetgridEventRegistrantService.findEventWithParticipantsByUserId(user.userId!);
 
@@ -60,11 +60,11 @@ export default async function Home() {
 
   return (
     <main className="grid grid-cols-12 grid-rows-12 gap-4 p-4">
-      <WelcomeCard className="col-span-12 md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
+      <WelcomeCard className="col-span-12 md:block md:col-span-4 lg:col-span-6" username={(curUser!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <FrontpageCalendar events={ meetgridAssociatedEvents} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-8" />
-      <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/>
+      {/* <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/> */}
     </main>
   );
 
@@ -86,30 +86,30 @@ function WelcomeCard({ username, className } : { username: string, className: st
   )
 }
 
-async function RecentActivityCard({ className, clerkUserId } : {className: string, clerkUserId: string}) { 
-  const eventService = new EventService();
-  const recentActivity = await eventService.getUserRecentEventActivity(clerkUserId);
+// async function RecentActivityCard({ className, clerkUserId } : {className: string, clerkUserId: string}) { 
+  // const eventService = new EventService();
+//   const recentActivity = await eventService.getUserRecentEventActivity(clerkUserId);
   
-  return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>
-          Recent Activity
-        </CardTitle>
-        <CardDescription>
-          Information about your recent activity
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        {recentActivity.map((activity, index) => {
-          return (
-            <RecentActivityComponent activity={activity} key={index}/>
-          );
-        })}
-      </CardContent>
-    </Card>
-  )
-}
+//   return (
+//     <Card className={className}>
+//       <CardHeader>
+//         <CardTitle>
+//           Recent Activity
+//         </CardTitle>
+//         <CardDescription>
+//           Information about your recent activity
+//         </CardDescription>
+//       </CardHeader>
+//       <CardContent className="flex flex-col gap-4">
+//         {recentActivity.map((activity, index) => {
+//           return (
+//             <RecentActivityComponent activity={activity} key={index}/>
+//           );
+//         })}
+//       </CardContent>
+//     </Card>
+//   )
+// }
 
 interface RecentActivity {
   username: string | null | undefined;
