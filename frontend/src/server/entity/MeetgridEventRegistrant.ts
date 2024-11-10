@@ -6,4 +6,7 @@ export type MeetgridEventRegistrant = {
     timeslotIdx: number,
     dayIdx: number,
     zoomLink: string,
+    backgroundColor: string;
+    borderColor: string;
+    textColor: string;
 }
