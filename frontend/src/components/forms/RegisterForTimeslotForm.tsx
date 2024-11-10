@@ -51,6 +51,8 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
             break;
         }
 
+        console.log(eventParticipantEmailToFind)
+
         //find the guy
         const targetUserResponse = await fetch("/api/user?" + new URLSearchParams({
             email: eventParticipantEmailToFind

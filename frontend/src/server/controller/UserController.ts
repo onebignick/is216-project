@@ -12,6 +12,7 @@ export class UserController {
     async find(request: NextRequest) {
         const targetUserEmail = request.nextUrl.searchParams.get("email");
         if (targetUserEmail) {
+            console.log(targetUserEmail);
             const targetUser = await this.userService.findUserByEmail(targetUserEmail);
             return NextResponse.json({ message: "success", targetUser: targetUser[0] });
         }
