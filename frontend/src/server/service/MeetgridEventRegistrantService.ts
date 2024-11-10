@@ -4,6 +4,8 @@ import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRe
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
 import { EmailNotificationOptions, EmailService } from "./EmailService";
 
+const URL = "http://localhost:3000";
+
 export class MeetgridEventRegistrantService {
 
     meetgridEventRegistrantRepository: MeetgridEventRegistrantRepository;
@@ -51,7 +53,8 @@ export class MeetgridEventRegistrantService {
         const mailOption = {
             to: createdMeetgridEventRegistrant[0].interviewerEmail,
             subject: "Interview Scheduled for [time]",
-            text: createdMeetgridEventRegistrant[0].zoomLink,
+            text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
+            " if you would like to edit the information you can use this link: " + URL + "interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(mailOption);
@@ -59,7 +62,8 @@ export class MeetgridEventRegistrantService {
         const participantMailOption = {
             to: createdMeetgridEventRegistrant[0].participantEmail,
             subject: "Interview Scheduled for [time todo]",
-            text: createdMeetgridEventRegistrant[0].zoomLink,
+            text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
+            " if you would like to edit the information you can use this link: " + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(participantMailOption);
