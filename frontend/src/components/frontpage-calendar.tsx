@@ -20,7 +20,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    console.log(events);
+    // console.log(events);
 
     const startOfWeek = new Date(); 
     
@@ -29,6 +29,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
         const timeslot = event.eventRegistrant.timeslotIdx;
         const dayIdx =  event.eventRegistrant.dayIdx;
+        const zoomLink = event.eventRegistrant.zoomLink;
 
         const meetingPeriod = event.event.meetingPeriod;
         const {start, end} = convertTimeslotIdxToMinutes(timeslot, meetingPeriod);
@@ -68,11 +69,12 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             start: startTimeLocal,  // Format start time for calendar
             end: endTimeLocal,  // Format end time for calendar
             participantEmail: event.eventRegistrant.participantEmail,
+            zoomLink: zoomLink
         };
     });
 
 
-    console.log(formattedEvents);
+    // console.log(formattedEvents);
 
     const handleEventClick = (event: any) => {
         const clickedEvent = event.event; // Access the nested 'event' object
@@ -80,6 +82,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
         // Find the matching event in formattedEvents using ID to get the description
         const matchedEvent = formattedEvents.find(e => e.id === clickedEvent.id);
+        
+        const zoomLink = matchedEvent ? matchedEvent.zoomLink: "No zoom link available";
 
         const description = matchedEvent ? matchedEvent.description : "No description available";
         const eventCode = matchedEvent ? matchedEvent.eventCode: "No event Code available";
@@ -99,6 +103,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             startTime: startTime,
             endTime: endTime,
             participantEmail: participantEmail,
+            zoomLink: zoomLink
         };
 
         setSelectedEvent({
@@ -110,7 +115,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             eventCode: formattedEvent.eventCode,
             startTime: formattedEvent.startTime,
             endTime: formattedEvent.endTime,
-            participantEmail: formattedEvent.participantEmail
+            participantEmail: formattedEvent.participantEmail,
+            zoomLink: formattedEvent.zoomLink
         });
 
         // console.log("Formatted Clicked Event Data:", formattedEvent);
@@ -218,6 +224,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 <p>Event Timing: {formatTimeToHHMM(event.startTime)} - {formatTimeToHHMM(event.endTime)} </p>
                 <p>Description: {event.description}</p>
                 <p>Participant Email: {event.participantEmail}</p>
+                <p>Zoom Link: <Link href={event.zoomLink} className='text-blue-600 hover:underline'>Link</Link></p>
                 <br />
                 <Button className="mb-4 w-full bg-blue-500 text-white hover:bg-blue-600 transition duration-200 rounded-md">
                     <Link href={`/event/${event.id}`}>View More Details</Link>
