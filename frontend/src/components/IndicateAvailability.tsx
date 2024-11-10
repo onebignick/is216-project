@@ -125,7 +125,7 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
 
                 return (
                     <tr key={timeIntervalIdx}>
-                        <td className="border border-slate-500 text-center select-none px-2">{currentTimeHours} : {currentTimeMinutes}</td>
+                        <td className="border border-slate-500 text-center select-none">{currentTimeHours} : {currentTimeMinutes}</td>
                         {
                             timeInterval.map((day, dayIdx) => {
                                 if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
