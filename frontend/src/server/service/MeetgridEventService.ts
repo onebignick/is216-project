@@ -103,6 +103,13 @@ export class MeetgridEventService {
 
     async updateOneEvent(eventToUpdate: MeetgridEvent) {
         const updatedEvent = await this.meetgridEventRepository.updateOne(eventToUpdate);
+
+        const relatedEventParticipants = await this.meetgridEventParticipantService.findByEventId(eventToUpdate.id!);
+        for (let i=0; i<relatedEventParticipants.length;i++) {
+            relatedEventParticipants[i].availabilityString = this.meetgridEventParticipantService.generateAvailabilityString(new Date(eventToUpdate.startDate), new Date(eventToUpdate.endDate));
+            await this.meetgridEventParticipantService.updateOneEventParticipant(relatedEventParticipants[i] as MeetgridEventParticipant);
+        }
+
         return updatedEvent;
     }
 
