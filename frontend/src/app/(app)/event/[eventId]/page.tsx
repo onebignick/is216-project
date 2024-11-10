@@ -16,6 +16,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { SettingsForm } from "@/components/forms/settings-form";
 import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
 import { TabsTrigger } from "@radix-ui/react-tabs";
+import { AdminDataTable } from "@/components/datatables/admin/AdminDataTable";
+import { AdminDataTableColumns } from "@/components/datatables/admin/AdminDataTableColumns";
+import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
 
 
 // const eventService: EventService = new EventService();
@@ -42,6 +45,8 @@ export default async function EventPage({params}: {params: {eventId:string, book
       const meetgridEvent: MeetgridEvent = meetgridEventArray[0];
       const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId);
       const currentUserAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventIdAndUserId(params.eventId, user.userId!);
+      const totalAdmins: MeetgridEventAdmin[] = await meetgridEventParticipantService.findByEventIdAndRole(params.eventId, "admin")
+      console.log(totalAdmins)
 
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
@@ -116,6 +121,34 @@ export default async function EventPage({params}: {params: {eventId:string, book
 
           <TabsContent value="questions">
 
+          </TabsContent>
+
+          <TabsContent value="admin">
+            <div className="grid grid-cols-12 gap-4 p-4">
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Add a new admin</CardTitle>
+                  <CardDescription>Use this form to add a new admin</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormDialogButton
+                    title="Invite people to run your meeting!"
+                    description="Fill in the form below with the person's email"
+                    label="Add admins"
+                    form={<AddAdminToEventForm eventId={params.eventId}/>}
+                  />
+                </CardContent>
+              </Card>
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Your Interview Admins</CardTitle>
+                  <CardDescription>Manage your admins here</CardDescription>
+                </CardHeader>
+                <CardContent className="w-full overflow-x-auto">
+                  <AdminDataTable columns={AdminDataTableColumns} data={totalAdmins}/>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       )

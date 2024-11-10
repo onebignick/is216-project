@@ -1,3 +1,4 @@
+import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
 import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
@@ -31,6 +32,27 @@ export class MeetgridEventParticipantService {
     async findByEventId(eventId: string) {
         const targetEventParticipants = await this.meetgridEventParticipantRepository.findByEventId(eventId);
         return targetEventParticipants;
+    }
+
+    async findByEventIdAndRole(eventId: string, role: string) {
+        const targetEventParticipants = await this.meetgridEventParticipantRepository.findByEventIdAndRole(eventId, role);
+
+        const result = [];
+        for (let i=0;i<targetEventParticipants.length;i++) {
+            const targetUser = await this.userRepository.getUserByClerkUserId(targetEventParticipants[i].userId);
+            
+            const currentAdmin = {
+                id: targetEventParticipants[i].id,
+                userId: targetEventParticipants[i].userId,
+                username: targetUser[0].username,
+                email: targetUser[0].email,
+                role: targetEventParticipants[i].role,
+                eventId: targetEventParticipants[i].eventId,
+            } as MeetgridEventAdmin;
+
+            result.push(currentAdmin);
+        }
+        return result;
     }
 
     async findByUserId(userId: string) {
@@ -77,8 +99,8 @@ export class MeetgridEventParticipantService {
         return updatedEventParticipant;
     }
 
-    async deleteOneEventParticipant(eventParticipantToDelete: MeetgridEventParticipant) {
-        const deletedEventParticipant = await this.meetgridEventParticipantRepository.deleteOne(eventParticipantToDelete);
+    async deleteOneEventParticipant(eventParticipantIdToDelete: string) {
+        const deletedEventParticipant = await this.meetgridEventParticipantRepository.deleteOne(eventParticipantIdToDelete);
         return deletedEventParticipant;
     }
 

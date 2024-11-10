@@ -22,6 +22,17 @@ export class MeetgridEventParticipantRepository {
         return targetEventParticipants;
     }
 
+    async findByEventIdAndRole(eventId: string, role: string) {
+        const targetEventParticipants = await db.select().from(eventParticipant).where(
+            and(
+                eq(eventParticipant.role, role!),
+                eq(eventParticipant.eventId, eventId!)
+            )
+        );
+        return targetEventParticipants;
+    }
+
+
     async findByUserId(userId: string) {
         const targetEventParticipants = await db.select().from(eventParticipant).where(
             eq(eventParticipant.userId, userId!)
@@ -49,8 +60,8 @@ export class MeetgridEventParticipantRepository {
         return updatedEventParticipant;
     }
 
-    async deleteOne(eventParticipantToDelete: MeetgridEventParticipant) {
-        const deletedEventParticipant = await db.delete(eventParticipant).where(eq(eventParticipant.id, eventParticipantToDelete.id!))
+    async deleteOne(eventParticipantIdToDelete: string) {
+        const deletedEventParticipant = await db.delete(eventParticipant).where(eq(eventParticipant.id, eventParticipantIdToDelete))
         return deletedEventParticipant
     }
 

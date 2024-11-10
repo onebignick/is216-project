@@ -13,8 +13,12 @@ export class MeetgridEventParticipantController {
     async find(request: NextRequest) {
         const targetEventId = request.nextUrl.searchParams.get("eventId");
         const targetUserId = request.nextUrl.searchParams.get("userId");
+        const targetRole = request.nextUrl.searchParams.get("role");
 
-        if (targetEventId && targetUserId) {
+        if (targetEventId && targetRole) {
+            const eventParticipants = await this.meetgridEventParticipantService.findByEventIdAndRole(targetEventId, targetRole);
+            return NextResponse.json({ message: "success", eventParticipants: eventParticipants }, { status: 200 })
+        } else if (targetEventId && targetUserId) {
             const eventParticipants = await this.meetgridEventParticipantService.findByEventIdAndUserId(targetEventId, targetUserId);
             return NextResponse.json({ message: "success", eventParticipants: eventParticipants }, { status: 200 })
         } else if (targetEventId) {
@@ -43,7 +47,7 @@ export class MeetgridEventParticipantController {
 
     async delete(request: NextRequest) {
         const eventParticipantToDelete = await request.json()
-        const deletedEventParticipant = await this.meetgridEventParticipantService.deleteOneEventParticipant(eventParticipantToDelete);
+        const deletedEventParticipant = await this.meetgridEventParticipantService.deleteOneEventParticipant(eventParticipantToDelete.id);
         return NextResponse.json({ message: "success", eventParticipant: deletedEventParticipant}, { status: 200 })
     }
 }
