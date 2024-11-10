@@ -3,22 +3,33 @@ import { WeeksMeetings } from "@/components/charts/weeks-meetings";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EventService } from "@/server/service/EventService";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { BookingService } from "@/server/service/BookingService";
 import FrontpageCalendar from "@/components/frontpage-calendar";
+import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRegistrantService";
+import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 
 export default async function Home() {
-  const eventService: EventService = new EventService();
-  const user = await currentUser();
+  // const eventService: EventService = new EventService();
+  // const user = await currentUser();
   const bookingService = new BookingService();
 
-  if (!user) return <p>Please log in to view events.</p>;
-  const allEvents = await eventService.getAllEvents(user.id);
+  // if (!user) return <p>Please log in to view events.</p>;
+  // const allEvents = await eventService.getAllEvents(user.id);
 
-  const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.id); //attend booking
-  const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
-  const combinedBookings = [...attendeeBookings, ...organizerBookings];
+  // const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.id); //attend booking
+  // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
+  // const combinedBookings = [...attendeeBookings, ...organizerBookings];
+
+  const meetgridEventRegistrantService: MeetgridEventRegistrantService= new MeetgridEventRegistrantService();
+  const user = auth()
+
+  const meetgridAssociatedEvents: MeetgridAssociatedEvent[] = await meetgridEventRegistrantService.findEventWithParticipantsByUserId(user.userId!);
+
+  // const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.userId!); //attend booking
+  // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
+  // const combinedBookings = [...attendeeBookings, ...organizerBookings];
 
   // Get today's date
   const today = new Date();
@@ -26,7 +37,7 @@ export default async function Home() {
   const endOfDay = new Date(today.setHours(23, 59, 59, 999));
   
   // Filter today's events with null check for event.startDate
-  const todaysEvents = allEvents.filter(event => {
+  const todaysEvents = meetgridAssociatedEvents.filter(event => {
     // Ensure event.startDate is a valid string
     if (event.startDate) {
       const eventDate = new Date(event.startDate); // Create Date only if startDate is valid
@@ -40,7 +51,7 @@ export default async function Home() {
   const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
 
   // Filter this week's events
-  const weeksEvents = allEvents.filter(event => {
+  const weeksEvents =  meetgridAssociatedEvents.filter(event => {
     if (event.startDate) {
       const eventDate = new Date(event.startDate);
       return eventDate >= startOfWeek && eventDate <= endOfWeek;
@@ -53,7 +64,7 @@ export default async function Home() {
       <WelcomeCard className="col-span-12 md:block md:col-span-4 lg:col-span-6" username={(user!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden md:block md:col-span-4 lg:col-span-3"/>
-      <FrontpageCalendar events={allEvents} bookings={combinedBookings} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-8" />
+      <FrontpageCalendar events={ meetgridAssociatedEvents} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-8" />
       <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/>
     </main>
   );

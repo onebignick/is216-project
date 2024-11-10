@@ -1,5 +1,5 @@
 import { db } from "@/server/db"
-import { eventRegistrant } from "../db/schema";
+import { eventParticipant, eventRegistrant, event, user } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { MeetgridEventRegistrant } from "../entity/MeetgridEventRegistrant";
 
@@ -37,4 +37,16 @@ export class MeetgridEventRegistrantRepository {
         return deletedEventParticipant
     }
 
+    // Method to get events with participant and registrant details using userId
+    async findEventWithParticipantsByUserId(userId: string) {
+        const result = await db
+            .select()  // Select all columns from the joined tables
+            .from(eventRegistrant)
+            .innerJoin(eventParticipant, eq(eventRegistrant.eventId, eventParticipant.eventId)) 
+            .innerJoin(event, eq(event.id, eventRegistrant.eventId))// Use `innerJoin` with proper condition
+            .where(eq(eventParticipant.userId, userId))  // Filter by the userId passed in
+            .execute();
+        
+        return result;  // Return the result with columns from all joined tables
+    }
 }
