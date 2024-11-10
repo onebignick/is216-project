@@ -64,7 +64,7 @@ export function RegisterEventForm() {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 shadow-lg">
                     <CardHeader>
-                        <CardTitle className = "text-center">Register for an event</CardTitle>
+                        <CardTitle className = "text-center">Register for an Interview Slot</CardTitle>
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-4">
                         <FormField
@@ -73,7 +73,7 @@ export function RegisterEventForm() {
                             render={({field}) => (
                                 <FormItem className="col-span-2">
                                     <FormControl>
-                                        <Input placeholder="Enter the event code here" {...field} />
+                                        <Input placeholder="Enter the interview code here" {...field} />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>

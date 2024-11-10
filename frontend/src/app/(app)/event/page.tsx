@@ -44,13 +44,13 @@ export default async function YourEventPage() {
     const meetgridAssociatedEvents: MeetgridAssociatedEvent[] = await meetgridEventService.findRelatedEventsByUserId(user.userId!);
 
     return (
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-4 p-4">
             <Card className="col-span-12">
                 <CardHeader>
                     <CardTitle>
-                        Your Events
+                        Your Interview Plans
                     </CardTitle>
-                    <CardDescription>Events that you are and admin or owner of</CardDescription>
+                    <CardDescription>Interview Plans that you are and admin or owner of</CardDescription>
                 </CardHeader>
                 <CardContent className="w-full overflow-x-auto">
                     <EventDataTable columns={EventDataTableColumns} data={meetgridAssociatedEvents}/>

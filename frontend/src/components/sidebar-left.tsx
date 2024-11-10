@@ -26,12 +26,12 @@ const data = {
       icon: Home,
     },
     {
-      title: "Create Interview",
+      title: "Create Interview Plan",
       url: "/event/create",
       icon: Plus,
     },
     {
-      title: "Your Interviews",
+      title: "Your Interview Plans",
       url: "/event",
       icon: Calendar,
     },
@@ -41,7 +41,7 @@ const data = {
       icon: MapPin,
     },
     {
-      title: "Interview Notes",
+      title: "Your Interview Notes",
       url: "#",
       icon: Inbox,
       badge: "10",

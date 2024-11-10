@@ -31,14 +31,6 @@ const durations = [
         id: "15",
         label: "15 minutes",
     },
-    {
-        id: "30",
-        label: "30 minutes",
-    },
-    {
-        id: "60",
-        label: "1 hour",
-    },
 ]
 
 export function CreateEventForm() {

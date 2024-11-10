@@ -14,6 +14,8 @@ import { DisplayTotalAvailability } from "@/components/DisplayTotalAvailability"
 import IndicateAvailability from "@/components/IndicateAvailability";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SettingsForm } from "@/components/forms/settings-form";
+import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
+import { TabsTrigger } from "@radix-ui/react-tabs";
 
 
 // const eventService: EventService = new EventService();
@@ -44,60 +46,77 @@ export default async function EventPage({params}: {params: {eventId:string, book
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
       return (
-        <div className="grid grid-cols-12 gap-4">
-          <Card className="col-span-12 md:col-span-6">
-            <CardHeader>
-              <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>
-              <CardDescription>Click below to add admins to your meeting</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <FormDialogButton
-                title="Invite people to run your meeting!"
-                description="Fill in the form below with the person's email"
-                label="Add admins"
-                form={<AddAdminToEventForm eventId={params.eventId}/>}
-              />
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="info">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="info">Event Information</TabsTrigger>
+            <TabsTrigger value="regitration">Registration Information</TabsTrigger>
+            <TabsTrigger value="questions">Interview Questions</TabsTrigger>
+          </TabsList>
 
-          <Card className="col-span-12 md:col-span-6">
-            <CardHeader>
-              <CardTitle>Invite people to register for your event</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Invite people to join with the code <code>{meetgridEvent.code}</code></p>
-              <p>Or use ask them to sign up with this link<code></code></p>
+       
+          <TabsContent value="info">
+            <div className="grid grid-cols-12 gap-4">
+              <Card className="col-span-12 md:col-span-6">
+                <CardHeader>
+                  <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>
+                  <CardDescription>Click below to add admins to your meeting</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormDialogButton
+                    title="Invite people to run your meeting!"
+                    description="Fill in the form below with the person's email"
+                    label="Add admins"
+                    form={<AddAdminToEventForm eventId={params.eventId}/>}
+                  />
+                </CardContent>
+              </Card>
 
-            </CardContent>
-          </Card>
+              <Card className="col-span-12 md:col-span-6">
+                <CardHeader>
+                  <CardTitle>Invite people to register for your event</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p>Invite people to join with the code <code>{meetgridEvent.code}</code></p>
+                </CardContent>
+              </Card>
 
-          <Card className="col-span-12 lg:col-span-6">
-            <CardHeader>
-              <CardTitle>View your groups availability here</CardTitle>
-              <CardDescription>Hover over the cards to see who is available</CardDescription>
-            </CardHeader>
-            <CardContent className="w-full overflow-x-auto">
-              <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
-            </CardContent>
-          </Card>
-          <Card className="col-span-12 lg:col-span-6">
-            <CardHeader>
-              <CardTitle>Indicate your availability</CardTitle>
-              <CardDescription>Use this tool below to indicate your availability</CardDescription>
-            </CardHeader>
-            <CardContent className="w-full overflow-x-auto">
-              <IndicateAvailability eventParticipant={currentUserAvailability[0]} event={meetgridEvent} userEmail={userObj.emailAddresses[0].emailAddress}/>
-            </CardContent>
-          </Card>
-          <Card className="col-span-12">
-            <CardHeader>
-              <CardTitle>Edit your event settings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <SettingsForm event={meetgridEvent}/>
-            </CardContent>
-          </Card>
-        </div>
+              <Card className="col-span-12 lg:col-span-6">
+                <CardHeader>
+                  <CardTitle>View your groups availability here</CardTitle>
+                  <CardDescription>Hover over the cards to see who is available</CardDescription>
+                </CardHeader>
+                <CardContent className="w-full overflow-x-auto">
+                  <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
+                </CardContent>
+              </Card>
+              <Card className="col-span-12 lg:col-span-6">
+                <CardHeader>
+                  <CardTitle>Indicate your availability</CardTitle>
+                  <CardDescription>Use this tool below to indicate your availability</CardDescription>
+                </CardHeader>
+                <CardContent className="w-full overflow-x-auto">
+                  <IndicateAvailability eventParticipant={currentUserAvailability[0]} event={meetgridEvent} userEmail={userObj.emailAddresses[0].emailAddress}/>
+                </CardContent>
+              </Card>
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Edit your event settings</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <SettingsForm event={meetgridEvent}/>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="registration">
+
+          </TabsContent>
+
+          <TabsContent value="questions">
+
+          </TabsContent>
+        </Tabs>
       )
   } catch {
     return <p>An error occured</p>

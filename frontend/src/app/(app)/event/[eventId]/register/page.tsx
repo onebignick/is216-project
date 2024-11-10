@@ -3,6 +3,7 @@ import { MeetgridEventParticipantService } from "@/server/service/MeetgridEventP
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 import RegisterForAvailableSessions from "@/components/RegisterForAvailableSessions";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function RegisterForEvent({ params }: {params : { eventId: string}}) {
 
@@ -17,9 +18,21 @@ export default async function RegisterForEvent({ params }: {params : { eventId: 
         const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId)       
 
         return(
-            <div>
-                <div>Welcome to {meetgridEvent.name}</div>
-                <RegisterForAvailableSessions totalAvailability={totalAvailability} event={meetgridEvent}/>
+            <div className="grid grid-cols-12 gap-4 p-4">
+                <Card className="col-span-12">
+                    <CardHeader>
+                        <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>
+                        <CardDescription>Click below to register for a timeslot</CardDescription>
+                    </CardHeader>
+                </Card>
+                <Card className="col-span-12">
+                    <CardHeader>
+                        <CardTitle>Register for a timeslot here</CardTitle>
+                    </CardHeader>
+                    <CardContent className="w-full overflow-x-auto">
+                        <RegisterForAvailableSessions totalAvailability={totalAvailability} event={meetgridEvent}/>
+                    </CardContent>
+                </Card>
             </div>
         )
     } catch {
