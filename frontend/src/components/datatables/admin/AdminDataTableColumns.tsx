@@ -2,12 +2,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { User } from "@/types/User";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
+import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 
-
-export const UserDataTableColumns: ColumnDef<User>[] = [
+export const UserDataTableColumns: ColumnDef<MeetgridEventParticipant>[] = [
     {
         accessorKey: "username",
         header: ({ column }) => {
@@ -17,20 +15,6 @@ export const UserDataTableColumns: ColumnDef<User>[] = [
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
                     Username
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-    },
-    {
-        accessorKey: "password",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Password
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -55,6 +39,7 @@ export const UserDataTableColumns: ColumnDef<User>[] = [
         enableHiding: false,
         cell: ({ row }) => {
             const user = row.original;
+            console.log(user)
 
             return (
                 <DropdownMenu>
@@ -66,26 +51,7 @@ export const UserDataTableColumns: ColumnDef<User>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                            <Link href={"/users/edit/" + user.username}>
-                                Edit Information
-                            </Link>
-                        </DropdownMenuItem>
                         <DropdownMenuItem onClick={async () => {
-                            const res = await fetch("http://localhost:8080/api/user", {
-                                method: "DELETE",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                    username: user.username,
-                                    password: user.password,
-                                    roles: user.roles,
-                                })
-                            })
-                            if (res.ok) {
-                                console.log("success");
-                            }
                         }}>
                             Delete user
                         </DropdownMenuItem>

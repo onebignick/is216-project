@@ -43,7 +43,7 @@ export class MeetgridEventParticipantController {
 
     async delete(request: NextRequest) {
         const eventParticipantToDelete = await request.json()
-        const deletedEventParticipant = await this.meetgridEventParticipantService.updateOneEventParticipant(eventParticipantToDelete);
+        const deletedEventParticipant = await this.meetgridEventParticipantService.deleteOneEventParticipant(eventParticipantToDelete);
         return NextResponse.json({ message: "success", eventParticipant: deletedEventParticipant}, { status: 200 })
     }
 }
