@@ -17,7 +17,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Name
+                    Interview Plan Name
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -38,7 +38,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Description
+                    Interview Plan Description
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -52,7 +52,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Start Date
+                    Start Date
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -69,7 +69,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event End Date
+                    End Date
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -100,7 +100,7 @@ export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Creation Date
+                    Creation Date
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
