@@ -7,22 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 import { DataTableViewOptions } from "@/components/DataTableViewOptions"
-import { DataTableFacetedFilter } from "@/components/DataTableFacetedFilter"
-
-const roles = [
-    {
-        value: "admin",
-        label: "System Administrator"
-    },
-    {
-        value: "marketing",
-        label: "Marketing User"
-    },
-    {
-        value: "sales",
-        label: "Salesperson",
-    },
-]
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>
@@ -44,13 +28,14 @@ export function DataTableToolbar<TData>({
                     }
                     className="h-8 w-[150px] lg:w-[250px]"
                 />
-                {table.getColumn("roles") && (
-                    <DataTableFacetedFilter
-                        column={table.getColumn("roles")}
-                        title="Roles"
-                        options={roles}
-                    />
-                )}
+                <Input
+                    placeholder="Filter Email..."
+                    value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+                    onChange={(event) =>
+                        table.getColumn("email")?.setFilterValue(event.target.value)
+                    }
+                    className="h-8 w-[150px] lg:w-[250px]"
+                />
                 {isFiltered && (
                     <Button
                         variant="ghost"

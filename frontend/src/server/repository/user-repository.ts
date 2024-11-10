@@ -9,6 +9,11 @@ export class UserRepository {
         return result;
     }
 
+    async getUserByClerkUserId(id: string) {
+        const result = await db.select().from(user).where(eq(user.clerkUserId, id));
+        return result;
+    }
+
     async getUserByUsername(username: string) {
         const targetUser = await db.select().from(user).where(eq(user.username, username!));
         return targetUser;

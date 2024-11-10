@@ -3,9 +3,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
+import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
 
-export const UserDataTableColumns: ColumnDef<MeetgridEventParticipant>[] = [
+export const AdminDataTableColumns: ColumnDef<MeetgridEventAdmin>[] = [
     {
         accessorKey: "username",
         header: ({ column }) => {
@@ -21,14 +21,28 @@ export const UserDataTableColumns: ColumnDef<MeetgridEventParticipant>[] = [
         },
     },
     {
-        accessorKey: "roles",
+        accessorKey: "email",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Roles
+                    Email
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
+        accessorKey: "role",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Role
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
@@ -52,6 +66,10 @@ export const UserDataTableColumns: ColumnDef<MeetgridEventParticipant>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem onClick={async () => {
+                            const res = await fetch("/api/eventParticipant", {
+                                method: "DELETE",
+                                body: JSON.stringify(row.original)
+                            })
                         }}>
                             Delete user
                         </DropdownMenuItem>
