@@ -26,14 +26,14 @@ import {
 } from "@/components/ui/table"
 
 import { DataTablePagination } from "@/components/DataTablePagination"
-import { DataTableToolbar } from "./EventDataTableToolbar";
+import { DataTableToolbar } from "./InterviewDataTableToolbar";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
 }
 
-export function EventDataTable<TData, TValue>({
+export function InterviewDataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {

@@ -1,6 +1,6 @@
-import { BookingService } from "@/server/service/BookingService";
-import { AvailabilityCard } from "@/components/availability-card";
-import { QuestionService } from "@/server/service/QuestionService";
+// import { BookingService } from "@/server/service/BookingService";
+// import { AvailabilityCard } from "@/components/availability-card";
+// import { QuestionService } from "@/server/service/QuestionService";
 
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
@@ -19,6 +19,10 @@ import { TabsTrigger } from "@radix-ui/react-tabs";
 import { AdminDataTable } from "@/components/datatables/admin/AdminDataTable";
 import { AdminDataTableColumns } from "@/components/datatables/admin/AdminDataTableColumns";
 import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
+import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRegistrantService";
+import { MeetgridInterview } from "@/types/MeetgridInterview";
+import { InterviewDataTable } from "@/components/datatables/interview/InterviewDataTable";
+import { InterviewDataTableColumns } from "@/components/datatables/interview/InterviewDataTableColumns";
 
 
 // const eventService: EventService = new EventService();
@@ -36,6 +40,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
   const userObj = await clerkClient.users.getUser(user.userId!);
   const meetgridEventService: MeetgridEventService = new MeetgridEventService();
   const meetgridEventParticipantService: MeetgridEventParticipantService = new MeetgridEventParticipantService();
+  const meetgridEventRegistrantService: MeetgridEventRegistrantService = new MeetgridEventRegistrantService();
 
   try {
     const meetgridEventArray = await meetgridEventService.findById(params.eventId);
@@ -46,7 +51,9 @@ export default async function EventPage({params}: {params: {eventId:string, book
       const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId);
       const currentUserAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventIdAndUserId(params.eventId, user.userId!);
       const totalAdmins: MeetgridEventAdmin[] = await meetgridEventParticipantService.findByEventIdAndRole(params.eventId, "admin")
-      console.log(totalAdmins)
+      const totalRegistrants: MeetgridInterview[] = await meetgridEventRegistrantService.findByEvent(params.eventId);
+
+      console.log(totalRegistrants)
 
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
@@ -54,7 +61,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
         <Tabs defaultValue="info">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="info">Event Information</TabsTrigger>
-            <TabsTrigger value="regitration">Participants</TabsTrigger>
+            <TabsTrigger value="registration">Participants</TabsTrigger>
             <TabsTrigger value="questions">Interview Questions</TabsTrigger>
             <TabsTrigger value="admin">Manage Admins</TabsTrigger>
           </TabsList>
@@ -116,6 +123,17 @@ export default async function EventPage({params}: {params: {eventId:string, book
           </TabsContent>
 
           <TabsContent value="registration">
+            <div className="grid grid-cols-12 gap-4 p-4">
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Registered Interviews</CardTitle>
+                  <CardDescription>Shows all people who have registered for this interview plan</CardDescription>
+                </CardHeader>
+                <CardContent className="w-full overflow-x-auto">
+                  <InterviewDataTable columns={InterviewDataTableColumns} data={totalRegistrants}/>
+                </CardContent>
+              </Card>
+            </div>
 
           </TabsContent>
 

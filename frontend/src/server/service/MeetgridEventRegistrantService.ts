@@ -1,20 +1,43 @@
+import { MeetgridInterview } from "@/types/MeetgridInterview";
 import { MeetgridEventRegistrant } from "../entity/MeetgridEventRegistrant";
 import { MeetgridEventRegistrantRepository } from "../repository/MeetgridEventRegistrantRepository";
+import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
 import { EmailNotificationOptions, EmailService } from "./EmailService";
 
 export class MeetgridEventRegistrantService {
 
     meetgridEventRegistrantRepository: MeetgridEventRegistrantRepository;
+    meetgridEventRepository: MeetgridEventRepository;
     emailService: EmailService
 
     constructor() {
         this.meetgridEventRegistrantRepository = new MeetgridEventRegistrantRepository();
+        this.meetgridEventRepository = new MeetgridEventRepository;
         this.emailService = new EmailService();
     }
 
     async findByEvent(eventId: string) {
+        const targetEvent = await this.meetgridEventRepository.findById(eventId);
         const meetgridEventRegistrants = await this.meetgridEventRegistrantRepository.findByEventId(eventId);
-        return meetgridEventRegistrants;
+
+        const result = [];
+        for (let i=0;i<meetgridEventRegistrants.length; i++ ) {
+            const curTime = new Date(targetEvent[0].startDate)
+            curTime.setDate(curTime.getDate() + meetgridEventRegistrants[i].dayIdx!);
+            curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrants[i].timeslotIdx!*15))
+            
+            const cur = {
+                id: meetgridEventRegistrants[i].id!,
+                interviewerEmail: meetgridEventRegistrants[i].interviewerEmail,
+                participantEmail: meetgridEventRegistrants[i].participantEmail,
+                time: curTime,
+                zoomLink: meetgridEventRegistrants[i].zoomLink,
+            } as MeetgridInterview;
+
+            result.push(cur);
+        }
+
+        return result;
     }
 
     async createOneEventRegistrant(meetgridEventRegistrantToCreate: MeetgridEventRegistrant) {

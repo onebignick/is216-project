@@ -4,110 +4,76 @@ import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 // import Link from "next/link";
-import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
-import Link from "next/link";
+import { MeetgridInterview } from "@/types/MeetgridInterview";
 
 
-export const EventDataTableColumns: ColumnDef<MeetgridAssociatedEvent>[] = [
+export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
     {
-        accessorKey: "name",
+        accessorKey: "time",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Name
+                    Interview Time
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
-            return (
-                <Button variant="link" asChild>
-                    <Link href={"/event/" + row.original.id}>{row.getValue("name")}</Link>
-                </Button>
-            )
+            return row.getValue("time").toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
         }
     },
     {
-        accessorKey: "description",
+        accessorKey: "interviewerEmail",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Description
+                    Interviewer Email
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
     },
     {
-        accessorKey: "startDate",
+        accessorKey: "participantEmail",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Start Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            return row.getValue("startDate").toDateString();
-        }
-    },
-    {
-        accessorKey: "endDate",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Event End Date
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            )
-        },
-        cell: ({ row }) => {
-            return row.getValue("endDate").toDateString();
-        }
-    },
-    {
-        accessorKey: "role",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Role
+                    Interviewee Email
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
     },
     {
-        accessorKey: "dateCreated",
+        accessorKey: "zoomLink",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Event Creation Date
+                    Zoom Link
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => {
-            return row.getValue("dateCreated").toDateString();
-        }
     },
     // {
     //     id: "actions",
