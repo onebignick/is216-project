@@ -22,18 +22,18 @@ export class MeetgridAnswerController {
     async save(request: NextRequest) {
         const meetgridAnswerToCreate = await request.json()
         const createdMeetgridAnswer = await this.meetgridAnswerService.createOne(meetgridAnswerToCreate);
-        return createdMeetgridAnswer
+        return NextResponse.json({message: "success", createdMeetgridAnswer: createdMeetgridAnswer}, {status: 200});
     }
 
     async update(request: NextRequest) {
         const meetgridAnswerToUpdate= await request.json()
         const updatedMeetgridAnswer = await this.meetgridAnswerService.updateOne(meetgridAnswerToUpdate);
-        return updatedMeetgridAnswer
+        return NextResponse.json({message: "success", updatedMeetgridAnswer: updatedMeetgridAnswer}, {status: 200});
     }
 
     async delete(request: NextRequest) {
         const { meetgridAnswerIdToDelete }= await request.json()
         const deletedMeetgridAnswer = await this.meetgridAnswerService.deleteOne(meetgridAnswerIdToDelete);
-        return deletedMeetgridAnswer
+        return NextResponse.json({message: "success", deletedMeetgridAnswer: deletedMeetgridAnswer}, {status: 200});
     }
 }
