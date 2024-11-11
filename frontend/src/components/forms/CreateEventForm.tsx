@@ -9,7 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { Calendar } from "../ui/calendar";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "../ui/button";
@@ -17,6 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
     name: z.string(),
@@ -37,13 +38,15 @@ export function CreateEventForm() {
     
     const { toast } = useToast();
     const router = useRouter();
+
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        
+        setIsLoading(true);
         // create new event with defaults
         const newEvent = {
             name: values.name,
@@ -68,18 +71,17 @@ export function CreateEventForm() {
 
             const createdEvent: MeetgridEvent = events[0];
 
-            console.log(createdEvent.code)
             toast({
                 title: "Event Successfully created!",
-                description: "You will be redirected to the event page in 5 seconds",
+                description: "You will be redirected to the event page in 3 seconds",
                 className: "bg-green-500 text-black",
             })
 
             setTimeout(() => {
                 router.push("/event/" + createdEvent.id)
-            }, 5000);
+            }, 3000);
         }
-
+        setIsLoading(false);
     }
 
     return (
@@ -202,9 +204,17 @@ export function CreateEventForm() {
                             )}
                         />
 
-                        <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
-                            Submit
-                        </Button>
+                        { 
+                            !isLoading ? 
+                                <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
+                                    Submit
+                                </Button>
+                            :
+                                <Button disabled className="col-span-2 bg-indigo-300">
+                                    <Loader2 className="animate-spin"/>
+                                    Please wait
+                                </Button>
+                        }
                     </CardContent>
                 </form>
             </Form>
