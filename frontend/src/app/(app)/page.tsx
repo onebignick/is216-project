@@ -100,7 +100,7 @@ function WelcomeCard({ username, className } : { username: string, className: st
       </CardHeader>
       <CardContent>
         <Button asChild className="bg-coral text-black hover:bg-coral/70 text-md py-4 px-6">
-          <Link href="/event/create">Create New Event</Link>
+          <Link href="/event/create">Create New Interview</Link>
         </Button>
       </CardContent>
     </Card>
