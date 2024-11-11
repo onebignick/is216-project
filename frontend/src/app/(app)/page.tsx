@@ -95,11 +95,11 @@ function WelcomeCard({ username, className } : { username: string, className: st
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle>Welcome back {username}!</CardTitle>
+        <CardTitle className="text-4xl font-semibold">Welcome back {username}!</CardTitle>
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
       <CardContent>
-        <Button asChild className="bg-coral text-black hover:bg-coral/70">
+        <Button asChild className="bg-coral text-black hover:bg-coral/70 text-md py-4 px-6">
           <Link href="/event/create">Create New Event</Link>
         </Button>
       </CardContent>

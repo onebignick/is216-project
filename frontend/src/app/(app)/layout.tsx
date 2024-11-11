@@ -16,7 +16,7 @@ export default function RootLayout({
           <SidebarTrigger/>
         </nav>
           <div className="flex-grow">{children}</div>
-          <footer className="p-3 w-full text-center  bg-muted text-muted-foreground mt-auto" >
+          <footer className="p-3 w-full text-center  bg-[#99DDCC] text-foreground mt-auto" >
             <p>© 2024 IS216 MeetGrid Project. All Rights Reserved.</p>
           </footer>
       </main>
