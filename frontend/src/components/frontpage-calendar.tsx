@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Props from '@toast-ui/react-calendar';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CalendarInstance from '@toast-ui/react-calendar';
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
@@ -20,6 +21,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [calendarView, setCalendarView] = useState<'week' | 'month'>('week'); // State for view toggle
+    const [calendarKey, setCalendarKey] = useState(0); //a key to force re-render
     // console.log(events);
 
     const startOfWeek = new Date(); 
@@ -121,7 +124,12 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
         // console.log("Formatted Clicked Event Data:", formattedEvent);
         setIsModalOpen(true);
-    } 
+    };
+
+    const toggleView = () => {
+        setCalendarView(prevView => (prevView === 'week' ? 'month' : 'week'));
+        setCalendarKey(prevKey => prevKey + 1); // Change the key to force re-render
+      };
         
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
@@ -129,7 +137,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
     const calendarProps: typeof Props = {
         height: '600px', // Adjust as needed
-        view: 'week', // Set default view as 'week'
+        view: calendarView, // Set default view as 'week'
         events: formattedEvents,
         week: {
             hourStart: 0,
@@ -148,6 +156,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             ],
         },
     };
+
     return (
         <Card className={className}>
             <CardHeader>
@@ -155,7 +164,10 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                <Calendar {...calendarProps} onClickEvent={handleEventClick}/>
+                <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md">
+                        Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
+                </Button>
+                <Calendar key={calendarKey} {...calendarProps} onClickEvent={handleEventClick}/>
                 {/* Render the modal with event details */}
                 <EventDetailModal 
                     isOpen={isModalOpen} 
