@@ -8,6 +8,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -24,8 +26,11 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
     });
 
     const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setIsLoading(true);
+
         const targetUserResponse = await fetch("/api/user?" + new URLSearchParams({
             email: values.email,
         }))
@@ -65,7 +70,7 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
                 description: "Seems like this user does not exist"
             })
         }
-
+        setIsLoading(false);
     }
 
     return (
@@ -83,7 +88,17 @@ export function AddAdminToEventForm({ eventId } : AddAdminToEventFormProps) {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="bg-indigo-500 hover:bg-indigo-300">Add User</Button>
+                { 
+                    !isLoading ? 
+                        <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
+                            Submit
+                        </Button>
+                    :
+                        <Button disabled className="col-span-2 bg-indigo-300">
+                            <Loader2 className="animate-spin"/>
+                            Please wait
+                        </Button>
+                }
             </form>
         </Form>
     )
