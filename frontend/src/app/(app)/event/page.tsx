@@ -47,7 +47,7 @@ export default async function YourEventPage() {
                     <CardTitle>
                         Your Interview Plans
                     </CardTitle>
-                    <CardDescription>Interview Plans that you are and admin or owner of</CardDescription>
+                    <CardDescription>Interview plans you manage as an admin or owner</CardDescription>
                 </CardHeader>
                 <CardContent className="w-full overflow-x-auto">
                     <EventDataTable columns={EventDataTableColumns} data={meetgridAssociatedEvents}/>
