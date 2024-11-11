@@ -22,6 +22,10 @@ import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRe
 import { MeetgridInterview } from "@/types/MeetgridInterview";
 import { InterviewDataTable } from "@/components/datatables/interview/InterviewDataTable";
 import { InterviewDataTableColumns } from "@/components/datatables/interview/InterviewDataTableColumns";
+import { CreateQuestionForm } from "@/components/forms/CreateQuestionForm";
+import { MeetgridQuestion } from "@/server/entity/MeetgridQuestion";
+import { MeetgridQuestionService } from "@/server/service/MeetgridQuestionService";
+import { QuestionDisplayCard } from "@/components/questionDisplayCard";
 
 
 // const eventService: EventService = new EventService();
@@ -40,7 +44,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
   const meetgridEventService: MeetgridEventService = new MeetgridEventService();
   const meetgridEventParticipantService: MeetgridEventParticipantService = new MeetgridEventParticipantService();
   const meetgridEventRegistrantService: MeetgridEventRegistrantService = new MeetgridEventRegistrantService();
-
+  const meetgridQuestionService: MeetgridQuestionService = new MeetgridQuestionService();
   try {
     const meetgridEventArray = await meetgridEventService.findById(params.eventId);
 
@@ -51,6 +55,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
       const currentUserAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventIdAndUserId(params.eventId, user.userId!);
       const totalAdmins: MeetgridEventAdmin[] = await meetgridEventParticipantService.findByEventIdAndRole(params.eventId, "admin")
       const totalRegistrants: MeetgridInterview[] = await meetgridEventRegistrantService.findByEvent(params.eventId);
+      const eventQuestions: MeetgridQuestion[] = await meetgridQuestionService.findByEvent(params.eventId);
 
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
@@ -135,7 +140,31 @@ export default async function EventPage({params}: {params: {eventId:string, book
           </TabsContent>
 
           <TabsContent value="questions">
-
+            <div className="grid grid-cols-12 gap-4 p-4">
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Add a new Question</CardTitle>
+                  <CardDescription>Use this form to add a new Question</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormDialogButton
+                    title="Add a new question"
+                    description="Fill in the form to add a new question"
+                    label="Add Question"
+                    form={<CreateQuestionForm eventId={params.eventId} length={0}/>}
+                  />
+                </CardContent>
+              </Card>
+              <Card className="col-span-12">
+                <CardHeader>
+                  <CardTitle>Add a new Question</CardTitle>
+                  <CardDescription>Use this form to add a new Question</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <QuestionDisplayCard eventId={params.eventId}/>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="admin">

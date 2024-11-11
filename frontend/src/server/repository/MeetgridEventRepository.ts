@@ -26,7 +26,6 @@ export class MeetgridEventRepository {
     }
 
     async updateOne(eventToUpdate: MeetgridEvent) {
-        console.log(eventToUpdate);
         const updatedEvent = await db.update(event).set(eventToUpdate).where(eq(event.id, eventToUpdate.id!)).returning();
         return updatedEvent;
     }
