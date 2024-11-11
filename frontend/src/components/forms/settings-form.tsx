@@ -126,7 +126,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
             // setSuccessMessage("Event deleted successfully!");
             // setErrorMessage("");
             toast({
-                title: "Event deleted successfully"
+                title: "Event deleted successfully",
+                className: "bg-green-500 text-black",
             })
             setShowDeleteModal(false); // Close the modal after deletion
         } else {
