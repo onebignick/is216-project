@@ -73,7 +73,7 @@ export default async function Home() {
       <WelcomeCard className="col-span-12 lg:block lg:col-span-6" username={(curUser!.username)!}/>
       <TodaysMeetings chartData={[{meetings: `${todaysEvents.length}`}]} className="hidden lg:block lg:col-span-3"/>
       <WeeksMeetings chartData={[{meetings: `${weeksEvents.length}`}]} className="hidden lg:block  lg:col-span-3"/>
-      <FrontpageCalendar events={ meetgridAssociatedEvents} className="row-span-4 col-span-12 lg:row-span-3" />
+      <FrontpageCalendar events={ meetgridAssociatedEvents} className="col-span-12" />
       {/* <RecentActivityCard clerkUserId={user!.id} className="row-span-4 col-span-12 lg:row-span-3 lg:col-span-4"/> */}
     </main>
   );
