@@ -23,6 +23,7 @@ const config = {
 			coral: {
 				DEFAULT: '#EDC7B7', // custom coral color
 			  },
+			
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

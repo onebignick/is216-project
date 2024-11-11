@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useState, useEffect } from "react"
 import {
   Calendar,
   Home,
@@ -8,7 +9,8 @@ import {
   Plus,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
+
+//import { useRouter } from "next/router"
 import {
   Sidebar,
   SidebarHeader,
@@ -46,10 +48,16 @@ const data = {
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const [selectedLink, setSelectedLink] = useState("")
+
+  useEffect(() => {
+    // Set initial selected link based on current URL
+    setSelectedLink(window.location.pathname)
+  }, [])
 
   return (
     <Sidebar className="border-r-0" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="bg-[#FEF4E6]" >
         <div className="flex justify-between">
           <SignedIn>
             <UserButton/>
@@ -59,9 +67,29 @@ export function SidebarLeft({
           </SignedOut>
           <ModeToggle/>
         </div>
-        <NavMain items={data.navMain} />
+        {/* <NavMain items={data.navMain} /> */}
       </SidebarHeader>
-      <SidebarRail />
+
+         {/* Sidebar Middle Section - apply beige color */}
+      <div className="bg-[#FEF4E6] flex-grow">
+        {data.navMain.map((item) => (
+          <a
+            key={item.url}
+            href={item.url}
+            onClick={() => setSelectedLink(item.title)}
+            className={`flex items-center p-4 ${
+              selectedLink === item.url
+              ? "bg-[#E0CBBF] text-black" // Darker shade for the active tab
+                : "text-gray-700 hover:bg-[#FEF4E6]"
+            }`}
+          >
+            <item.icon className="mr-2" />
+            <span>{item.title}</span>
+          </a>
+        ))}
+      </div>
+
+      <SidebarRail className="bg-[#FEF4E6]"/>
     </Sidebar>
   )
 }
