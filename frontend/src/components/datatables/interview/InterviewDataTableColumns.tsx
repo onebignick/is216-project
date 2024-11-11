@@ -10,6 +10,32 @@ import Link from "next/link";
 
 export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
     {
+        accessorKey: "id",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Interview Notes
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            return (
+                <Button
+                    variant="link"
+                    className="px-0"
+                    asChild
+                >
+                    <Link href={"/i/"+row.getValue("id")}>Enter</Link>
+                </Button>
+            )
+        }
+
+    },
+    {
         accessorKey: "time",
         header: ({ column }) => {
             return (

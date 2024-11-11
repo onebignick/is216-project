@@ -157,8 +157,8 @@ export default async function EventPage({params}: {params: {eventId:string, book
               </Card>
               <Card className="col-span-12">
                 <CardHeader>
-                  <CardTitle>Add a new Question</CardTitle>
-                  <CardDescription>Use this form to add a new Question</CardDescription>
+                  <CardTitle>Current Interview Questions</CardTitle>
+                  <CardDescription>Below are the interview questions for this interview plan</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <QuestionDisplayCard eventId={params.eventId}/>

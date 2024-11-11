@@ -63,7 +63,7 @@ export const eventQuestion = createTable("eventQuestion", {
 
 export const answer = createTable("answer", {
 	id: uuid("id").defaultRandom().primaryKey(),
-	questionId: uuid("questionId").references(() => eventQuestion.id, { onDelete: "cascade"}),
-	interviewId: uuid("interviewId").references(() => eventRegistrant.id, { onDelete: "cascade" }),
-	answer: varchar("answer", { length: 10000 }),
+	questionId: uuid("questionId").references(() => eventQuestion.id, { onDelete: "cascade"}).notNull(),
+	interviewId: uuid("interviewId").references(() => eventRegistrant.id, { onDelete: "cascade" }).notNull(),
+	answer: varchar("answer", { length: 10000 }).notNull(),
 })
