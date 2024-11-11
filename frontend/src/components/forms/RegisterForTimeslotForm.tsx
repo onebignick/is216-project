@@ -10,6 +10,9 @@ import { useToast } from "@/hooks/use-toast";
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant";
 import { MeetgridEventRegistrant } from "@/server/entity/MeetgridEventRegistrant";
+import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
     email: z.string().email("This is not a valid email"),
@@ -25,6 +28,9 @@ interface RegisterEventFormProps {
 export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayIdx, event }: RegisterEventFormProps) {
 
     const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const router = useRouter();
+    const pathname = usePathname();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
@@ -42,6 +48,7 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
     }
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setIsLoading(true);
 
         let eventParticipantEmailToFind = "";
         for (const key in mergedAvailability[timeslotIdx][dayIdx]) {
@@ -117,6 +124,8 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
             description: "You will receive an email with the details of the meeting",
             className: "bg-green-500 text-black",
         })
+        setIsLoading(false);
+        router.push(pathname);
     }
 
     return(
@@ -134,9 +143,17 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="bg-indigo-500 hover:bg-indigo-300">
-                            Submit
-                        </Button>
+                        { 
+                            !isLoading ? 
+                                <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
+                                    Submit
+                                </Button>
+                            :
+                                <Button disabled className="col-span-2 bg-indigo-300">
+                                    <Loader2 className="animate-spin"/>
+                                    Please wait
+                                </Button>
+                        }
                 </form>
             </Form>
     )

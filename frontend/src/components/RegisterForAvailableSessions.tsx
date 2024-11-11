@@ -101,7 +101,7 @@ function TableBody({ mergedAvailability, event }: TableBodyProps) {
                                     if (mergedAvailability[timeslotIdx][dayIdx][key] === "") emptyCount++;
                                 }
 
-                                if (emptyCount === Object.keys(mergedAvailability[timeslotIdx][dayIdx]).length) {
+                                if (emptyCount != 0) {
                                     return (
                                         <td key={dayIdx} className="border border-slate-500">
                                             <div className="flex justify-center items-center h-full py-1 px-2"> {/* Center the button */}
