@@ -83,8 +83,8 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }),
-            text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
-            " if you would like to edit the information you can use this link: " + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
+            text: "An interview has been scheduled. Here's the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            "\n \nIf you would like to edit the information you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(mailOption);
@@ -100,8 +100,8 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }),
-            text: "An interview has been scheduled for " + createdMeetgridEventRegistrant[0].zoomLink + 
-            " if you would like to edit the information you can use this link: " + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
+            text: "An interview has been scheduled. Here's the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            "\n \nIf you would like to edit the information you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(participantMailOption);
