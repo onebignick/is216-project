@@ -145,11 +145,11 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
                         />
                         { 
                             !isLoading ? 
-                                <Button type="submit" className="col-span-2 bg-indigo-500 hover:bg-indigo-300">
+                                <Button type="submit" className="col-span-2 bg-coral text-black hover:bg-coral/70">
                                     Submit
                                 </Button>
                             :
-                                <Button disabled className="col-span-2 bg-indigo-300">
+                                <Button disabled className="col-span-2 bg-coral text-black hover:bg-coral/70">
                                     <Loader2 className="animate-spin"/>
                                     Please wait
                                 </Button>

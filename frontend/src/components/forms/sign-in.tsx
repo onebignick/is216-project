@@ -41,7 +41,7 @@ export default function SignInForm() {
                     <SignIn.Action navigate="forgot-password" className="text-left">Forgot Password?</SignIn.Action>
 
                     <SignIn.Action submit asChild>
-                        <Button className="bg-indigo-500 hover:bg-indigo-300">Continue</Button>
+                        <Button className="bg-coral text-black hover:bg-coral/70">Continue</Button>
                     </SignIn.Action>
                     </CardContent>
 

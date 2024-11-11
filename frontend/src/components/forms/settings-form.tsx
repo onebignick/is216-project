@@ -397,7 +397,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                             className="px-4 py-2 bg-red-600 text-white rounded col-span-1">
                             Delete Event
                         </Button>
-                        <Button type="submit" className="px-4 py-2 col-start-4 rounded col-span-1">Save Changes</Button>
+                        <Button type="submit" className="px-4 py-2 col-start-4 rounded col-span-1 bg-coral text-black hover:bg-coral/70">Save Changes</Button>
                     </div>
 
   

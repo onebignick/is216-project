@@ -48,7 +48,7 @@ export default function CancelInterviewForm({ params } : { params: { interviewId
                             Rebook
                         </Button>
                     :
-                        <Button disabled className="col-span-2 bg-indigo-300">
+                        <Button disabled className="col-span-2 bg-coral text-black hover:bg-coral/70">
                             <Loader2 className="animate-spin"/>
                             Please wait
                         </Button>
@@ -75,7 +75,7 @@ export default function CancelInterviewForm({ params } : { params: { interviewId
                             Cancel
                         </Button>
                     :
-                        <Button disabled className="col-span-2 bg-indigo-300">
+                        <Button disabled className="col-span-2 bg-coral text-black hover:bg-coral/70">
                             <Loader2 className="animate-spin"/>
                             Please wait
                         </Button>

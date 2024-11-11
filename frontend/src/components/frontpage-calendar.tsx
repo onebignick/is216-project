@@ -226,7 +226,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                 <p>Participant Email: {event.participantEmail}</p>
                 <p>Zoom Link: <Link href={event.zoomLink} className='text-blue-600 hover:underline'>Link</Link></p>
                 <br />
-                <Button className="mb-4 w-full bg-indigo-500 hover:bg-indigo-300 transition duration-200 rounded-md">
+                <Button className="mb-4 w-full bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md">
                     <Link href={`/event/${event.id}`}>View More Details</Link>
                 </Button>
             </div>
