@@ -57,17 +57,21 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const availability: {[key: string]: string}[][] = JSON.parse(eventParticipant.availabilityString);
 
-    function handleOnMouseDown(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, timeIntervalIdx: number, dayIdx: number) {
-        const { target } = e;
+    function handleOnMouseDown(e: React.MouseEvent<HTMLTableCellElement, MouseEvent> | React.TouchEvent<HTMLTableCellElement>, timeIntervalIdx: number, dayIdx: number) {
+        // const { target } = e;
+        e.preventDefault(); // Prevents unintended behavior on mobile
 
+        // Type guard to distinguish between MouseEvent and TouchEvent
+        const isTouchEvent = 'touches' in e;
+        const target = isTouchEvent ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : e.target;
+        
+        if (target instanceof HTMLElement) {
             if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
                 setIsDelete(true);
             } else {
                 setIsDelete(false);
             }
             setIsMouseDown(true);
-
-        if (target instanceof HTMLElement) {
             if (isDelete) {
                 delete availability[timeIntervalIdx][dayIdx][userEmail];
                 target.classList.remove("bg-green-800");
@@ -80,11 +84,15 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
         }
     }
 
-    function handleOnMouseEnter(e: React.MouseEvent<HTMLTableCellElement, MouseEvent>, timeIntervalIdx: number, dayIdx: number) {
+    function handleOnMouseEnter(e: React.MouseEvent<HTMLTableCellElement> | React.TouchEvent<HTMLTableCellElement>, timeIntervalIdx: number, dayIdx: number) {
         if (!isMouseDown) return;
 
-        const { target } = e;
+        // const { target } = e;
+        e.preventDefault();
+        const isTouchEvent = 'touches' in e;
+        const target = isTouchEvent ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : e.target;
         console.log(target)
+
         if (target instanceof HTMLElement) {
             if (isDelete) {
                 delete availability[timeIntervalIdx][dayIdx][userEmail];
@@ -129,9 +137,17 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
                         {
                             timeInterval.map((day, dayIdx) => {
                                 if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-green-800"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} 
+                                    onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} 
+                                    onMouseUp={() => handleOnMouseUp()} 
+                                    onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} 
+                                    onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} 
+                                    onTouchEnd={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-green-800"/>
                                 } else {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-red-200"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} 
+                                    onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} 
+                                    onMouseUp={() => handleOnMouseUp()}    
+                                    key={dayIdx} className="border border-slate-500 bg-red-200"/>
                                 }
                             })
                         }
