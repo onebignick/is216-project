@@ -14,7 +14,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { SignedIn, UserButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
 import { ModeToggle } from "./toggle-theme-button"
 
 const data = {
@@ -54,6 +54,9 @@ export function SidebarLeft({
           <SignedIn>
             <UserButton/>
           </SignedIn>
+          <SignedOut>
+            <SignInButton/>
+          </SignedOut>
           <ModeToggle/>
         </div>
         <NavMain items={data.navMain} />
