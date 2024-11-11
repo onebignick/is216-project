@@ -5,6 +5,7 @@ import { MeetgridEventRepository } from "../repository/MeetgridEventRepository";
 import { UserRepository } from "../repository/user-repository";
 import { EmailNotificationOptions, EmailService } from "./EmailService";
 
+const URL = "https://meetgrid.vercel.app";
 export class MeetgridEventParticipantService {
 
     meetgridEventParticipantRepository: MeetgridEventParticipantRepository;
@@ -85,8 +86,8 @@ export class MeetgridEventParticipantService {
 
         const mailOptions = {
             to: targetUser.email,
-            subject: "You have just been added to " + targetEvent!.name,
-            text: "Make your fist changes now"
+            subject: "New Activity: " + targetEvent!.name,
+            text: "Dear Sir/Madam: \n\nYou have just added to " + targetEvent!.name + ". You can make changes and adjust the timing according to your availability through this link " + URL + "/" + eventParticipantToCreate.eventId + ". \n \nThanks! \n \nBest Regards, \nMeetGrid"
         } as EmailNotificationOptions;
 
         await this.emailService.sendEmailNotification(mailOptions);

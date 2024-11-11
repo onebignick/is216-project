@@ -7,7 +7,7 @@ import { UserRepository } from "../repository/user-repository";
 import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
 
-const URL = "https://is216-project.vercel.app";
+const URL = "https://meetgrid.vercel.app";
 
 export class MeetgridEventRegistrantService {
 
@@ -74,7 +74,7 @@ export class MeetgridEventRegistrantService {
         
         const mailOption = {
             to: createdMeetgridEventRegistrant[0].interviewerEmail,
-            subject: "Interview Scheduled for " + curTime.toLocaleString('en-SG', {
+            subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -83,15 +83,15 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }),
-            text: "An interview has been scheduled. Here's the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
-            "\n \nIf you would like to edit the information you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
+            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(mailOption);
 
         const participantMailOption = {
             to: createdMeetgridEventRegistrant[0].participantEmail,
-            subject: "Interview Scheduled for " + curTime.toLocaleString('en-SG', {
+            subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -100,8 +100,8 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }),
-            text: "An interview has been scheduled. Here's the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
-            "\n \nIf you would like to edit the information you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit",
+            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(participantMailOption);
