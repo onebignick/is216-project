@@ -29,20 +29,23 @@ export default async function Home() {
   // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
   // const combinedBookings = [...attendeeBookings, ...organizerBookings];
 
-  // // Get today's date
-  const today = new Date();
+
+  // Get today's date in Singapore Time (SGT)
+  const today = toSingaporeTime(new Date());
+
+  // Set start and end of today (using Singapore Time)
   const startOfDay = new Date(today.setHours(0, 0, 0, 0));
   const endOfDay = new Date(today.setHours(23, 59, 59, 999));
   
   // Filter today's events with null check for event.startDate
   const todaysEvents = meetgridAssociatedEvents.filter(event => {
     if (event.event.startDate && event.eventRegistrant.dayIdx !== null && event.eventRegistrant.dayIdx !== undefined) {
-      const startDate = new Date(event.event.startDate); // Ensure startDate is valid
-  
+      let startDate = new Date(event.event.startDate); // Ensure startDate is valid
+      startDate = toSingaporeTime(startDate); // Convert to Singapore Ti
       const dayIdx = event.eventRegistrant.dayIdx; // The day index of the event (0 is the same day as startDate)
   
       // Calculate the event date by adding dayIdx to the startDate
-     startDate.setDate(startDate.getDate() + dayIdx); // Add dayIdx to startDate to get the event date
+      startDate.setDate(startDate.getDate() + dayIdx); // Add dayIdx to startDate to get the event date
   
       // Check if the eventDate is today
       return startDate >= startOfDay && startDate <= endOfDay;
@@ -51,14 +54,15 @@ export default async function Home() {
     return false; // If startDate or dayIdx is missing, exclude the event
   });
 
-  // // Calculate start and end of the week (assuming week starts on Sunday)
-  const startOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-  const endOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
+  // Calculate start and end of the week in Singapore Time (SGT)
+  const startOfWeek = toSingaporeTime(new Date(today.setDate(today.getDate() - today.getDay()))); // Sunday of this week
+  const endOfWeek = toSingaporeTime(new Date(today.setDate(today.getDate() - today.getDay() + 6))); // Saturday of this week
 
   // Filter this week's events
   const weeksEvents =  meetgridAssociatedEvents.filter(event => {
     if (event.event.startDate) {
-      const eventDate = new Date(event.event.startDate);
+      let eventDate = new Date(event.event.startDate);
+      eventDate = toSingaporeTime(eventDate); // Convert to Singapore Time
       return eventDate >= startOfWeek && eventDate <= endOfWeek;
     }
     return false;
@@ -75,6 +79,17 @@ export default async function Home() {
   );
 
 }
+
+// Function to convert a UTC date to Singapore Time (SGT)
+function toSingaporeTime(date: Date) {
+  const singaporeOffset = 8 * 60; // Singapore is UTC+8, so the offset is +8 hours in minutes
+  const localOffset = date.getTimezoneOffset(); // Local timezone offset in minutes
+  const adjustedTime = new Date(date.getTime() + (singaporeOffset + localOffset) * 60000); // Adjust by the offset
+  return adjustedTime;
+}
+
+// Get today's date in Singapore Time (SGT)
+const today = toSingaporeTime(new Date());
 
 function WelcomeCard({ username, className } : { username: string, className: string }) {
   return (
