@@ -20,7 +20,7 @@ export function WeeksMeetings({className, chartData}: Props) {
     return (
         <Card className={className}>
             <CardHeader>
-                <CardTitle className="text-center">Meetings this week</CardTitle>
+                <CardTitle className="text-center">Meetings This Week</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
@@ -37,7 +37,7 @@ export function WeeksMeetings({className, chartData}: Props) {
                             className="first:fill-muted last:fill-background"
                             polarRadius={[86, 74]}
                         />
-                        <RadialBar dataKey="meetings" background/>
+                        <RadialBar dataKey="meetings" fill="#6fe1f2" background/>
                             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                                 <Label
                                     content={({ viewBox }) => {
