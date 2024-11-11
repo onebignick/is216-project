@@ -36,23 +36,19 @@ export default async function Home() {
   
   // Filter today's events with null check for event.startDate
   const todaysEvents = meetgridAssociatedEvents.filter(event => {
-    // Ensure event.startDate is a valid string
-    const startDate = new Date(event.event.startDate);
-
-    if (startDate && event.eventRegistrant.dayIdx !== null && event.eventRegistrant.dayIdx !== undefined) {
-      const dayIdx = event.eventRegistrant.dayIdx;
-      const eventDate = new Date(startDate); // Create Date only if startDate is valid
+    if (event.event.startDate && event.eventRegistrant.dayIdx !== null && event.eventRegistrant.dayIdx !== undefined) {
+      const startDate = new Date(event.event.startDate); // Ensure startDate is valid
   
-      // Adjust the eventDate by adding the difference between the day of the week and the event's dayIdx
-      const currentDay = eventDate.getDay(); // Get the current day of the week (0-6)
-      const diff = dayIdx - currentDay; // Calculate the difference between current day and dayIdx
-      eventDate.setDate(eventDate.getDate() + diff); // Adjust the date accordingly
+      const dayIdx = event.eventRegistrant.dayIdx; // The day index of the event (0 is the same day as startDate)
   
-      // Now compare eventDate to today's date range
-      return eventDate >= startOfDay && eventDate <= endOfDay;
+      // Calculate the event date by adding dayIdx to the startDate
+     startDate.setDate(startDate.getDate() + dayIdx); // Add dayIdx to startDate to get the event date
+  
+      // Check if the eventDate is today
+      return startDate >= startOfDay && startDate <= endOfDay;
     }
-  
-    return false; // If startDate is null or dayIdx is null/undefined, do not include this event
+    
+    return false; // If startDate or dayIdx is missing, exclude the event
   });
 
   // // Calculate start and end of the week (assuming week starts on Sunday)
