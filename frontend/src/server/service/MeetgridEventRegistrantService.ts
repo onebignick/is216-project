@@ -38,7 +38,7 @@ export class MeetgridEventRegistrantService {
         for (let i=0;i<meetgridEventRegistrants.length; i++ ) {
             const curTime = new Date(targetEvent[0].startDate)
             curTime.setDate(curTime.getDate() + meetgridEventRegistrants[i].dayIdx!);
-            curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrants[i].timeslotIdx!*15))
+            curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrants[i].timeslotIdx!*30))
             
             const cur = {
                 id: meetgridEventRegistrants[i].id!,
@@ -63,7 +63,7 @@ export class MeetgridEventRegistrantService {
         const targetEvent = await this.meetgridEventRepository.findById(meetgridEventRegistrantToCreate.eventId);
         const curTime = new Date(targetEvent[0].startDate)
         curTime.setDate(curTime.getDate() + meetgridEventRegistrantToCreate.dayIdx!);
-        curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrantToCreate.timeslotIdx!*15))
+        curTime.setMinutes(curTime.getMinutes() + (meetgridEventRegistrantToCreate.timeslotIdx!*30))
 
         const backgroundColor = this.getRandomColor();
         meetgridEventRegistrantToCreate.backgroundColor = backgroundColor;
@@ -115,7 +115,7 @@ export class MeetgridEventRegistrantService {
         const targetEvent = await this.meetgridEventRepository.findById(deletedEventRegistrant[0].eventId!);
         const curTime = new Date(targetEvent[0].startDate)
         curTime.setDate(curTime.getDate() + deletedEventRegistrant[0].dayIdx!);
-        curTime.setMinutes(curTime.getMinutes() + (deletedEventRegistrant[0].timeslotIdx!*15))
+        curTime.setMinutes(curTime.getMinutes() + (deletedEventRegistrant[0].timeslotIdx!*30))
 
         const targetUser = await this.userRepository.findUserByEmail(deletedEventRegistrant[0].interviewerEmail!);
         

@@ -89,7 +89,7 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
         // todo generate zoom code and email
         const eventStartDate = new Date(event.startDate);
         eventStartDate.setDate(eventStartDate.getDate() + dayIdx);
-        eventStartDate.setMinutes(eventStartDate.getMinutes() + timeslotIdx*15)
+        eventStartDate.setMinutes(eventStartDate.getMinutes() + timeslotIdx*30)
         const createZoomMeetingResponse = await fetch("/api/zoom", {
             method: "POST",
             body: JSON.stringify({

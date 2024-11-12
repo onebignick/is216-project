@@ -23,7 +23,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
     const [calendarView, setCalendarView] = useState<'week' | 'month'>('month'); // State for view toggle
     const [calendarKey, setCalendarKey] = useState(0); //a key to force re-render
-    // console.log(events);
+    console.log(events);
 
     // const startOfWeek = new Date(); 
     
@@ -126,8 +126,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             participantEmail: formattedEvent.participantEmail,
             zoomLink: formattedEvent.zoomLink
         });
-
-        // console.log("Formatted Clicked Event Data:", formattedEvent);
+        
+        console.log("Formatted Clicked Event Data:", formattedEvent);
         setIsModalOpen(true);
     };
 
@@ -181,8 +181,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 }
 
 function convertTimeslotIdxToMinutes(timeslotIdx: number, meetingPeriod: number): { start: number, end: number } {
-    // Each timeslot represents a 15-minute increment, so the total minutes is timeslotIdx * 15
-    const totalMinutes = timeslotIdx * 15;
+    // Each timeslot represents a 30-minute increment, so the total minutes is timeslotIdx * 30
+    const totalMinutes = timeslotIdx * meetingPeriod;
     
     // Start time in minutes
     const startMinutes = totalMinutes;

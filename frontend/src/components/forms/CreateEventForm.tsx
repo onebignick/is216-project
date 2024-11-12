@@ -29,8 +29,8 @@ const formSchema = z.object({
 
 const durations = [
     {
-        id: "15",
-        label: "15 minutes",
+        id: "30",
+        label: "30 minutes",
     },
 ]
 

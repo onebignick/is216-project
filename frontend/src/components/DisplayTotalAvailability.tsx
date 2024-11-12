@@ -53,8 +53,8 @@ export function DisplayTotalAvailability({totalAvailability, event} : DisplayTot
 
   function generateTableBody() {
     const body = [];
-    let startTimeIdx = event.startTimeMinutes/15 >> 0;
-    const endTimeIdx = event.endTimeMinutes/15 >> 0;
+    let startTimeIdx = event.startTimeMinutes/30 >> 0;
+    const endTimeIdx = event.endTimeMinutes/30 >> 0;
 
     while (startTimeIdx < endTimeIdx) {
       body.push(<TableRow key={startTimeIdx} currentTimeIdx={startTimeIdx} row={availability[startTimeIdx]} maxAvailability={maxAvailability}/>);
@@ -82,7 +82,7 @@ function TableHeader({ title }: {title: string}) {
 }
 
 function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: string[][], maxAvailability: number}) {
-  const currentTimeTotalMinutes = currentTimeIdx * 15
+  const currentTimeTotalMinutes = currentTimeIdx * 30
   
   let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
   let currentTimeHours = (currentTimeTotalMinutes / 60 >> 0).toString();

@@ -80,7 +80,7 @@ function TableBody({ mergedAvailability, event }: TableBodyProps) {
         <tbody>
             {mergedAvailability.map((timeslot, timeslotIdx) => {
 
-                const currentTimeTotalMinutes = timeslotIdx * 15
+                const currentTimeTotalMinutes = timeslotIdx * 30
                 if (currentTimeTotalMinutes < event.startTimeMinutes || currentTimeTotalMinutes >= event.endTimeMinutes) return;
                 
                 let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();

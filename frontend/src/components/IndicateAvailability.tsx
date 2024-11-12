@@ -9,7 +9,6 @@ interface IndicateAvailabilityProps {
     eventParticipant: MeetgridEventParticipant;
     event: MeetgridEvent;
     userEmail: string;
-    onAvailabilitySaved: () => void; // Add this line
 }
 
 export default function IndicateAvailability({ eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
@@ -157,7 +156,7 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
     return(
         <tbody>
             {availability.map((timeInterval, timeIntervalIdx) => {
-                const currentTimeTotalMinutes = timeIntervalIdx * 15
+                const currentTimeTotalMinutes = timeIntervalIdx * 30
 
                 if (currentTimeTotalMinutes < event.startTimeMinutes || currentTimeTotalMinutes >= event.endTimeMinutes) return;
                 

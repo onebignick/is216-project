@@ -31,7 +31,7 @@ const formSchema = z.object({
     endMinute: z.coerce.number(),
 }).refine(data => {
     // Validate that end date is after start date
-    return data.endDate > data.startDate;
+    return data.endDate >= data.startDate;
 }, {
     message: "End date must be later than start date.",
     path: ["endDate"],
@@ -112,6 +112,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                 className: "bg-red-500 text-white", // Error color
             })
         }
+        window.location.reload()
     }
 
     // Handle delete function
@@ -310,9 +311,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                                     </FormControl>
                                                     <SelectContent>
                                                         <SelectItem value="0">00</SelectItem>
-                                                        <SelectItem value="15">15</SelectItem>
                                                         <SelectItem value="30">30</SelectItem>
-                                                        <SelectItem value="60">45</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage/>
@@ -365,9 +364,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                                     </FormControl>
                                                     <SelectContent>
                                                         <SelectItem value="0">00</SelectItem>
-                                                        <SelectItem value="15">15</SelectItem>
                                                         <SelectItem value="30">30</SelectItem>
-                                                        <SelectItem value="60">45</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                                 <FormMessage/>
