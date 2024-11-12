@@ -126,7 +126,7 @@ export function QuestionDisplayCard({ eventId }: QuestionDisplayCardProps) {
                             )}
                             <div className="flex space-x-2">
                               <Button size="sm" onClick={() => handleEditQuestion(question.id, question.title)}>Edit</Button>
-                              <Button size="sm" variant="destructive" onClick={() => handleDeleteQuestion(question.title)}>Delete</Button>
+                              <Button size="sm" variant="destructive" onClick={() => handleDeleteQuestion(question.id)}>Delete</Button>
                             </div>
                           </li>
                         )}
