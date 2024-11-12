@@ -9,13 +9,11 @@ interface IndicateAvailabilityProps {
     eventParticipant: MeetgridEventParticipant;
     event: MeetgridEvent;
     userEmail: string;
-    onAvailabilitySaved: () => void; // Add this line
 }
 
 export default function IndicateAvailability({ eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
     
     const diff = (+(new Date(event.endDate)) - +(new Date(event.startDate))) / (1000*60*60*24);
-    console.log(diff)
 
     function generateTableHeaders() {
         const headers = [<TableHeader title="Time" key="time-header" />];
