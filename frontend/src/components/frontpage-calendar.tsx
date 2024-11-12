@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Props from '@toast-ui/react-calendar';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import CalendarInstance from '@toast-ui/react-calendar';
+// import CalendarInstance from '@toast-ui/react-calendar';
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
 
@@ -21,14 +21,17 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [selectedEvent, setSelectedEvent] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [calendarView, setCalendarView] = useState<'week' | 'month'>('week'); // State for view toggle
+    const [calendarView, setCalendarView] = useState<'week' | 'month'>('month'); // State for view toggle
     const [calendarKey, setCalendarKey] = useState(0); //a key to force re-render
     // console.log(events);
 
-    const startOfWeek = new Date(); 
+    // const startOfWeek = new Date(); 
     
-    const formattedEvents = events
-    .map(event => {
+    useEffect(() => {
+        setIsClient(true); // Ensures component renders only on client side
+    }, []);
+    
+    const formattedEvents = events.map(event => {
 
         const timeslot = event.eventRegistrant.timeslotIdx;
         const dayIdx =  event.eventRegistrant.dayIdx;
@@ -75,9 +78,11 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             zoomLink: zoomLink
         };
     });
-
-
-    // console.log(formattedEvents);
+    //toggle the view between monthly and weekly
+    const toggleView = () => {
+        setCalendarView(prevView => (prevView === 'week' ? 'month' : 'week'));
+        setCalendarKey(prevKey => prevKey + 1); // Change the key to force re-render
+      };
 
     const handleEventClick = (event: any) => {
         const clickedEvent = event.event; // Access the nested 'event' object
@@ -126,18 +131,9 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         setIsModalOpen(true);
     };
 
-    const toggleView = () => {
-        setCalendarView(prevView => (prevView === 'week' ? 'month' : 'week'));
-        setCalendarKey(prevKey => prevKey + 1); // Change the key to force re-render
-      };
-        
-    useEffect(() => {
-        setIsClient(true); // Ensures component renders only on client side
-    }, []);
-
     const calendarProps: typeof Props = {
         height: '600px', // Adjust as needed
-        view: calendarView, // Set default view as 'week'
+        view: calendarView,
         events: formattedEvents,
         week: {
             hourStart: 0,
@@ -145,6 +141,11 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             startDayOfWeek: new Date().getDay(),
             taskView: false,
             eventView: ['time'],
+        },
+        month:{
+            isAlways6Weeks: false,
+            visibleWeeksCount: 4,
+            visibleEventCount: 1
         },
         timezone: {
             zones: [
@@ -164,7 +165,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent>
-                <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md">
+                <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md hidden sm:block">
                         Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
                 </Button>
                 <Calendar key={calendarKey} {...calendarProps} onClickEvent={handleEventClick}/>
