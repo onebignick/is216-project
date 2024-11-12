@@ -59,7 +59,7 @@ export function SidebarLeft({
       <SidebarHeader className="bg-[#FEF4E6]" >
         <div className="flex justify-between">
           <SignedIn>
-            <UserButton/>
+            <UserButton appearance={{ elements: { userButtonPopoverCard: { pointerEvents: 'initial',  }, }, }}/>
           </SignedIn>
           <SignedOut>
             <SignInButton/>
