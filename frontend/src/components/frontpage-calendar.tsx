@@ -160,11 +160,11 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
     return (
         <Card className={className}>
-            <CardHeader>
-                <CardTitle>Upcoming Meetings</CardTitle>
+            <CardHeader className="pb-3">
+                <CardTitle className="sm:text-xl md:text-3xl">Upcoming Meetings</CardTitle>
                     <CardDescription></CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
                 <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md hidden sm:block">
                         Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
                 </Button>

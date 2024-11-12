@@ -95,7 +95,7 @@ const today = toSingaporeTime(new Date());
 function WelcomeCard({ username, className } : { username: string, className: string }) {
   return (
     <Card className={className}>
-      <CardHeader>
+      <CardHeader className="pb-3">
         <CardTitle className="text-4xl font-semibold">
           <div className="inline-block">
               <TypewriterEffect
