@@ -14,7 +14,6 @@ interface IndicateAvailabilityProps {
 export default function IndicateAvailability({ eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
     
     const diff = (+(new Date(event.endDate)) - +(new Date(event.startDate))) / (1000*60*60*24);
-    console.log(diff)
 
     function generateTableHeaders() {
         const headers = [<TableHeader title="Time" key="time-header" />];
@@ -93,9 +92,9 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
         e.preventDefault();
         const isTouchEvent = 'touches' in e;
         const target = isTouchEvent ? document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY) : e.target;
-        console.log(target)
 
-        if (target instanceof HTMLElement) {
+        if (target instanceof HTMLTableCellElement && target.classList.contains("selectable")) {
+            console.log("hey")
             if (isDelete) {
                 delete availability[timeIntervalIdx][dayIdx][userEmail];
                 target.classList.remove("bg-green-800");
@@ -172,9 +171,9 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
                         {
                             timeInterval.map((day, dayIdx) => {
                                 if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-green-800"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-green-800 selectable"/>
                                 } else {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-red-200"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-red-200 selectable"/>
                                 }
                             })
                         }
