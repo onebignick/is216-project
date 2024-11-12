@@ -55,7 +55,7 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
 
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
-    const availability: {[key: string]: string}[][] = JSON.parse(eventParticipant.availabilityString);
+    const [availability, setAvailability] = useState<{ [key: string]: string }[][]>(JSON.parse(eventParticipant.availabilityString));
 
     function handleOnMouseDown(e: React.MouseEvent<HTMLTableCellElement, MouseEvent> | React.TouchEvent<HTMLTableCellElement>, timeIntervalIdx: number, dayIdx: number) {
         // const { target } = e;
@@ -118,6 +118,37 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
         console.log(result);
     }
 
+    const handleOnClick = async (timeIntervalIdx: number, dayIdx: number) => {
+        const updatedAvailability = [...availability];
+        const targetCell = updatedAvailability[timeIntervalIdx][dayIdx];
+        
+        // Toggle the availability status for this cell
+        if (targetCell.hasOwnProperty(userEmail)) {
+            delete targetCell[userEmail];
+            setIsDelete(true);
+        } else {
+            targetCell[userEmail] = "";
+            setIsDelete(false);
+        }
+
+        // Update the state with the new availability data
+        setAvailability(updatedAvailability);
+
+        // Save to the database
+        eventParticipant.availabilityString = JSON.stringify(updatedAvailability);
+        const result = await fetch("/api/eventParticipant", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(eventParticipant),
+        });
+
+        const data = await result.json();
+        console.log("Saved data:", data);
+    };
+
+
     return(
         <tbody>
             {availability.map((timeInterval, timeIntervalIdx) => {
@@ -137,9 +168,9 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
                         {
                             timeInterval.map((day, dayIdx) => {
                                 if (availability[timeIntervalIdx][dayIdx].hasOwnProperty(userEmail)) {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-green-800"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-green-800"/>
                                 } else {
-                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} className="border border-slate-500 bg-red-200"/>
+                                    return <td onMouseDown={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onMouseEnter={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onMouseUp={() => handleOnMouseUp()} onTouchStart={(e) => handleOnMouseDown(e, timeIntervalIdx, dayIdx)} onTouchMove={(e) => handleOnMouseEnter(e, timeIntervalIdx, dayIdx)} onTouchEnd={() => handleOnMouseUp()} key={dayIdx} onClick={() => handleOnClick(timeIntervalIdx, dayIdx)} className="border border-slate-500 bg-red-200"/>
                                 }
                             })
                         }
