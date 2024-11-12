@@ -98,7 +98,7 @@ export function CreateEventForm() {
                             render={({field}) => (
                                 <FormItem className="col-span-2">
                                     <FormControl>
-                                        <Input placeholder="Enter the name of your interview here" {...field} />
+                                        <Input placeholder="Enter the name of your interview" {...field} />
                                     </FormControl>
                                     <FormMessage/>
                                 </FormItem>
@@ -186,10 +186,10 @@ export function CreateEventForm() {
                             name="meetingPeriod"
                             render={({ field }) => (
                                 <FormItem className="col-span-2">
-                                <FormLabel>Select interview duration</FormLabel>
+                                <FormLabel>Interview duration</FormLabel>
                                 <Select onValueChange={field.onChange}>
                                     <FormControl>
-                                    <SelectTrigger>
+                                    <SelectTrigger className="text-muted-foreground">
                                         <SelectValue placeholder="Select the duration of each interview" />
                                     </SelectTrigger>
                                     </FormControl>
