@@ -6,6 +6,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import FrontpageCalendar from "@/components/frontpage-calendar";
 import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRegistrantService";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 export default async function Home() {
   // const eventService: EventService = new EventService();
@@ -95,7 +96,15 @@ function WelcomeCard({ username, className } : { username: string, className: st
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="text-4xl font-semibold">Welcome back {username}!</CardTitle>
+        <CardTitle className="text-4xl font-semibold">
+          <div className="inline-block">
+              <TypewriterEffect
+                words={[{ text: `Welcome back, ${username}!` }]}
+                className="text-4xl font-semibold"
+                cursorClassName="bg-coral"
+              />
+            </div>
+        </CardTitle>
         <CardDescription>What would you like to do today?</CardDescription>
       </CardHeader>
       <CardContent>

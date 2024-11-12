@@ -16,11 +16,11 @@ export const TypewriterEffect = ({
   className?: string;
   cursorClassName?: string;
 }) => {
-  // split text inside of words into array of characters
+  // split text inside of words into array of characters, keeping spaces as a special character
   const wordsArray = words.map((word) => {
     return {
       ...word,
-      text: word.text.split(""),
+      text: word.text.split('').map((char) => (char === ' ' ? ' ' : char)),  // Keep spaces
     };
   });
 
@@ -59,16 +59,16 @@ export const TypewriterEffect = ({
                     word.className
                   )}
                 >
-                  {char}
+                  {char === ' ' ? '\u00A0' : char} {/* Render spaces as non-breaking spaces */}
                 </motion.span>
               ))}
-              &nbsp;
             </div>
           );
         })}
       </motion.div>
     );
   };
+
   return (
     <div
       className={cn(
@@ -110,13 +110,14 @@ export const TypewriterEffectSmooth = ({
   className?: string;
   cursorClassName?: string;
 }) => {
-  // split text inside of words into array of characters
+  // split text inside of words into array of characters, keeping spaces as a special character
   const wordsArray = words.map((word) => {
     return {
       ...word,
-      text: word.text.split(""),
+      text: word.text.split('').map((char) => (char === ' ' ? ' ' : char)),  // Keep spaces
     };
   });
+
   const renderWords = () => {
     return (
       <div>
@@ -126,12 +127,11 @@ export const TypewriterEffectSmooth = ({
               {word.text.map((char, index) => (
                 <span
                   key={`char-${index}`}
-                  className={cn(`dark:text-white text-black `, word.className)}
+                  className={cn(`dark:text-white text-black`, word.className)}
                 >
-                  {char}
+                  {char === ' ' ? '\u00A0' : char} {/* Render spaces as non-breaking spaces */}
                 </span>
               ))}
-              &nbsp;
             </div>
           );
         })}
@@ -178,7 +178,7 @@ export const TypewriterEffectSmooth = ({
           repeatType: "reverse",
         }}
         className={cn(
-          "block rounded-sm w-[4px]  h-4 sm:h-6 xl:h-12 bg-blue-500",
+          "block rounded-sm w-[4px] h-4 sm:h-6 xl:h-12 bg-blue-500",
           cursorClassName
         )}
       ></motion.span>
