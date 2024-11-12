@@ -42,6 +42,7 @@ export class MeetgridEventRegistrantService {
             
             const cur = {
                 id: meetgridEventRegistrants[i].id!,
+                participantName: meetgridEventRegistrants[i].participantName,
                 interviewerEmail: meetgridEventRegistrants[i].interviewerEmail,
                 participantEmail: meetgridEventRegistrants[i].participantEmail,
                 time: curTime,

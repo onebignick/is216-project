@@ -1,6 +1,7 @@
 export type MeetgridEventRegistrant = {
     id?: string,
     eventId: string,
+    participantName: string,
     interviewerEmail: string,
     participantEmail: string,
     timeslotIdx: number,

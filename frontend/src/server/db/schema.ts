@@ -43,6 +43,7 @@ export const eventParticipant = createTable("eventParticipant", {
 
 export const eventRegistrant = createTable("eventRegistrant", {
 	id: uuid("id").defaultRandom().primaryKey(),
+	participantName: varchar("participantName", { length: 100 }),
 	interviewerEmail: varchar("interviewerEmail", { length: 100 }),
 	participantEmail: varchar("participantEmail", { length: 100 }),
 	eventId: uuid("eventId").references(() => event.id, { onDelete: "cascade" }),

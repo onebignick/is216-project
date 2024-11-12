@@ -16,6 +16,7 @@ import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
     email: z.string().email("This is not a valid email"),
+    participantName: z.string().min(1, "Name is required"),
 })
 
 interface RegisterEventFormProps {
@@ -101,36 +102,57 @@ export function RegisterForTimeslotForm({ mergedAvailability, timeslotIdx, dayId
         })
 
         const { createdMeeting } = await createZoomMeetingResponse.json()
+        if (eventParticipantEmailToFind == values.email) {
+            toast({
+                title: "Unable to register for event",
+                description: "Same user account register for the same event",
+                className: "bg-red-500 text-black",
+            })
+        } else {
+            // create new event registrant at with that timeslot
+            const eventRegistrantToCreate = {
+                interviewerEmail: eventParticipantEmailToFind,
+                participantName: values.participantName,
+                participantEmail: values.email,
+                eventId: event.id,
+                timeslotIdx: timeslotIdx,
+                dayIdx: dayIdx,
+                zoomLink: createdMeeting.start_url
+            } as MeetgridEventRegistrant
 
-        // create new event registrant at with that timeslot
-        const eventRegistrantToCreate = {
-            interviewerEmail: eventParticipantEmailToFind,
-            participantEmail: values.email,
-            eventId: event.id,
-            timeslotIdx: timeslotIdx,
-            dayIdx: dayIdx,
-            zoomLink: createdMeeting.start_url
-        } as MeetgridEventRegistrant
+            // record the info in db
+            const createdEventRegistrantResponse = await fetch("/api/eventRegistrant", {
+                method: "POST",
+                body: JSON.stringify(eventRegistrantToCreate),
+            })
+            console.log(await createdEventRegistrantResponse.json())
 
-        // record the info in db
-        const createdEventRegistrantResponse = await fetch("/api/eventRegistrant", {
-            method: "POST",
-            body: JSON.stringify(eventRegistrantToCreate),
-        })
-        console.log(await createdEventRegistrantResponse.json())
-
-        toast({
-            title: "Successfully Registered for event",
-            description: "You will receive an email with the details of the meeting",
-            className: "bg-green-500 text-black",
-        })
+            toast({
+                title: "Successfully Registered for event",
+                description: "You will receive an email with the details of the meeting",
+                className: "bg-green-500 text-black",
+            })
+        }
         setIsLoading(false);
         router.push(pathname);
+        
     }
 
     return(
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                        <FormField
+                            control={form.control}
+                            name="participantName"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Input placeholder="Enter your name here" {...field} />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
                         <FormField
                             control={form.control}
                             name="email"

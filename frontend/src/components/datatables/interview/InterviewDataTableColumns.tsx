@@ -61,6 +61,20 @@ export const InterviewDataTableColumns: ColumnDef<MeetgridInterview>[] = [
         }
     },
     {
+        accessorKey: "participantName",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Participant Name
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+    },
+    {
         accessorKey: "interviewerEmail",
         header: ({ column }) => {
             return (
