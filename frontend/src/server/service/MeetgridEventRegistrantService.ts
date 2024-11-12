@@ -138,7 +138,15 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }) + " was cancelled",
-            text: "The interview was cancelled"
+            text: "Dear Sir/Madam: \n\nThe interview that you have booked on "+ curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            })  + " was cancelled. If you wish to schedule/book another interview. You may do so at " + URL +"/interview/"+ deletedEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid"
         } as EmailNotificationOptions;
 
         const participantMailOption2 = {
@@ -152,7 +160,15 @@ export class MeetgridEventRegistrantService {
                 second: '2-digit',
                 hour12: false
             }) + " was cancelled",
-            text: "The interview was cancelled"
+            text: "Dear Sir/Madam: \n\nThe interview that you have scheduled on "+ curTime.toLocaleString('en-SG', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            })  + " was cancelled.\n \nThanks! \n \nBest Regards, \nMeetGrid"
         } as EmailNotificationOptions;
         this.emailService.sendEmailNotification(participantMailOption);
         this.emailService.sendEmailNotification(participantMailOption2);
