@@ -9,8 +9,8 @@ import { DisplayTotalAvailability } from "@/components/DisplayTotalAvailability"
 import IndicateAvailability from "@/components/IndicateAvailability";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SettingsForm } from "@/components/forms/settings-form";
-import { Tabs, TabsContent, TabsList } from "@/components/ui/tabs";
-import { TabsTrigger } from "@radix-ui/react-tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { TabsTrigger } from "@radix-ui/react-tabs";
 import { AdminDataTable } from "@/components/datatables/admin/AdminDataTable";
 import { AdminDataTableColumns } from "@/components/datatables/admin/AdminDataTableColumns";
 import { MeetgridEventAdmin } from "@/types/MeetgridEventAdmin";
@@ -44,141 +44,145 @@ export default async function EventPage({params}: {params: {eventId:string, book
       if (totalAvailability.length === 0) throw new Error("No availability found");
 
       return (
-        <Tabs defaultValue="info">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="info">Event Information</TabsTrigger>
-            <TabsTrigger value="registration">Participants</TabsTrigger>
-            <TabsTrigger value="questions">Interview Questions</TabsTrigger>
-            <TabsTrigger value="admin">Manage Admins</TabsTrigger>
-          </TabsList>
+        <div>
+          <Tabs defaultValue="info">
+            <TabsList className="w-full grid bg-gray-200 grid-cols-2 lg:grid-cols-4">
+              <TabsTrigger value="info">Event Information</TabsTrigger>
+              <TabsTrigger value="registration">Participants</TabsTrigger>
+              <TabsTrigger value="questions">Interview Questions</TabsTrigger>
+              <TabsTrigger value="admin">Manage Admins</TabsTrigger>
+            </TabsList>
 
-       
-          <TabsContent value="info">
-            <div className="grid grid-cols-12 gap-4 p-4">
-              <Card className="col-span-12 md:col-span-6">
-                <CardHeader>
-                  <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>
-                  <CardDescription>Click below to add admins to your meeting</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormDialogButton
-                    title="Invite people to run your meeting!"
-                    description="Fill in the form below with the person's email"
-                    label="Add Admins"
-                    form={<AddAdminToEventForm eventId={params.eventId}/>}
-                  />
-                </CardContent>
-              </Card>
 
-              <Card className="col-span-12 md:col-span-6">
-                <CardHeader>
-                  <CardTitle>Invite people to register for your event</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>Invite people to join with the code <code>{meetgridEvent.code}</code></p>
-                </CardContent>
-              </Card>
+            <div className="mt-8">        
+              <TabsContent value="info">
+                <div className="grid grid-cols-12 gap-4 p-4">
+                  <Card className="col-span-12 md:col-span-6">
+                    <CardHeader>
+                      <CardTitle>Welcome to {meetgridEvent.name}</CardTitle>
+                      <CardDescription>Click below to add admins to your meeting</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <FormDialogButton
+                        title="Invite people to run your meeting!"
+                        description="Fill in the form below with the person's email"
+                        label="Add Admins"
+                        form={<AddAdminToEventForm eventId={params.eventId}/>}
+                      />
+                    </CardContent>
+                  </Card>
 
-              <Card className="col-span-12 lg:col-span-6">
-                <CardHeader>
-                  <CardTitle>View your groups availability here</CardTitle>
-                  <CardDescription>See who is available</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full overflow-x-auto">
-                  <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
-                </CardContent>
-              </Card>
-              <Card className="col-span-12 lg:col-span-6">
-                <CardHeader>
-                  <CardTitle>Indicate your availability</CardTitle>
-                  <CardDescription>Use this tool below to indicate your availability</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full overflow-x-auto">
-                  <IndicateAvailability eventParticipant={currentUserAvailability[0]} event={meetgridEvent} userEmail={userObj.emailAddresses[0].emailAddress}/>
-                </CardContent>
-              </Card>
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Edit your event settings</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <SettingsForm event={meetgridEvent}/>
-                </CardContent>
-              </Card>
+                  <Card className="col-span-12 md:col-span-6">
+                    <CardHeader>
+                      <CardTitle>Invite people to register for your event</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p>Invite people to join with the code <code>{meetgridEvent.code}</code></p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="col-span-12 lg:col-span-6">
+                    <CardHeader>
+                      <CardTitle>View your groups availability here</CardTitle>
+                      <CardDescription>See who is available</CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full overflow-x-auto">
+                      <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
+                    </CardContent>
+                  </Card>
+                  <Card className="col-span-12 lg:col-span-6">
+                    <CardHeader>
+                      <CardTitle>Indicate your availability</CardTitle>
+                      <CardDescription>Use this tool below to indicate your availability</CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full overflow-x-auto">
+                      <IndicateAvailability eventParticipant={currentUserAvailability[0]} event={meetgridEvent} userEmail={userObj.emailAddresses[0].emailAddress}/>
+                    </CardContent>
+                  </Card>
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Edit your event settings</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <SettingsForm event={meetgridEvent}/>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="registration">
+                <div className="grid grid-cols-12 gap-4 p-4">
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Registered Interviews</CardTitle>
+                      <CardDescription>Shows all people who have registered for this interview plan</CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full overflow-x-auto">
+                      <InterviewDataTable columns={InterviewDataTableColumns} data={totalRegistrants}/>
+                    </CardContent>
+                  </Card>
+                </div>
+
+              </TabsContent>
+
+              <TabsContent value="questions">
+                <div className="grid grid-cols-12 gap-4 p-4">
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Add a new Question</CardTitle>
+                      <CardDescription>Use this form to add a new Question</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <FormDialogButton
+                        title="Add a new question"
+                        description="Fill in the form to add a new question"
+                        label="Add Question"
+                        form={<CreateQuestionForm eventId={params.eventId} length={0}/>}
+                      />
+                    </CardContent>
+                  </Card>
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Current Interview Questions</CardTitle>
+                      <CardDescription>Below are the interview questions for this interview plan</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <QuestionDisplayCard eventId={params.eventId}/>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="admin">
+                <div className="grid grid-cols-12 gap-4 p-4">
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Add a New Admin</CardTitle>
+                      <CardDescription>Use this form to add a new admin</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <FormDialogButton
+                        title="Invite people to run your meeting!"
+                        description="Fill in the form below with the person's email"
+                        label="Add Admins"
+                        form={<AddAdminToEventForm eventId={params.eventId}/>}
+                      />
+                    </CardContent>
+                  </Card>
+                  <Card className="col-span-12">
+                    <CardHeader>
+                      <CardTitle>Your Interview Admins</CardTitle>
+                      <CardDescription>Manage your admins here</CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full overflow-x-auto">
+                      <AdminDataTable columns={AdminDataTableColumns} data={totalAdmins}/>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
             </div>
-          </TabsContent>
-
-          <TabsContent value="registration">
-            <div className="grid grid-cols-12 gap-4 p-4">
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Registered Interviews</CardTitle>
-                  <CardDescription>Shows all people who have registered for this interview plan</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full overflow-x-auto">
-                  <InterviewDataTable columns={InterviewDataTableColumns} data={totalRegistrants}/>
-                </CardContent>
-              </Card>
-            </div>
-
-          </TabsContent>
-
-          <TabsContent value="questions">
-            <div className="grid grid-cols-12 gap-4 p-4">
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Add a new Question</CardTitle>
-                  <CardDescription>Use this form to add a new Question</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormDialogButton
-                    title="Add a new question"
-                    description="Fill in the form to add a new question"
-                    label="Add Question"
-                    form={<CreateQuestionForm eventId={params.eventId} length={0}/>}
-                  />
-                </CardContent>
-              </Card>
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Current Interview Questions</CardTitle>
-                  <CardDescription>Below are the interview questions for this interview plan</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <QuestionDisplayCard eventId={params.eventId}/>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="admin">
-            <div className="grid grid-cols-12 gap-4 p-4">
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Add a New Admin</CardTitle>
-                  <CardDescription>Use this form to add a new admin</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormDialogButton
-                    title="Invite people to run your meeting!"
-                    description="Fill in the form below with the person's email"
-                    label="Add Admins"
-                    form={<AddAdminToEventForm eventId={params.eventId}/>}
-                  />
-                </CardContent>
-              </Card>
-              <Card className="col-span-12">
-                <CardHeader>
-                  <CardTitle>Your Interview Admins</CardTitle>
-                  <CardDescription>Manage your admins here</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full overflow-x-auto">
-                  <AdminDataTable columns={AdminDataTableColumns} data={totalAdmins}/>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
+          </Tabs>
+        </div>
       )
   } catch {
     return <p>An error occured</p>
