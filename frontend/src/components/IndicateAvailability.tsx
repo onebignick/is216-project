@@ -2,12 +2,14 @@
 
 import { MeetgridEvent } from "@/server/entity/MeetgridEvent";
 import { MeetgridEventParticipant } from "@/server/entity/MeetgridEventParticipant"
+import { useRouter } from 'next/navigation';
 import { useState } from "react";
 
 interface IndicateAvailabilityProps {
     eventParticipant: MeetgridEventParticipant;
     event: MeetgridEvent;
     userEmail: string;
+    onAvailabilitySaved: () => void; // Add this line
 }
 
 export default function IndicateAvailability({ eventParticipant, event, userEmail} : IndicateAvailabilityProps) {
@@ -56,6 +58,7 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [isMouseDown, setIsMouseDown] = useState<boolean>(false);
     const [availability, setAvailability] = useState<{ [key: string]: string }[][]>(JSON.parse(eventParticipant.availabilityString));
+    const router = useRouter();
 
     function handleOnMouseDown(e: React.MouseEvent<HTMLTableCellElement, MouseEvent> | React.TouchEvent<HTMLTableCellElement>, timeIntervalIdx: number, dayIdx: number) {
         // const { target } = e;
@@ -114,7 +117,8 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
             "method": "PUT",
             "body": JSON.stringify(eventParticipant)
         });
-
+        
+        router.refresh();
         console.log(result);
     }
 
@@ -145,6 +149,7 @@ function TableBody({ eventParticipant, event, userEmail }: TableBodyProps) {
         });
 
         const data = await result.json();
+        router.refresh();
         console.log("Saved data:", data);
     };
 

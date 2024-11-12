@@ -46,7 +46,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
       return (
         <div>
           <Tabs defaultValue="info">
-            <TabsList className="w-full grid bg-gray-200 grid-cols-2 lg:grid-cols-4">
+            <TabsList className="grid grid-cols-2 lg:grid-cols-4">
               <TabsTrigger value="info">Event Information</TabsTrigger>
               <TabsTrigger value="registration">Participants</TabsTrigger>
               <TabsTrigger value="questions">Interview Questions</TabsTrigger>

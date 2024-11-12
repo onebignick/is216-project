@@ -98,3 +98,19 @@
     @apply bg-background text-foreground;
   }
 }
+.toastui-calendar-grid-cell-more-events {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  height: 27px;
+  line-height: 27px;
+  padding: 0 5px;
+}
