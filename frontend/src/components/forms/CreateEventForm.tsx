@@ -72,7 +72,7 @@ export function CreateEventForm() {
             const createdEvent: MeetgridEvent = events[0];
 
             toast({
-                title: "Event Successfully created!",
+                title: "Event successfully created!",
                 description: "You will be redirected to the event page in 3 seconds",
                 className: "bg-green-500 text-black",
             })

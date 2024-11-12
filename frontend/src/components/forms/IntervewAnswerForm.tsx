@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Loader2 } from "lucide-react";
 import { MeetgridQuestion } from "@/server/entity/MeetgridQuestion";
 import { MeetgridAnswer } from "@/server/entity/MeetgridAnswer";
+import { useToast } from "@/hooks/use-toast";
 
 interface InterviewAnswerFormProps {
     questions: MeetgridQuestion[];
@@ -19,6 +20,7 @@ interface InterviewAnswerFormProps {
 export function InterviewAnswerForm({ questions, interviewId }: InterviewAnswerFormProps) {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [answers, setAnswers] = useState<MeetgridAnswer[]>();
+    const { toast } = useToast(); 
 
     const formSchemaObject: { [key: string]: z.ZodString } = {};
     questions.forEach((question) => {
@@ -77,6 +79,12 @@ export function InterviewAnswerForm({ questions, interviewId }: InterviewAnswerF
 
         await Promise.all(requests);
         setIsLoading(false);
+
+        toast({
+            title: "Notes Saved!",
+            description: "Your notes have been saved successfully.",
+            className: "bg-green-500 text-black",
+        });
     }
 
     return (
