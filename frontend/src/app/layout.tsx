@@ -7,7 +7,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "IS216 Project",
+  title: "MeetGrid",
   description: "A project",
 };
 
