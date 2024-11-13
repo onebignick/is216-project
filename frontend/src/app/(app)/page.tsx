@@ -96,11 +96,11 @@ function WelcomeCard({ username, className } : { username: string, className: st
   return (
     <Card className={className}>
       <CardHeader>
-        <CardTitle className="text-4xl font-semibold">
+        <CardTitle className="text-lg font-semibold">
           <div className="inline-block">
               <TypewriterEffect
                 words={[{ text: `Welcome back, ${username}!` }]}
-                className="text-4xl font-semibold"
+                className="text-lg font-semibold"
                 cursorClassName="bg-coral"
               />
             </div>
