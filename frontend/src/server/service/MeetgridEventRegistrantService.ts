@@ -6,6 +6,9 @@ import { EmailNotificationOptions, EmailService } from "./EmailService";
 import { UserRepository } from "../repository/user-repository";
 import { MeetgridEventParticipantRepository } from "../repository/MeetgridEventParticipantRepository";
 import { MeetgridEventParticipant } from "../entity/MeetgridEventParticipant";
+import { createEvent, EventAttributes, EventStatus } from "ics";
+import { color } from "framer-motion";
+import { string, boolean } from "zod";
 
 const URL = "https://meetgrid.vercel.app";
 
@@ -72,42 +75,157 @@ export class MeetgridEventRegistrantService {
         meetgridEventRegistrantToCreate.textColor = this.isLightColor(backgroundColor) ? '#000000' : '#ffffff'; // Adjust text color based on luminance
 
         const createdMeetgridEventRegistrant = await this.meetgridEventRegistrantRepository.createOne(meetgridEventRegistrantToCreate);
-        
-        const mailOption = {
-            to: createdMeetgridEventRegistrant[0].interviewerEmail,
-            subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false,
-                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
-            }),
-            html: `Dear Sir/Madam: \n\nYour inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
-            `<br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a>` +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
-        } as EmailNotificationOptions;
+        // Create .ics event data
+        const interviewerEvent: EventAttributes = {
+            start: [
+                curTime.getFullYear(),
+                curTime.getMonth() + 1,
+                curTime.getDate(),
+                curTime.getHours(),
+                curTime.getMinutes(),
+            ] as [number, number, number, number, number],
+            duration: { hours: 1 }, // Event duration of 1 hour
+            title: "Scheduled Interview",
+            description: "Your interview has been scheduled.",
+            location: "Zoom Meeting",
+            url: createdMeetgridEventRegistrant[0].zoomLink || undefined, // Optional: Zoom link or other URL
+            status: "CONFIRMED" as EventStatus,
+            organizer: {
+                name: createdMeetgridEventRegistrant[0].interviewerEmail!,
+                email: process.env.GMAIL_EMAIL || '', // Set your Gmail email in environment variables
+            },
+            attendees: [
+                {
+                    name: createdMeetgridEventRegistrant[0].participantName!,
+                    email: createdMeetgridEventRegistrant[0].participantEmail!,
+                },
+            ],
+        };
 
-        this.emailService.sendEmailNotification(mailOption);
+        // Generate .ics for interviewer
+         const { error: interviewerError, value: interviewerValue } = createEvent(interviewerEvent);
 
-        const participantMailOption = {
-            to: createdMeetgridEventRegistrant[0].participantEmail,
-            subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false,
-                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
-            }),
-            html: `Dear Sir/Madam: \n\nYour inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
-            `<br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a>` +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
-        } as EmailNotificationOptions;
+        if (interviewerError) {
+            console.error("Error creating event:", interviewerError);
+        } else {
+            const interviewerMailOption: EmailNotificationOptions = {
+                to: createdMeetgridEventRegistrant[0].interviewerEmail!,
+                subject: `Interview Scheduled on ${curTime.toLocaleString('en-SG', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZone: 'Asia/Singapore',
+                })}`,
+                text: "",
+                html: `Dear Sir/Madam, <br><br>Your interview has been scheduled. <br> Here is the Zoom link: <a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a><br><br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a><br><br>Thanks!<br><br>Best Regards,<br>MeetGrid`,
+                attachments: [
+                    {
+                        filename: 'interview-schedule.ics', // Name of the .ics file
+                        content: interviewerValue!, // The .ics event content
+                        contentType: 'text/calendar',
+                    },
+                ],
+            };
+            // Send email to interviewer
+            this.emailService.sendEmailNotification(interviewerMailOption);
+        };
 
-        this.emailService.sendEmailNotification(participantMailOption);
+        // Create .ics event data for the participant
+        const participantEvent: EventAttributes = {
+            start: [
+                curTime.getFullYear(),
+                curTime.getMonth() + 1,
+                curTime.getDate(),
+                curTime.getHours(),
+                curTime.getMinutes(),
+            ] as [number, number, number, number, number],
+            duration: { hours: 1 }, // Event duration of 1 hour
+            title: "Scheduled Interview",
+            description: "Your interview has been scheduled.",
+            location: "Zoom Meeting",
+            url: createdMeetgridEventRegistrant[0].zoomLink || undefined, // Optional: Zoom link or other URL
+            status: "CONFIRMED" as EventStatus,
+            organizer: {
+                name: createdMeetgridEventRegistrant[0].interviewerEmail!,
+                email: process.env.GMAIL_EMAIL || '', // Set your Gmail email in environment variables
+            },
+            attendees: [
+                {
+                    name: createdMeetgridEventRegistrant[0].participantName!,
+                    email: createdMeetgridEventRegistrant[0].participantEmail!,
+                },
+            ],
+        };
+
+        // Generate .ics for participant
+        const { error: participantError, value: participantValue } = createEvent(participantEvent);
+
+        if (participantError) {
+            console.error("Error creating participant event:", participantError);
+        } else {
+            const participantMailOption: EmailNotificationOptions = {
+                to: createdMeetgridEventRegistrant[0].participantEmail!,
+                subject: `Interview Scheduled on ${curTime.toLocaleString('en-SG', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZone: 'Asia/Singapore',
+                })}`,
+                text: "",
+                html: `Dear Sir/Madam, <br><br>Your interview has been scheduled. <br> Here is the Zoom link: <a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a><br><br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a><br><br>Thanks!<br><br>Best Regards,<br>MeetGrid`,
+                attachments: [
+                    {
+                        filename: 'interview-schedule.ics',
+                        content: participantValue!,
+                        contentType: 'text/calendar',
+                    },
+                ],
+            };
+            this.emailService.sendEmailNotification(participantMailOption);
+        };
+        // const mailOption = {
+        //     to: createdMeetgridEventRegistrant[0].interviewerEmail,
+        //     subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
+        //         year: 'numeric',
+        //         month: '2-digit',
+        //         day: '2-digit',
+        //         hour: '2-digit',
+        //         minute: '2-digit',
+        //         second: '2-digit',
+        //         hour12: false,
+        //         timeZone: 'Asia/Singapore' // Ensure Singapore timezone
+        //     }),
+        //     html: `Dear Sir/Madam: <br><br>Your inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
+        //     `<br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a>` +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
+        // } as EmailNotificationOptions;
+
+        // this.emailService.sendEmailNotification(mailOption);
+
+        // const participantMailOption = {
+        //     to: createdMeetgridEventRegistrant[0].participantEmail,
+        //     subject: "Interview Scheduled on " + curTime.toLocaleString('en-SG', {
+        //         year: 'numeric',
+        //         month: '2-digit',
+        //         day: '2-digit',
+        //         hour: '2-digit',
+        //         minute: '2-digit',
+        //         second: '2-digit',
+        //         hour12: false,
+        //         timeZone: 'Asia/Singapore' // Ensure Singapore timezone
+        //     }),
+        //     html: `Dear Sir/Madam: <br><br>Your inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
+        //     `<br> If you would like to update or cancel the timing, you can use this link: <a href="${URL}/interview/${createdMeetgridEventRegistrant[0].id}/edit" target="_blank">Update/Cancel Interview</a>` +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
+        // } as EmailNotificationOptions;
+
+        // this.emailService.sendEmailNotification(participantMailOption);
 
         return createdMeetgridEventRegistrant;
     }
