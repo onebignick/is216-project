@@ -111,7 +111,7 @@ export class MeetgridEventRegistrantService {
 
         return createdMeetgridEventRegistrant;
     }
-
+    
     async deleteOneEventRegistrant(id: string) {
         const deletedEventRegistrant = await this.meetgridEventRegistrantRepository.deleteOne(id);
         
