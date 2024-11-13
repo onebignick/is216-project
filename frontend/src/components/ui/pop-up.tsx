@@ -43,7 +43,7 @@ export const PopUpEffect = ({
       initial={{ opacity: 0, scale: 0.8 }} // Start small and invisible
       animate={{ opacity: 1, scale: 1 }} // Pop to full size
       className={cn(
-        "text-base sm:text-xl md:text-3xl lg:text-5xl font-bold",
+        "text-base sm:text-xl md:text-3xl lg:text-m font-bold",
         className // Custom className allows control over alignment or additional styles
       )}
     >

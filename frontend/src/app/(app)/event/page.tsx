@@ -5,6 +5,7 @@ import { EventDataTable } from "@/components/datatables/events/EventDataTable";
 import { EventDataTableColumns } from "@/components/datatables/events/EventDataTableColumns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PopUpEffect } from "@/components/ui/pop-up";
+import { FadeInEffect } from "@/components/ui/fade-in";
 
 // export default async function Event() {
 //     const user = await currentUser();
@@ -54,7 +55,14 @@ export default async function YourEventPage() {
                             ]}
                         />
                     </CardTitle>
-                    <CardDescription>Interview plans you manage as an admin or owner</CardDescription>
+                    <CardDescription>
+                        <FadeInEffect
+                                words={[
+                                    { text: "Interview plans you manage as an admin or owner." }
+                                ]}
+                                className="text-gray-600" // Optional styling
+                            />
+                    </CardDescription>
                 </CardHeader>
                 <CardContent className="w-full overflow-x-auto">
                     <EventDataTable columns={EventDataTableColumns} data={meetgridAssociatedEvents}/>

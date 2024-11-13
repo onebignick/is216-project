@@ -7,6 +7,7 @@ import Link from "next/link";
 import FrontpageCalendar from "@/components/frontpage-calendar";
 import { MeetgridEventRegistrantService } from "@/server/service/MeetgridEventRegistrantService";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
+import { FadeInEffect } from "@/components/ui/fade-in";
 
 export default async function Home() {
   // const eventService: EventService = new EventService();
@@ -100,7 +101,14 @@ function WelcomeCard({ username, className } : { username: string, className: st
               />
             </div>
         </CardTitle>
-        <CardDescription>What would you like to do today?</CardDescription>
+        <CardDescription>
+          <FadeInEffect
+                words={[
+                    { text: "What would you like to do today?" }
+                ]}
+                className="text-gray-600" // Optional styling
+            />
+          </CardDescription>
       </CardHeader>
       <CardContent>
         <Button asChild className="bg-coral text-black hover:bg-coral/70 text-md py-4 px-6">

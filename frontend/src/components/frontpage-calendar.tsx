@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Props from '@toast-ui/react-calendar';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { PopUpEffect } from "@/components/ui/pop-up";
 // import CalendarInstance from '@toast-ui/react-calendar';
 
 const Calendar = dynamic(() => import('@toast-ui/react-calendar'), { ssr: false });
@@ -165,7 +166,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     return (
         <Card className={className}>
             <CardHeader className="pb-3">
-                <CardTitle className="sm:text-xl md:text-3xl">Upcoming Meetings</CardTitle>
+                <CardTitle className="sm:text-xl md:text-3xl">
+                    <PopUpEffect words={[{text:"Upcoming Meetings"}]}/></CardTitle>
                     <CardDescription></CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
