@@ -15,6 +15,7 @@ interface EventPageProps {
     events: any[];
     className?: string;
 }
+
 // ../../node_modules/@toast-ui/react-calendar/types/index.d.ts
 export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [isClient, setIsClient] = useState(false);
@@ -25,8 +26,6 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     const [calendarKey, setCalendarKey] = useState(0); //a key to force re-render
     console.log(events);
 
-    // const startOfWeek = new Date(); 
-    
     useEffect(() => {
         setIsClient(true); // Ensures component renders only on client side
     }, []);

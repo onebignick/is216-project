@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion, stagger, useAnimate, useInView } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const TypewriterEffect = ({
   words,
@@ -26,6 +26,15 @@ export const TypewriterEffect = ({
 
   const [scope, animate] = useAnimate();
   const isInView = useInView(scope);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [cursorHeight, setCursorHeight] = useState(0);
+
+  useEffect(() => {
+    if (textRef.current) {
+      setCursorHeight(textRef.current.clientHeight); // Set cursor height based on text height
+    }
+  }, [textRef]);
+
   useEffect(() => {
     if (isInView) {
       animate(
@@ -78,17 +87,9 @@ export const TypewriterEffect = ({
     >
       {renderWords()}
       <motion.span
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-        }}
-        transition={{
-          duration: 0.8,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
+        initial={{opacity: 0,}}
+        animate={{opacity: 1,}}
+        transition={{duration: 0.8, repeat: Infinity,repeatType: "reverse",}}
         className={cn(
           "inline-block rounded-sm w-[4px] h-4 md:h-6 lg:h-10 bg-blue-500",
           cursorClassName
@@ -156,7 +157,7 @@ export const TypewriterEffectSmooth = ({
         }}
       >
         <div
-          className="text-xs sm:text-base md:text-xl lg:text:3xl xl:text-5xl font-bold"
+          className="text-xs sm:text-base md:text-xl lg:text:2xl xl:text-2xl font-bold"
           style={{
             whiteSpace: "nowrap",
           }}
