@@ -76,7 +76,7 @@ export function SidebarLeft({
             key={item.url}
             href={item.url}
             onClick={() => setSelectedLink(item.title)}
-            className={`flex items-center p-4 ${
+            className={`flex items-center p-3 text-md ${
               selectedLink === item.url
               ? "bg-[#E0CBBF] text-black" // Darker shade for the active tab
                 : "text-gray-700 hover:bg-[#FEF4E6]"

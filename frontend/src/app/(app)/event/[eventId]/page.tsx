@@ -84,7 +84,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
                   <Card className="col-span-12 lg:col-span-6">
                     <CardHeader>
                       <CardTitle>View your groups availability here</CardTitle>
-                      <CardDescription>See who is available</CardDescription>
+                      <CardDescription>Hover over to see who is available</CardDescription>
                     </CardHeader>
                     <CardContent className="w-full overflow-x-auto">
                       <DisplayTotalAvailability totalAvailability={totalAvailability} event={meetgridEvent}/>
