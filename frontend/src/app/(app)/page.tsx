@@ -101,14 +101,12 @@ function WelcomeCard({ username, className } : { username: string, className: st
               />
             </div>
         </CardTitle>
-        <CardDescription>
           <FadeInEffect
                 words={[
                     { text: "What would you like to do today?" }
                 ]}
                 className="text-gray-600" // Optional styling
             />
-          </CardDescription>
       </CardHeader>
       <CardContent>
         <Button asChild className="bg-coral text-black hover:bg-coral/70 text-md py-4 px-6">

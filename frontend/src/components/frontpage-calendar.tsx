@@ -154,7 +154,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         month:{
             isAlways6Weeks: false,
             visibleWeeksCount: 4,
-            visibleEventCount: 1
+            visibleEventCount: 3
         },
         timezone: {
             zones: [
