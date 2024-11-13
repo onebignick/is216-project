@@ -85,8 +85,8 @@ export class MeetgridEventRegistrantService {
                 hour12: false,
                 timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
-            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
-            "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
+            html: `Dear Sir/Madam: \n\nYour inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
+            `\n \n<br>If you would like to update/cancel the timing you can use this link: \n` + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(mailOption);
@@ -103,8 +103,8 @@ export class MeetgridEventRegistrantService {
                 hour12: false,
                 timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
-            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
-            "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
+            html: `Dear Sir/Madam: \n\nYour inteview has been scheduled. <br> Below is the zoom link: \n` + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
+            `\n \n<br>If you would like to update/cancel the timing you can use this link: \n` + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ` <br> \n \nThanks! \n \n<br>Best Regards, \nMeetGrid`,
         } as EmailNotificationOptions;
 
         this.emailService.sendEmailNotification(participantMailOption);
