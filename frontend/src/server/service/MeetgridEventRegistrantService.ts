@@ -85,7 +85,7 @@ export class MeetgridEventRegistrantService {
                 hour12: false,
                 timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
-            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
             "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
         } as EmailNotificationOptions;
 
@@ -103,7 +103,7 @@ export class MeetgridEventRegistrantService {
                 hour12: false,
                 timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
-            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
+            text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + `<a href="${createdMeetgridEventRegistrant[0].zoomLink}" target="_blank">Zoom Interview Link</a>` + 
             "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
         } as EmailNotificationOptions;
 

@@ -26,11 +26,6 @@ export default async function Home() {
 
   const meetgridAssociatedEvents = await meetgridEventRegistrantService.findEventWithParticipantsByUserId(user.userId!);
 
-  // const attendeeBookings = await bookingService.getAllBookEventsJoinByUser(user.userId!); //attend booking
-  // const organizerBookings = await bookingService.getAllBookEventsOrganizedByUser(user.id); //organised bookings
-  // const combinedBookings = [...attendeeBookings, ...organizerBookings];
-
-
   // Get today's date in Singapore Time (SGT)
   const today = toSingaporeTime(new Date());
 
