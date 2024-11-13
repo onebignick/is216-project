@@ -4,6 +4,7 @@ import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 import { EventDataTable } from "@/components/datatables/events/EventDataTable";
 import { EventDataTableColumns } from "@/components/datatables/events/EventDataTableColumns";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PopUpEffect } from "@/components/ui/pop-up";
 
 // export default async function Event() {
 //     const user = await currentUser();
@@ -45,7 +46,13 @@ export default async function YourEventPage() {
             <Card className="col-span-12">
                 <CardHeader>
                     <CardTitle>
-                        Your Interview Plans
+                    <PopUpEffect
+                            words={[
+                                { text: "Your", className: "mr-2" },
+                                { text: "Interview", className: "mr-2" },
+                                { text: "Plans" }
+                            ]}
+                        />
                     </CardTitle>
                     <CardDescription>Interview plans you manage as an admin or owner</CardDescription>
                 </CardHeader>
