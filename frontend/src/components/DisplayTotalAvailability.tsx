@@ -81,27 +81,65 @@ function TableHeader({ title }: {title: string}) {
     return <th className="border border-slate-500 whitespace-nowrap px-2">{title}</th>
 }
 
-function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: string[][], maxAvailability: number}) {
-  const currentTimeTotalMinutes = currentTimeIdx * 30
+// function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: string[][], maxAvailability: number}) {
+//   const currentTimeTotalMinutes = currentTimeIdx * 30
+  
+//   let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
+//   let currentTimeHours = (currentTimeTotalMinutes / 60 >> 0).toString();
+
+//   if (currentTimeHours.length === 1) currentTimeHours = "0" + currentTimeHours
+//   if (currentTimeMinutes.length === 1) currentTimeMinutes = "0" + currentTimeMinutes
+
+//   return (
+//     <tr key={currentTimeIdx}>
+//       <td className="border border-slate-500 text-center select-none">{currentTimeHours} : {currentTimeMinutes}</td>
+//       {row.map((col, idx) => {
+//         if (Object.keys(col).length === 0) {
+//           return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
+//         } else if (Object.keys(col).length === maxAvailability) {
+//           return <td key={idx} className="border border-slate-500 bg-green-800 w-[30px] h-[10px]"></td>
+//         } else {
+//           return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}></td>
+//         }
+//       })}
+//     </tr>
+//   )
+// }
+function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: any[], maxAvailability: number}) {
+  const currentTimeTotalMinutes = currentTimeIdx * 30;
   
   let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
   let currentTimeHours = (currentTimeTotalMinutes / 60 >> 0).toString();
 
-  if (currentTimeHours.length === 1) currentTimeHours = "0" + currentTimeHours
-  if (currentTimeMinutes.length === 1) currentTimeMinutes = "0" + currentTimeMinutes
+  if (currentTimeHours.length === 1) currentTimeHours = "0" + currentTimeHours;
+  if (currentTimeMinutes.length === 1) currentTimeMinutes = "0" + currentTimeMinutes;
 
   return (
     <tr key={currentTimeIdx}>
       <td className="border border-slate-500 text-center select-none">{currentTimeHours} : {currentTimeMinutes}</td>
       {row.map((col, idx) => {
+        const userId = col.userId || '';  // Ensure that each "col" has a userId property
+
         if (Object.keys(col).length === 0) {
-          return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>
+          return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>;
         } else if (Object.keys(col).length === maxAvailability) {
-          return <td key={idx} className="border border-slate-500 bg-green-800 w-[30px] h-[10px]"></td>
+          return (
+            <td
+              key={idx}
+              className="border border-slate-500 bg-green-800 w-[30px] h-[10px] relative"
+              title={userId ? `User ID: ${userId}` : 'No user'} // Show user ID on hover
+            ></td>
+          );
         } else {
-          return <td key={idx} className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}></td>
+          return (
+            <td
+              key={idx}
+              className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}
+              title={userId ? `User ID: ${userId}` : 'No user'} // Show user ID on hover
+            ></td>
+          );
         }
       })}
     </tr>
-  )
+  );
 }
