@@ -3,7 +3,7 @@ import { MeetgridEventService } from "@/server/service/MeetgridEventService";
 import { MeetgridAssociatedEvent } from "@/types/MeetgridAssociatedEvents";
 import { EventDataTable } from "@/components/datatables/events/EventDataTable";
 import { EventDataTableColumns } from "@/components/datatables/events/EventDataTableColumns";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PopUpEffect } from "@/components/ui/pop-up";
 import { FadeInEffect } from "@/components/ui/fade-in";
 
@@ -55,14 +55,12 @@ export default async function YourEventPage() {
                             ]}
                         />
                     </CardTitle>
-                    <CardDescription>
-                        <FadeInEffect
-                                words={[
-                                    { text: "Interview plans you manage as an admin or owner." }
-                                ]}
-                                className="text-gray-600" // Optional styling
-                            />
-                    </CardDescription>
+                    <FadeInEffect
+                            words={[
+                                { text: "Interview plans you manage as an admin or owner." }
+                            ]}
+                            className="text-gray-600" // Optional styling
+                        />
                 </CardHeader>
                 <CardContent className="w-full overflow-x-auto">
                     <EventDataTable columns={EventDataTableColumns} data={meetgridAssociatedEvents}/>
