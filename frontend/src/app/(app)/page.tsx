@@ -100,7 +100,7 @@ function WelcomeCard({ username, className } : { username: string, className: st
           <div className="inline-block">
               <TypewriterEffect
                 words={[{ text: `Welcome back, ${username}!` }]}
-                className="text-4xl font-semibold"
+                className="text-lg font-semibold"
                 cursorClassName="bg-coral"
               />
             </div>
