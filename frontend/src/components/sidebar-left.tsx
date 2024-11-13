@@ -55,7 +55,7 @@ export function SidebarLeft({
   }, [])
 
   return (
-    <Sidebar className="border-r-0" {...props}>
+    <Sidebar className="w-64 border-r-0" {...props}>
       <SidebarHeader className="bg-[#FEF4E6]" >
         <div className="flex justify-between">
           <SignedIn>
@@ -76,11 +76,12 @@ export function SidebarLeft({
             key={item.url}
             href={item.url}
             onClick={() => setSelectedLink(item.title)}
-            className={`flex items-center p-3 text-md ${
+            className={`flex items-center p-3 text-md  w-full box-border ${
               selectedLink === item.url
               ? "bg-[#E0CBBF] text-black" // Darker shade for the active tab
                 : "text-gray-700 hover:bg-[#FEF4E6]"
             }`}
+            style={{boxSizing:"border-box"}}
           >
             <item.icon className="mr-2" />
             <span>{item.title}</span>
