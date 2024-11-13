@@ -87,7 +87,7 @@ export class MeetgridEventParticipantService {
         const mailOptions = {
             to: targetUser.email,
             subject: "New Activity: " + targetEvent!.name,
-            text: "Dear Sir/Madam: \n\nYou have just added to " + targetEvent!.name + ". You can make changes and adjust the timing according to your availability through this link " + URL + "/event/" + eventParticipantToCreate.eventId + ". \n \nThanks! \n \nBest Regards, \nMeetGrid"
+            text: "Dear Sir/Madam: \n\nYou have just added to " + targetEvent!.name + ". You can make changes and adjust the timing according to your availability through this link " + URL + "/event/" + eventParticipantToCreate.eventId + ".\nYou can also start invite participant for interview through this link " + URL + "/event/register \n \nThanks! \n \nBest Regards, \nMeetGrid"
         } as EmailNotificationOptions;
 
         await this.emailService.sendEmailNotification(mailOptions);
