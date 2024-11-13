@@ -67,7 +67,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         // const { start, end } = convertToEventTimes(event.dayIdx, event.timeslotIdx, startOfWeek);
         return {
             id: event.event.id, // Assuming `event.event.id` holds the ID
-            title: event.event.name || "Untitled Event", // If name is missing, default to "Untitled Event"
+            name: event.eventRegistrant.participantName,
+            title: event.event.name + ': '+ event.eventRegistrant.participantName || "Untitled Event", // If name is missing, default to "Untitled Event"
             allDay: false,  // Assuming it's not an all-day event
             description: event.event.description, // Event description
             eventCode: event.event.code, // Event code
@@ -103,11 +104,13 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         const startTime =  matchedEvent ? matchedEvent.start: "No Start Time available";
         const endTime =  matchedEvent ? matchedEvent.end: "No End Time available";
         const participantEmail =  matchedEvent ? matchedEvent.participantEmail: "No participant Email available";
+        const name = matchedEvent? matchedEvent.name: "No participant name";
         
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
             id: clickedEvent.id,
             title: clickedEvent.title,
+            name: name,
             start: clickedEvent.start.d.d, // Accessing the date string
             end: clickedEvent.end.d.d, // Accessing the date string
             allDay: clickedEvent.isAllday || false, // Important for showing as all-day
@@ -122,6 +125,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         setSelectedEvent({
             id: formattedEvent.id,
             title: formattedEvent.title,
+            name: formattedEvent.name,
             start: new Date(formattedEvent.start).toLocaleString(),
             end: new Date(formattedEvent.end).toLocaleString(),
             description: formattedEvent.description,
@@ -166,14 +170,14 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
     return (
         <Card className={className}>
             <CardHeader className="pb-3">
-                <CardTitle className="sm:text-xl md:text-3xl">
-                    <PopUpEffect words={[{text:"Upcoming Meetings"}]}/></CardTitle>
-                    <CardDescription></CardDescription>
+                <div className="flex justify-between items-center w-full">
+                    <CardTitle className="sm:text-xl md:text-3xl m-0 pt-2 pb-2">Upcoming Meetings</CardTitle>
+                    <Button onClick={toggleView} className="bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md hidden sm:block">
+                        Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
+                    </Button>
+                </div>
             </CardHeader>
             <CardContent className="pt-0">
-                <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md hidden sm:block">
-                        Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
-                </Button>
                 <Calendar key={calendarKey} {...calendarProps} onClickEvent={handleEventClick}/>
                 {/* Render the modal with event details */}
                 <EventDetailModal 
@@ -239,6 +243,7 @@ const EventDetailModal = ({ isOpen, onClose, event }: { isOpen: boolean; onClose
                     </button>
                     
                 </div>
+                <p>Participant Name: {event.name}</p>
                 <p>Event Code: {event.eventCode}</p>
                 <p>Event Timing: {formatTimeToHHMM(event.startTime)} - {formatTimeToHHMM(event.endTime)} </p>
                 <p>Description: {event.description}</p>
