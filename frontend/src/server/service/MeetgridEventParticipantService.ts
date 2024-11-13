@@ -68,6 +68,13 @@ export class MeetgridEventParticipantService {
 
     async createOneEventParticipant(eventParticipantToCreate: MeetgridEventParticipant) {
         console.log("MeetgridEventParticipantService.createOneEventPartcipant: creating event participant")
+
+        const targetEventId = eventParticipantToCreate.eventId;
+        const targetUserId = eventParticipantToCreate.userId;
+        const check = await this.findByEventIdAndUserId(targetEventId, targetUserId);
+        if (check.length != 0) throw new Error("User already exists");
+        
+
         let targetEvent;
         if (eventParticipantToCreate.availabilityString === "" && eventParticipantToCreate.eventId) {
             const targetEventArray = await this.meetgridEventRepository.findById(eventParticipantToCreate.eventId);
