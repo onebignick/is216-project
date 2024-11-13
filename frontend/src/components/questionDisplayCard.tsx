@@ -84,13 +84,15 @@ export function QuestionDisplayCard({ eventId }: QuestionDisplayCardProps) {
         });
         if (deletedQuestionResponse.ok) {
             toast({
-                title: "Question Successfully Deleted"
+                title: "Question Successfully Deleted",
+                className: "bg-green-500 text-black",
             })
             setQuestions(questions.filter((q) => q.id !== questionIdToDelete));
             return;
         }
         toast({
-            title: "Failed to delete question..."
+            title: "Failed to delete question...",
+            className: "bg-red-500 text-black",
         })
     };
 

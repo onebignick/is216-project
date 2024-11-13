@@ -8,8 +8,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Router } from "lucide-react";
 import { MeetgridQuestion } from "@/server/entity/MeetgridQuestion";
+import { usePathname, useRouter } from "next/navigation";
 
 const formSchema = z.object({
     title: z.string(),
@@ -25,7 +26,9 @@ export function CreateQuestionForm({ eventId, length }: CreateQuestionFormProps)
     const { toast } = useToast();
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    
+    const router = useRouter();
+    const pathname = usePathname();
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema)
     });
@@ -50,6 +53,8 @@ export function CreateQuestionForm({ eventId, length }: CreateQuestionFormProps)
         })
         
         setIsLoading(false);
+        router.push(pathname);
+        router.refresh();
     }
 
     return (
