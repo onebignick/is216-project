@@ -8,6 +8,7 @@ import { Input } from "../ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { useRouter } from 'next/navigation';
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
     eventCode: z.string(),
@@ -21,6 +22,7 @@ export function RegisterEventForm() {
     });
 
     const router = useRouter();
+    const { toast } = useToast();
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
 
@@ -31,6 +33,12 @@ export function RegisterEventForm() {
         if (targetEventResponse.ok) {
             const { targetEvent } = await targetEventResponse.json();
             router.push("/event/" + targetEvent.id + "/register");
+        } else {
+            toast({
+                title: "Error",
+                description: "Invalid registration code. Please try again.",
+                className: "bg-red-500 text-black",
+            });
         }
 
 
