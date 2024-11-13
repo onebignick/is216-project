@@ -43,11 +43,11 @@ export default function RegisterForAvailableSessions({totalAvailability, event} 
   function generateTableHeaders() {
       const headers = [<TableHeader title="Time" key="time-header" />];
       const curDate = new Date(event.startDate);
-      const options: Intl.DateTimeFormatOptions = { weekday: "short", day: "2-digit", month: "short" }
+      const options: Intl.DateTimeFormatOptions = { weekday: "short", day: "2-digit", month: "short", timeZone: "Asia/Singapore" }
       
       curDate.setDate(curDate.getDate());
       for (let i=0; i <= diff; i++) {
-          headers.push(<TableHeader key={i} title={curDate.toLocaleDateString("en-GB", options)}/>)
+          headers.push(<TableHeader key={i} title={curDate.toLocaleDateString("en-SG", options)}/>)
           curDate.setDate(curDate.getDate() + 1)
       }
 

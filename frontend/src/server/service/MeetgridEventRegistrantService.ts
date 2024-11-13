@@ -82,7 +82,8 @@ export class MeetgridEventRegistrantService {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false
+                hour12: false,
+                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
             text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
             "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL + "/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
@@ -99,7 +100,8 @@ export class MeetgridEventRegistrantService {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false
+                hour12: false,
+                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }),
             text: "Dear Sir/Madam: \n\nYour inteview has been scheduled. Below is the zoom link: \n" + createdMeetgridEventRegistrant[0].zoomLink + 
             "\n \nIf you would like to update/cancel the timing you can use this link: \n" + URL +"/interview/"+createdMeetgridEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid",
@@ -137,7 +139,8 @@ export class MeetgridEventRegistrantService {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false
+                hour12: false,
+                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             }) + " was cancelled",
             text: "Dear Sir/Madam: \n\nThe interview that you have booked on "+ curTime.toLocaleString('en-SG', {
                 year: 'numeric',
@@ -146,7 +149,8 @@ export class MeetgridEventRegistrantService {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                hour12: false
+                hour12: false,
+                timeZone: 'Asia/Singapore' // Ensure Singapore timezone
             })  + " was cancelled. If you wish to schedule/book another interview. You may do so at " + URL +"/interview/"+ deletedEventRegistrant[0].id+"/edit" +  ". \n \nThanks! \n \nBest Regards, \nMeetGrid"
         } as EmailNotificationOptions;
 

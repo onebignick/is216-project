@@ -93,7 +93,7 @@ export class MeetgridEventService {
         const mailOptions = {
             to: targetUser.email,
             subject: "Successfully create new Interview Schedule: " + createdEvent.name,
-            text: "Dear Sir/Madam: \n \nYou have successfully create an interview schedule called " + createdEvent.name +". You can start inviting people to your meeting through this code: " + createdEvent.code + "\n \nThanks! \n \nBest Regards, \nMeetGrid",
+            text: "Dear Sir/Madam: \n \nYou have successfully create an interview schedule called " + createdEvent.name +". You can start inviting people to collaborate and join your meeting through this code: " + createdEvent.code + "\n \nThanks! \n \nBest Regards, \nMeetGrid",
         } as EmailNotificationOptions;
 
         await this.emailService.sendEmailNotification(mailOptions);

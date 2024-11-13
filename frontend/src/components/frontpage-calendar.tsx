@@ -40,6 +40,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         const meetingPeriod = event.event.meetingPeriod;
         const {start, end} = convertTimeslotIdxToMinutes(timeslot, meetingPeriod);
 
+        console.log(start, end);
         // Parse the booking.date which is already in Singapore time
         const startTimeDate = new Date(event.event.startDate);
         startTimeDate.setDate(startTimeDate.getDate() + dayIdx);
@@ -48,7 +49,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         const endTimeDate = new Date(event.event.startDate);
         endTimeDate.setDate(endTimeDate.getDate() + dayIdx);
         endTimeDate.setMinutes(endTimeDate.getMinutes() + end); // Apply end time offset
-           
+        
+        console.log(startTimeDate, endTimeDate);
         // Format the dates as local Singapore time strings
         const formatDate = (date: Date) => {
             const year = date.getFullYear();
@@ -78,6 +80,9 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             zoomLink: zoomLink
         };
     });
+    
+    console.log(formattedEvents);
+
     //toggle the view between monthly and weekly
     const toggleView = () => {
         setCalendarView(prevView => (prevView === 'week' ? 'month' : 'week'));
@@ -98,7 +103,7 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
         const startTime =  matchedEvent ? matchedEvent.start: "No Start Time available";
         const endTime =  matchedEvent ? matchedEvent.end: "No End Time available";
         const participantEmail =  matchedEvent ? matchedEvent.participantEmail: "No participant Email available";
-
+        
         // Map the `clickedEvent` data to the simpler structure
         const formattedEvent = {
             id: clickedEvent.id,
@@ -108,8 +113,8 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
             allDay: clickedEvent.isAllday || false, // Important for showing as all-day
             description: description, // Fallback to description
             eventCode: eventCode,
-            startTime: startTime,
-            endTime: endTime,
+            startTime: clickedEvent.start.d.d,
+            endTime: clickedEvent.end.d.d,
             participantEmail: participantEmail,
             zoomLink: zoomLink
         };
@@ -160,11 +165,11 @@ export default function FrontpageCalendar({ events, className}: EventPageProps){
 
     return (
         <Card className={className}>
-            <CardHeader>
-                <CardTitle>Upcoming Meetings</CardTitle>
+            <CardHeader className="pb-3">
+                <CardTitle className="sm:text-xl md:text-3xl">Upcoming Meetings</CardTitle>
                     <CardDescription></CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
                 <Button onClick={toggleView} className="mb-4 bg-coral text-black hover:bg-coral/70 transition duration-200 rounded-md hidden sm:block">
                         Toggle to {calendarView === 'week' ? 'Monthly' : 'Weekly'} View
                 </Button>

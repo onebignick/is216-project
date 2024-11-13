@@ -16,7 +16,7 @@ export default async function RegisterForEvent({ params }: {params : { eventId: 
 
         const meetgridEvent: MeetgridEvent = meetgridEventArray[0];
         const totalAvailability: MeetgridEventParticipant[] = await meetgridEventParticipantService.findByEventId(params.eventId)       
-
+        
         return(
             <div className="grid grid-cols-12 gap-4 p-4">
                 <Card className="col-span-12">
