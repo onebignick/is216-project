@@ -105,7 +105,7 @@ function TableHeader({ title }: {title: string}) {
 //     </tr>
 //   )
 // }
-function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: any[], maxAvailability: number}) {
+function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: number, row: {[key: string]: string}[], maxAvailability: number}) {
   const currentTimeTotalMinutes = currentTimeIdx * 30;
   
   let currentTimeMinutes = (currentTimeTotalMinutes % 60).toString();
@@ -118,7 +118,7 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
     <tr key={currentTimeIdx}>
       <td className="border border-slate-500 text-center select-none">{currentTimeHours} : {currentTimeMinutes}</td>
       {row.map((col, idx) => {
-        const userId = col.userId || '';  // Ensure that each "col" has a userId property
+        const availablePeople = Object.keys(col).join(" ");  // Ensure that each "col" has a availablePeople property
 
         if (Object.keys(col).length === 0) {
           return <td key={idx} className="border border-slate-500 w-[30px] h-[10px]"></td>;
@@ -127,7 +127,7 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
             <td
               key={idx}
               className="border border-slate-500 bg-green-800 w-[30px] h-[10px] relative"
-              title={userId ? `User ID: ${userId}` : 'No user'} // Show user ID on hover
+              title={availablePeople ? `Available People: ${availablePeople}` : 'No user'} // Show user ID on hover
             ></td>
           );
         } else {
@@ -135,7 +135,7 @@ function TableRow({ currentTimeIdx, row, maxAvailability }: { currentTimeIdx: nu
             <td
               key={idx}
               className={"border border-slate-500 bg-green-800 w-[30px] h-[10px] opacity-" + (100 -(Object.keys(col).length/maxAvailability * 100))}
-              title={userId ? `User ID: ${userId}` : 'No user'} // Show user ID on hover
+              title={availablePeople ? `Available People: ${availablePeople}` : 'No user'} // Show user ID on hover
             ></td>
           );
         }
