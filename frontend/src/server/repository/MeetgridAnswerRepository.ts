@@ -2,14 +2,19 @@ import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { answer } from "../db/schema";
 import { MeetgridAnswer } from "../entity/MeetgridAnswer";
+import { BaseRepository } from "./BaseRepository";
 
-export class MeetgridAnswerRepository {
+export class MeetgridAnswerRepository implements BaseRepository<MeetgridAnswer, string> {
     async findById(id: string) {
         return await db.select().from(answer).where(eq(answer.id, id));
     }
 
     async findByInterviewId(interviewId: string) {
         return await db.select().from(answer).where(eq(answer.interviewId, interviewId));
+    }
+
+    async findAll() {
+        return await db.select().from(answer);
     }
 
     async createOne(meetgridAnswerToCreate: MeetgridAnswer) {
