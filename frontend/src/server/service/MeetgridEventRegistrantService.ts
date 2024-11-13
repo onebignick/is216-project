@@ -85,7 +85,7 @@ export class MeetgridEventRegistrantService {
                 curTime.getMinutes(),
             ] as [number, number, number, number, number],
             duration: { hours: 1 }, // Event duration of 1 hour
-            title: "Scheduled Interview",
+            title: targetEvent[0].name! + " Interview",
             description: "Your interview has been scheduled.",
             location: "Zoom Meeting",
             url: createdMeetgridEventRegistrant[0].zoomLink || undefined, // Optional: Zoom link or other URL
@@ -144,7 +144,7 @@ export class MeetgridEventRegistrantService {
                 curTime.getMinutes(),
             ] as [number, number, number, number, number],
             duration: { hours: 1 }, // Event duration of 1 hour
-            title: "Scheduled Interview",
+            title: targetEvent[0].name! + " Interview",
             description: "Your interview has been scheduled.",
             location: "Zoom Meeting",
             url: createdMeetgridEventRegistrant[0].zoomLink || undefined, // Optional: Zoom link or other URL
