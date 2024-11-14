@@ -102,13 +102,13 @@ export function SettingsForm({ event } : SettingsFormInterface) {
 
         if (updatedEventResponse.ok) {
             toast({
-                title: "Event updated successfully",
+                title: "Interview updated successfully",
                 className: "bg-green-500 text-black",
             })
         } else {
             toast({
                 title: "Uh oh something went wrong!",
-                description: "Something went wrong when trying to update event",
+                description: "Something went wrong when trying to update interview",
                 className: "bg-red-500 text-white", // Error color
             })
         }
@@ -127,7 +127,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
             // setSuccessMessage("Event deleted successfully!");
             // setErrorMessage("");
             toast({
-                title: "Event deleted successfully",
+                title: "Interview deleted successfully",
                 className: "bg-green-500 text-black",
             })
             setShowDeleteModal(false); // Close the modal after deletion
@@ -136,7 +136,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
             // setErrorMessage("Failed to delete event.");
             toast({
                 title: "Uh oh something went wrong!",
-                description: "Something went wrong when trying to update event",
+                description: "Something went wrong when trying to update interview",
                 className: "bg-red-500 text-white", // Error color
             })
         }
@@ -149,8 +149,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                     <div className = "grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <Card className = "col-span-2">
                             <CardHeader>
-                                <CardTitle>Event Name</CardTitle>
-                                <CardDescription>Your event name</CardDescription>
+                                <CardTitle>Interview Name</CardTitle>
+                                <CardDescription>Your Interview name</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <FormField
@@ -159,7 +159,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                     render={({field}) => (
                                         <FormItem className="col-span-2">
                                             <FormControl>
-                                                <Input placeholder="Event name" {...field} />
+                                                <Input placeholder="Interview name" {...field} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -169,8 +169,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                         </Card>
                         <Card className = "col-span-2">
                             <CardHeader>
-                                <CardTitle>Event Description</CardTitle>
-                                <CardDescription>Your event description</CardDescription>
+                                <CardTitle>Interview Description</CardTitle>
+                                <CardDescription>Your interview description</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <FormField
@@ -179,7 +179,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                                     render={({field}) => (
                                         <FormItem className="col-span-2">
                                             <FormControl>
-                                                <Textarea placeholder="Tell us more about your event" {...field}/>
+                                                <Textarea placeholder="Tell us more about your Interview" {...field}/>
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -190,8 +190,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
 
                         <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
-                                <CardTitle>Event Start Date</CardTitle>
-                                <CardDescription>Your event start date</CardDescription>
+                                <CardTitle>Interview Start Date</CardTitle>
+                                <CardDescription>Your interview start date</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <FormField
@@ -230,8 +230,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                         </Card>
                         <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
-                                <CardTitle>Event end Date</CardTitle>
-                                <CardDescription>Your event end date</CardDescription>
+                                <CardTitle>Interview End Date</CardTitle>
+                                <CardDescription>Your interview end date</CardDescription>
                             </CardHeader>
                             <CardContent>
                             <FormField
@@ -270,8 +270,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                         </Card>
                         <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
-                                <CardTitle>Event Start Time</CardTitle>
-                                <CardDescription>Your event start time</CardDescription>
+                                <CardTitle>Interview Start Time</CardTitle>
+                                <CardDescription>Your interview start time</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-4">
@@ -323,8 +323,8 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                         </Card>
                         <Card className = "col-span-2 lg:col-span-1">
                             <CardHeader>
-                                <CardTitle>Event End Time</CardTitle>
-                                <CardDescription>Your event end time</CardDescription>
+                                <CardTitle>Interview End Time</CardTitle>
+                                <CardDescription>Your interview end time</CardDescription>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 gap-4">
@@ -393,7 +393,7 @@ export function SettingsForm({ event } : SettingsFormInterface) {
                             type="button" 
                             onClick={() => setShowDeleteModal(true)} 
                             className="px-4 py-2 bg-red-600 text-white rounded col-span-1">
-                            Delete Event
+                            Delete Interview
                         </Button>
                         <Button type="submit" className="px-4 py-2 col-start-4 rounded col-span-1 bg-coral text-black hover:bg-coral/70">Save Changes</Button>
                     </div>

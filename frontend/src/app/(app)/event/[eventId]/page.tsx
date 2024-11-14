@@ -47,7 +47,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
         <div>
           <Tabs defaultValue="info">
             <TabsList className="grid grid-cols-2 lg:grid-cols-4">
-              <TabsTrigger value="info">Event Information</TabsTrigger>
+              <TabsTrigger value="info">Interview Information</TabsTrigger>
               <TabsTrigger value="registration">Participants</TabsTrigger>
               <TabsTrigger value="questions">Interview Questions</TabsTrigger>
               <TabsTrigger value="admin">Manage Admins</TabsTrigger>
@@ -74,7 +74,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
 
                   <Card className="col-span-12 md:col-span-6">
                     <CardHeader>
-                      <CardTitle>Invite people to register for your event</CardTitle>
+                      <CardTitle>Invite people to register for your interview</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <p>Invite people to join with the code <code>{meetgridEvent.code}</code></p>
@@ -101,7 +101,7 @@ export default async function EventPage({params}: {params: {eventId:string, book
                   </Card>
                   <Card className="col-span-12">
                     <CardHeader>
-                      <CardTitle>Edit your event settings</CardTitle>
+                      <CardTitle>Edit your interview settings</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <SettingsForm event={meetgridEvent}/>
