@@ -16,7 +16,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs"
-import { ModeToggle } from "./toggle-theme-button"
+//import { ModeToggle } from "./toggle-theme-button"
 
 const data = {
   navMain: [
@@ -64,12 +64,12 @@ export function SidebarLeft({
           <SignedOut>
             <SignInButton/>
           </SignedOut>
-          <ModeToggle/>
+          {/* <ModeToggle/> */}
         </div>
         {/* <NavMain items={data.navMain} /> */}
       </SidebarHeader>
 
-         {/* Sidebar Middle Section - apply beige color */}
+         
       <div className="bg-[#FEF4E6] flex-grow">
         {data.navMain.map((item) => (
           <a
