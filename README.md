@@ -19,10 +19,14 @@ Password: TestPwd123
 
 # Tech Stack
 * [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
-* [![Postgres](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+* [![ShadCN](https://img.shields.io/badge/ShadCN-4A90E2?style=for-the-badge&logoColor=white)](https://ui.shadcn.com)
+* [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+* [![Aceternity](https://img.shields.io/badge/Aceternity-FFD700?style=for-the-badge&logoColor=black)](https://ui.aceternity.com/)
 * [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
-* [![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
+* [![Drizzle ORM](https://img.shields.io/badge/Drizzle%20ORM-8A2BE2?style=for-the-badge&logoColor=white)](https://orm.drizzle.team/)
+* [![Postgres](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 * [![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+
 
 # Getting started
 ### Before you begin
