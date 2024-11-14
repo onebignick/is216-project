@@ -6,8 +6,6 @@ MeetGrid is a streamlined, all-in-one platform designed to simplify scheduling, 
 
 You may access our deployed site here: https://meetgrid.vercel.app/ <br/>
 Login details:   <br/>
-Email: meetgridtesteracc@gmail.com <br/>
-Password: TestPwd123
 
 # Main Features
 - **Effortless Scheduling:** Create interviews or events, and customize the event quickly and intuitively
