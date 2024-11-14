@@ -131,7 +131,7 @@ export class MeetgridEventRegistrantService {
                 ],
             };
             // Send email to interviewer
-            this.emailService.sendEmailNotification(interviewerMailOption);
+            await this.emailService.sendEmailNotification(interviewerMailOption);
         };
 
         // Create .ics event data for the participant
@@ -189,7 +189,7 @@ export class MeetgridEventRegistrantService {
                     },
                 ],
             };
-            this.emailService.sendEmailNotification(participantMailOption);
+            await this.emailService.sendEmailNotification(participantMailOption);
         };
         // const mailOption = {
         //     to: createdMeetgridEventRegistrant[0].interviewerEmail,
